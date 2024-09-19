@@ -1,0 +1,13 @@
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #f5f5f5; /* Add background color */
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+    width: 450px; /* Fixed width to prevent resizing */
+    height: 450px; /* Fixed height */
+  }
+  

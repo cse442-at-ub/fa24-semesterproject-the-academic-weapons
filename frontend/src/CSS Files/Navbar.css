@@ -1,0 +1,56 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-image: url("../Assets/Background.png");
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar-logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .logo-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+  
+  .navbar-links {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .navbar-links a {
+    text-decoration: none;
+    color: black;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .navbar-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .profile-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  
+  .navbar-profile a {
+    text-decoration: none;
+    color: black;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
