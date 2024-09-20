@@ -1,6 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
-import '../CSS Files/SubPieChart.css';
+import '../../CSS Files/Dashboard Components/SubPieChart.css';
 
 const subDataMap = {
   'Category 1': [

@@ -1,0 +1,12 @@
+.bar-chart-component {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bar-chart-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
