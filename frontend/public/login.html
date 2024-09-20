@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swiper</title>
+
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <script src="{% static 'js/scripts.js' %}" defer></script>
+</head>
+<body>
+
+    <div class="Login_box">
+        <div class="Login_Title">
+            <h1>Wealth Wise</h1>
+        </div>
+
+        <div class = "login_section">
+            <div class="email_section"> 
+                <label for="username" class="email_text">Email</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="password_section"> 
+                <label for="password" class="password_text">Password</label>
+                <input type="password" id="password" name="password" required>
+                <a class="forgot_password">Forgot Password</a>
+            </div>
+            <button class="log_in_box"> 
+                <h2>Log in</h2>
+            </button>
+            <div class="Create_account"> 
+                Don't have an account?<a> Sign up</a>
+            </div>
+            
+        </div>
+    </div>
+    
+</body>
+</html>
