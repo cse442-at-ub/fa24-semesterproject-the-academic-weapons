@@ -1,7 +1,7 @@
 .settings_modal_bg_container {
     position: absolute;
     width: 100vw;
-    height: 100vh;
+    height: 107vh;
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.31);
@@ -15,7 +15,7 @@
     /*transform: translate(25%, 25%);*/
     position: relative;
     background-color: white;
-    border: 2px solid #A3AAD9;
+    border: 3px solid #A3AAD9;
     border-radius: 10px;
 }
 
@@ -35,5 +35,39 @@
 
 .close_modal_button {
     cursor: pointer;
+    padding-top: 7px;
     margin: 15px;
+}
+
+.divider_line {
+    height: 3px;
+    background-color: #A3AAD9;
+    margin-bottom: 20px;
+}
+
+.settings_modal_content {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+}
+
+.settings_tab_content {
+    width: 80%;
+    height: 100%;
+}
+
+.settings_button_sidenav {
+    height: 100%;
+    width:20%;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings_button_sidenav button {
+    background-color: rgba(0, 0, 0, 0);
+    width: 50%;
+    font-size: 20px;
+    margin-inline: auto;
+    margin-bottom: 20px;
 }
