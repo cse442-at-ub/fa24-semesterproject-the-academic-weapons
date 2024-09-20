@@ -1,0 +1,51 @@
+.recent-transactions {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.add-button {
+  background-color: #8884d8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.add-button:hover {
+  background-color: #6b5fb5;
+}
+
+.transactions-list {
+  margin-top: 10px;
+ 
+  overflow-y: auto;
+}
+
+.transaction {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.transaction span {
+  font-size: 1rem;
+}

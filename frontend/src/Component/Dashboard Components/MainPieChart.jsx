@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
-import '../CSS Files/MainPieChart.css';
+import '../../CSS Files/Dashboard Components/MainPieChart.css';
 import SubPieChart from './SubPieChart';
 
 const data = [

@@ -7,7 +7,6 @@ import {HashRouter, Routes, Route} from 'react-router-dom'
 import Settings from "./Page/Settings";
 import Dashboard from './Page/Dashboard';
 import Navbar from './Component/Navbar';
-import PieChart from './Component/MainPieChart'
 import {useState} from "react";
 import AddTransaction from "./Component/AddTransaction";
 
