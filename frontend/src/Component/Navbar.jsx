@@ -1,24 +1,26 @@
 import React from 'react';
-import '../CSS Files/Navbar.css'; 
 import logo from '../logo.svg';
 import person1 from '../Assets/Profile Pictures/Person1.svg'
+import {Link, useNavigate} from "react-router-dom";
 
-function Navbar() {
+const Navbar = ({ openModal, openSettings }) => {
+    const navigate = useNavigate();
+
   return (
     <nav className="navbar">
-      <div className="navbar-logo">
+      <div onClick={e => navigate('/')} className="navbar-logo">
         <img src={logo} alt="Wealth Wise Logo" className="logo-image" />
         <span className="logo-text">
           Wealth <br /> Wise
         </span>
       </div>
       <div className="navbar-links">
-        <a href="/dashboard">Dashboard</a>
-        <a href="/add-transaction">Add Transaction</a>
+        <Link to={"/"}>Dashboard</Link>
+        <div onClick={openModal}>Add Transaction</div>
       </div>
       <div className="navbar-profile">
-        <img src={person1} alt="Profile Icon" className="profile-icon" />
-        <a href="/logout">Log Out</a>
+        <img onClick={openSettings} src={person1} alt="Profile Icon" className="profile-icon" />
+        <div>Log Out</div>
       </div>
     </nav>
   );

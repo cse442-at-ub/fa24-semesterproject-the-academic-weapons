@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-const Settings = () => {
+import { RiCloseLargeLine } from "react-icons/ri";
+const Settings = ({closeSettings}) => {
 
 
   return (
-    // <Background>
-        <div>
-            <h1>Settings</h1>
-            <div>Hello?</div>
+      <div onClick={closeSettings} className={"settings_modal_bg_container"}>
+        <div onClick={event => event.stopPropagation()} className={"settings_modal_container"}>
+            <div className={"settings_modal_title_band"}>
+                <h2>Settings</h2>
+                <RiCloseLargeLine onClick={closeSettings} size={30} className={"close_modal_button"}/>
+            </div>
+
+            <div>Hello</div>
         </div>
-    // </Background>
+      </div>
   );
 };
 
