@@ -11,7 +11,7 @@
     height: 450px; /* Same fixed height */
   }
   
-  button {
+  .sub-pie-container button {
     margin-bottom: 20px;
     padding: 8px 16px;
     font-size: 16px;
@@ -22,7 +22,7 @@
     border-radius: 5px;
   }
   
-  button:hover {
+  .sub-pie-container button:hover {
     background-color: #6b5fb5; /* Darker on hover */
   }
   

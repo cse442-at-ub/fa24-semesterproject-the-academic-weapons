@@ -1,0 +1,20 @@
+.add_trans_modal_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-inline: auto;
+    width: 100vw;
+    height: 100vh;
+    background-color: #5661AC;
+}
+
+.add_trans_modal_container_inside {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    margin-inline: auto;
+    width: 100vw;
+    height: calc(100vh - 50px);
+    background-color: #7984D2;
+    border-top-left-radius: 20px;
+}

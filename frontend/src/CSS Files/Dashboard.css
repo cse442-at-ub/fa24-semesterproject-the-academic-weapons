@@ -1,9 +1,9 @@
 /* Dashboard.css */
-div {
+.dashboard_page_container div {
     color: black;
   }
   
-  h1 {
+.dashboard_page_container h1 {
     color: black;
   }
   
