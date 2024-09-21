@@ -3,6 +3,7 @@ import './App.css';
 import './CSS Files/Navbar.css';
 import './CSS Files/AddTransaction.css'
 import './CSS Files/Settings.css'
+import './CSS Files/Settings Components/ChangeUsername.css'
 import {HashRouter, Routes, Route} from 'react-router-dom'
 import Settings from "./Page/Settings";
 import Dashboard from './Page/Dashboard';
@@ -37,7 +38,7 @@ function App() {
           <header className="App-header">
             <Navbar openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
-              <Route path={"/"} element={<Dashboard/>}/>
+              <Route path={"/"} element={<Dashboard openModal={openTransactionModal}/>}/>
               <Route path={"/settings"} element={<Settings/>}/>
             </Routes>
 
