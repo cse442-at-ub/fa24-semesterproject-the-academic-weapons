@@ -50,11 +50,11 @@ const Settings = ({closeSettings}) => {
                                 </div>
                             </div>:
                             <div>
-                                <div className={"settings_tab_row"}>
-                                    <div>Change Password</div>
-                                    <button className={change_button}>Change</button>
-                                </div>
-                                <br/>
+                                {/*<div className={"settings_tab_row"}>*/}
+                                {/*    <div>Change Password</div>*/}
+                                {/*    <button className={change_button}>Change</button>*/}
+                                {/*</div>*/}
+                                {/*<br/>*/}
                                 <div className={"settings_tab_row"}>
                                     <div>Delete Account</div>
                                     <button className={"delete_account_button"}>Delete</button>
