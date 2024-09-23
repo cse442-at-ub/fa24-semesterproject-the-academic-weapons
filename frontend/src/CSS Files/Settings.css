@@ -1,7 +1,7 @@
 .settings_modal_bg_container {
-    position: absolute;
+    position: fixed;
     width: 100vw;
-    height: 100vh;
+    height: 107vh;
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.31);
@@ -12,10 +12,9 @@
     margin-inline: auto;
     width: 80vw;
     height: 80vh;
-    /*transform: translate(25%, 25%);*/
     position: relative;
     background-color: white;
-    border: 2px solid #A3AAD9;
+    border: 3px solid #A3AAD9;
     border-radius: 10px;
 }
 
@@ -35,5 +34,122 @@
 
 .close_modal_button {
     cursor: pointer;
+    padding-top: 7px;
     margin: 15px;
+}
+
+.divider_line {
+    height: 3px;
+    background-color: #A3AAD9;
+    margin-bottom: 20px;
+}
+
+.settings_modal_content {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+}
+
+.settings_tab_content {
+    width: 80%;
+    height: 100%;
+}
+
+.settings_button_sidenav {
+    height: 100%;
+    width:20%;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings_button_sidenav button {
+    height: 40px;
+    border-radius: 10px;
+    width: 50%;
+    border: 1px solid #8884d8;
+    font-size: 20px;
+    margin-inline: auto;
+    margin-bottom: 25px;
+    transition: background-color 0.3s ease;
+}
+
+.settings_button_inactive {
+    color: #8884d8;
+    background-color: white;
+}
+
+/*.settings_button_active:hover {*/
+/*    background-color: #8884d8;*/
+/*    color: white;*/
+/*    border: 1px solid rgba(0, 0, 0, 0);*/
+/*}*/
+
+.settings_button_active {
+    background-color: #8884d8;
+    color: white;
+}
+
+/*.settings_button_inactive:hover {*/
+/*    color: #8884d8;*/
+/*    background-color: white;*/
+/*    border: 1px solid #8884d8;*/
+/*}*/
+
+
+.settings_tab_rows {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings_tab_row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.settings_tab_row button {
+    height: 40px;
+    border-radius: 10px;
+    width: 100px;
+    font-size: 20px;
+    transition: background-color 0.3s ease;
+    margin-right: 40px;
+}
+
+.settings_tab_row_button {
+    background-color: #fff;
+    color: #8884d8;
+    border: 1px solid #8884d8;
+}
+
+.settings_tab_row_button:hover {
+    color: #fff;
+    background-color: #8884d8;
+}
+
+.settings_tab_row div {
+    width: 70%;
+    text-align: center;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.delete_account_button {
+    background-color: #a10000;
+    color: white;
+    border: 1px solid #a10000;
+}
+
+.delete_account_button:hover {
+    color: #a10000;
+    background-color: white;
+    border: 1px solid #a10000;
+}
+
+.settings_profile_picture {
+    vertical-align: middle;
 }
