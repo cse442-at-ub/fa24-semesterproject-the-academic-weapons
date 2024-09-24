@@ -1,0 +1,28 @@
+.sub-pie-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #f5f5f5; /* Same background as main chart */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Consistent shadow */
+    width: 450px; /* Same fixed width */
+    height: 450px; /* Same fixed height */
+  }
+  
+  .sub-pie-container button {
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: #8884d8;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .sub-pie-container button:hover {
+    background-color: #6b5fb5; /* Darker on hover */
+  }
+  
