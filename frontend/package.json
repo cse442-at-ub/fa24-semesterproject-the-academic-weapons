@@ -1,5 +1,6 @@
 {
   "name": "financial-manager-frontend",
+  "homepage": "https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442an/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
