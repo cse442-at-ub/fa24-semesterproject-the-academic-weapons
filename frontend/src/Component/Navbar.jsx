@@ -1,11 +1,13 @@
 import React from 'react';
 import logo from '../logo.svg';
 import person1 from '../Assets/Profile Pictures/Person1.svg'
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 const Navbar = ({ openModal, openSettings }) => {
     const navigate = useNavigate();
+    const location = useLocation();
 
+if (location.pathname !== "/Login")
   return (
     <nav className="navbar">
       <div onClick={e => navigate('/')} className="navbar-logo">

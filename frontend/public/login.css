@@ -1,4 +1,3 @@
-/* File: frontend/src/CSS Files/Login.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 
@@ -8,26 +7,28 @@
     padding: 0;
 }
 
-.LoginContainer {
-  overflow: hidden; /* Prevents overflow in both x and y directions */
-  height: 100vh; /* Full height of the viewport */
-  width: 100vw; /* Full width of the viewport */
-  margin: 0; /* Optional: Removes default margin */
-  padding: 0; /* Optional: Removes default padding */
+body
+{
+    background-color: #E0E0E0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 
 
 
 .Login_box
 {
-    margin-top: 30px;
+    margin-top: 60px;
     display: flex;
-    justify-content: flex-start;    
+    justify-self: center;
+    justify-content: flex-start;
     align-items: center;
-    width:  35dvw;
-    min-width: 420px;
-    height: auto;
+    width:  calc(40%);
+    min-width: 720px;
+    height: 700px;
     flex-direction: column;
       
 }
@@ -38,9 +39,8 @@
     justify-content: center;
     align-items: center;
     background-color: #A3AAD9;
-    width: 30dvw;
-    min-width: 290px;
-    height: 150px;
+    width: 525px;
+    height: 170px;
     border-radius: 10px;
     
     
@@ -54,7 +54,7 @@ h1{
 {
     margin-top: 30px;
     width: 100%;
-    height: auto;
+    height: 640px;
     background-color: #F2F4F7;
     flex-direction: column;
     display: flex;
@@ -77,7 +77,8 @@ h1{
 
 .email_text, .password_text {
     color: #5661AC;
-    margin-left: 10px; /* Reset any default margins if needed Allowed it to go to left side*/
+    /* Remove display: flex; */
+    margin-left: 10px; /* Reset any default margins if needed */
 }
 .password_section
 {
@@ -91,15 +92,12 @@ h1{
 }
 
 input{
-
     height: 77px;
-    width: 25dvw;
-    min-width: 250px;
+    width: 460px;
     background-color: #E0E0E0;
     outline:2px solid #A3AAD9;
     border-radius: 4px;
-    padding-left: 15px;
-    font-size: 18px;
+    
     border: none;
 }
 
@@ -116,8 +114,7 @@ input{
 .log_in_box
 {
     margin-top: 20px;
-    width: 20dvw;
-    min-width: 250px;
+    width: 327px;
     height: 77px;
     background-color: #E0E0E0;
     display: flex;
@@ -132,7 +129,6 @@ h2{
 }
 .Create_account
 {
-    margin-top: 15px;  
+    margin-top: 15px;
     color: #7984D2;
-    margin-bottom: 15px;
 }
