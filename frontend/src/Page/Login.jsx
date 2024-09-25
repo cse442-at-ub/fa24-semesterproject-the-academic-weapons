@@ -11,7 +11,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/routes/login.php', {
+      const response = await fetch(`${process.env.REACT_APP_API_PATH}/routes/login.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ const Login = () => {
       console.log(data); // Log response data for debugging
   
       if (data.success) {
-        navigate('/dashboard');
+        navigate('/');
       } else {
         alert(data.message || 'Login failed');
       }
