@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
 import '../../CSS Files/Dashboard Components/MainPieChart.css';
-import SubPieChart from './SubPieChart';
+import SubPieChart from './SubPieChart.jsx';
 
 const data = [
   { name: 'Category 1', value: 400 },
