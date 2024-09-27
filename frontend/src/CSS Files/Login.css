@@ -2,8 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 
-*
-{
+.LoginContainer * {
     margin: 0 auto;
     padding: 0;
 }
@@ -46,7 +45,7 @@
     
 }
 
-h1{
+.LoginContainer h1{
     color: #FFFFFF;
 }
 
@@ -90,7 +89,7 @@ h1{
     align-items: flex-start;
 }
 
-input{
+.LoginContainer input {
 
     height: 77px;
     width: 25dvw;
@@ -127,7 +126,7 @@ input{
     border-radius: 10px;
     border: none;
 }
-h2{
+.LoginContainer h2{
     color: #5661AC;
 }
 .Create_account
