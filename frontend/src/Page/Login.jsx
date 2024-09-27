@@ -27,7 +27,9 @@ const Login = () => {
       console.log(data); // Log response data for debugging
   
       if (data.success) {
+        sessionStorage.setItem("User", "1")
         navigate('/');
+        window.location.reload()
       } else {
         alert(data.message || 'Login failed');
       }

@@ -8,7 +8,7 @@
 }
 
 .LoginContainer {
-  overflow: hidden; /* Prevents overflow in both x and y directions */
+  /*overflow: hidden; !* Prevents overflow in both x and y directions *!*/
   height: 100vh; /* Full height of the viewport */
   width: 100vw; /* Full width of the viewport */
   margin: 0; /* Optional: Removes default margin */
