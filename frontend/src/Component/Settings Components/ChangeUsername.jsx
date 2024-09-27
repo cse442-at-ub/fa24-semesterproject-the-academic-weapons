@@ -5,7 +5,8 @@ const ChangeUsername = ({ closeModal, changeUsername }) => {
 
     const updateUsername = () => {
         changeUsername(newUsername);
-        saveUsernameToDatabase().then(r => closeModal());
+        saveUsernameToDatabase();
+        closeModal();
     }
 
     const saveUsernameToDatabase = async () => {
