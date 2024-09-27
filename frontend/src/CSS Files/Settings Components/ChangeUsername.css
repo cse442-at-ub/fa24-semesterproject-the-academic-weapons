@@ -10,17 +10,20 @@
 .change_modal_container {
     position: relative;
     background-color: white;
-    border: 2px solid #6b5fb5;
+    border: 2px solid #A3AAD9;
     border-radius: 10px;
-    width: 50%;
-    height: 70%;
+    width: 40%;
+    min-width: 300px;
+    height: fit-content;
+    padding-bottom: 40px;
     margin-inline: auto;
     margin-top: 7%;
 }
 
 .change_cancel {
     margin-top: 20px;
-    width: 100%;
+    width: fit-content;
+    margin-inline: auto;
     text-align: center;
     cursor: pointer;
     text-decoration: underline;
@@ -28,38 +31,77 @@
     float: bottom;
 }
 
+.change_cancel:hover {
+    color: #596296;
+}
+
+.change_modal_title_desc_container {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    width: 80%;
+    margin-inline: auto;
+    text-align: center;
+}
+
+.change_modal_title_desc_container h2 {
+    margin-bottom: 10px;
+    color: #5661AC;
+    font-size: 30px;
+}
+
+.change_modal_desc {
+    margin-inline: auto;
+    max-width: 80%;
+    color: #7984D2;
+}
+
 .change_form {
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    min-width: 200px;
+    width: 50%;
 }
 
 .change_button {
+    cursor: pointer;
     height: 40px;
     border-radius: 10px;
     width: 50%;
-    border: 1px solid #8884d8;
+    border: 2px solid #A3AAD9;
     font-size: 20px;
     margin-inline: auto;
     margin-bottom: 25px;
     transition: background-color 0.3s ease;
-    color: #8884d8;
-    background-color: white;
+    color: #5661AC;
+    background-color: #E0E0E0;
+}
+
+.change_button:hover {
+    background-color: #b7b7b7;
 }
 
 .change_field {
-    width: 50%;
-    font-size: 20px;
-    margin-inline: auto;
+    width: 100%;
+    height: 40px;
+    background-color: #E0E0E0;
+    border:2px solid #A3AAD9;
+    border-radius: 10px;
+    outline: none;
+    font-size: 18px;
+    margin-bottom: 20px;
 }
 
 .change_label {
-    font-size: 15px;
-    color: #6b5fb5;
-
+    float: left;
+    width: fit-content;
+    font-size: 20px;
+    color: #5661AC;
+    font-weight: normal;
 }
 
 .label_container {
-    width: 50%;
+    width: 100%;
     margin-inline: auto;
 }
