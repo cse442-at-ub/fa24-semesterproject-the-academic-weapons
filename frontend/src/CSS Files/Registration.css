@@ -8,22 +8,17 @@
     padding: 0;
 }
 
-.LoginContainer {
+.RegisterContainer {
   overflow-x: hidden; /* Prevents overflow in both x and y directions */
   height: 100vh; /* Full height of the viewport */
   width: 100vw; /* Full width of the viewport */
   margin: 0; /* Optional: Removes default margin */
   padding: 0; /* Optional: Removes default padding */
-  display: flex;
-  justify-content: flex-start;    
-  align-items: center;
 }
 
-
-
-
-.Login_box
+.Register_box
 {
+    margin-top: 20px;
     display: flex;
     justify-content: flex-start;    
     align-items: center;
@@ -34,13 +29,13 @@
       
 }
 
-.Login_Title
+.Register_Title
 {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #A3AAD9;
-    width: 30dvw;
+    width: 32dvw;
     min-width: 350px;
     height: 150px;
     border-radius: 10px;
@@ -48,13 +43,13 @@
     
 }
 
-.LoginContainer h1{
+.RegisterContainer h1{
     color: #FFFFFF;
 }
 
-.login_section
+.Register_section
 {
-    margin-top: 30px;
+    margin-top: 15px;
     width: 100%;
     height: auto;
     background-color: #F2F4F7;
@@ -68,7 +63,7 @@
 }
 
 .email_section {
-    margin-top: 50px;
+    margin-top: 15px;
     flex-direction: column;
     justify-content: center;
     height: 116px;
@@ -77,13 +72,34 @@
     align-items: flex-start; /* Keep this to align children to the left */
 }
 
-.email_text, .password_text {
+.email_text, .password_text, .username_text {
     color: #5661AC;
     margin-left: 10px; /* Reset any default margins if needed Allowed it to go to left side*/
 }
+
+.username_section
+{
+    margin-top: 15px;
+    flex-direction: column;
+    justify-content: center;
+    height: 116px;
+    width: auto;
+    display: flex;
+    align-items: flex-start; /* Keep this to align children to the left */
+}
+.pass_requir_txt
+{
+    margin-top: 2px;
+    width: 25dvw;
+    min-width: 250px;
+    margin-bottom: 2px;
+    font-size: 19px;
+    color: #7984D2;
+}
+
 .password_section
 {
-    margin-top: 20px;
+    margin-top: 15px;
     flex-direction: column;
     justify-content: center;
     height: 116px;
@@ -92,7 +108,18 @@
     align-items: flex-start;
 }
 
-.LoginContainer input{
+.confirm_password_section
+{
+    margin-top: 15px;
+    flex-direction: column;
+    justify-content: center;
+    height: 116px;
+    width: auto;
+    display: flex;
+    align-items: flex-start;
+}
+
+.RegisterContainer input{
 
     height: 77px;
     width: 25dvw;
@@ -106,18 +133,9 @@
 }
 
 
-.forgot_password
+.Register_in_box
 {
-    color:#5661AC;
-    margin: 0;
-    align-self: flex-end;
-    margin-right: 5px;
-    margin-top: 5px;
-}
-
-.log_in_box
-{
-    margin-top: 20px;
+    margin-top: 15px;
     width: 20dvw;
     min-width: 250px;
     height: 77px;
@@ -131,13 +149,13 @@
     transition: background-color .3s, box-shadow .3s;
 }
 
-.log_in_box:hover
+.Register_in_box:hover
 {
     background-color: #D0D0D0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.LoginContainer h2{
+.RegisterContainer h2{
     color: #5661AC;
 }
 .Create_account

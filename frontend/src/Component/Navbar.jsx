@@ -7,8 +7,11 @@ const Navbar = ({ openModal, openSettings }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
-if (location.pathname !== "/Login")
-  return (
+    if (location.pathname !== "/login" || location.pathname !== "/register" || location.pathname !== "/#login")
+    {
+      return null;
+    }
+      return (
     <nav className="navbar">
       <div onClick={e => navigate('/')} className="navbar-logo">
         <img src={logo} alt="Wealth Wise Logo" className="logo-image" />

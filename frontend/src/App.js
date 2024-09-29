@@ -7,6 +7,7 @@ import './CSS Files/Settings Components/ChangeUsername.css'
 import {HashRouter, Routes, Route} from 'react-router-dom'
 import Settings from "./Page/Settings";
 import Login from './Page/Login';
+import Register from './Page/Registration';
 import Dashboard from './Page/Dashboard';
 import Navbar from './Component/Navbar';
 import {useState} from "react";
@@ -42,6 +43,7 @@ function App() {
               <Route path={"/"} element={<Dashboard openModal={openTransactionModal}/>}/>
               <Route path={"/"} element={<Dashboard/>}/>
               <Route path="/login" element={<Login />} /> {/* Add the Login route */}
+              <Route path="/register" element={<Register />} /> {/* Add the Login route */}
               <Route path={"/settings"} element={<Settings/>}/>
             </Routes>
 
