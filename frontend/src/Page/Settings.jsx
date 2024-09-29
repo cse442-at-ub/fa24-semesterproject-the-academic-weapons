@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { RiCloseLargeLine } from "react-icons/ri";
 import person1 from "../Assets/Profile Pictures/Person1.svg";
 import ChangeUsername from "../Component/Settings Components/ChangeUsername";
+import ChangePFP from "../Component/Settings Components/ChangePFP.jsx";
 const Settings = ({closeSettings}) => {
     const active = 'settings_button_active';
     const inactive = 'settings_button_inactive';
     const change_button = 'settings_tab_row_button'
     const [showSettings, setShowSettings] = useState('General');
     const [showChangeUsername, setShowChangeUsername] = useState(false);
-    const [username, setUsername] = useState('JourneySpratt')
+    const [showChangePFP, setShowChangePFP] = useState(false);
+    const [username, setUsername] = useState('JourneySpratt');
+    const [profilePicture, setProfilePicture] = useState(1);
 
     const openUsername = () => {
         setShowChangeUsername(true);
@@ -18,10 +21,21 @@ const Settings = ({closeSettings}) => {
         setShowChangeUsername(false);
     }
 
+    const openChangePFP = () => {
+        setShowChangePFP(true);
+    }
+
+    const closeChangePFP = () => {
+        setShowChangePFP(false)
+    }
+
     const changeUsername = (e) => {
         setUsername(e)
     }
 
+    const changePFP = (e) => {
+        setProfilePicture(e);
+    }
 
     return (
         <div onClick={closeSettings} className={"settings_modal_bg_container"}>
@@ -46,7 +60,7 @@ const Settings = ({closeSettings}) => {
                                 <br/>
                                 <div className={"settings_tab_row"}>
                                     <div>Current Profile Picture: <img src={person1} alt="Profile Icon" className="settings_profile_picture" /></div>
-                                    <button className={change_button}>Change</button>
+                                    <button onClick={openChangePFP} className={change_button}>Change</button>
                                 </div>
                             </div>:
                             <div>
@@ -64,6 +78,7 @@ const Settings = ({closeSettings}) => {
                     </div>
                 </div>
                 {showChangeUsername ? <ChangeUsername closeModal={closeUsername} changeUsername={changeUsername}/>:null}
+                {showChangePFP ? <ChangePFP closeModal={closeChangePFP} changeUsername={changePFP}/>:null}
             </div>
         </div>
     );
