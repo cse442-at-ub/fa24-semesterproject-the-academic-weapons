@@ -8,10 +8,10 @@ const Registration = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleRegristration = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_PATH}/routes/login.php`, {
+      const response = await fetch(`${process.env.REACT_APP_API_PATH}/routes/registration.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ const Registration = () => {
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while trying to registr in.');
+      alert('An error occurred while trying to registr.');
     }
   };
   
@@ -44,7 +44,7 @@ const Registration = () => {
     <div className="Register_Title">
       <h1>Wealth Wise</h1>
     </div>
-    <form className="Register_section" onSubmit={handleLogin}>
+    <form className="Register_section" onSubmit={handleRegristration}>
       <div className="email_section">
         <label htmlFor="username" className="email_text">Email</label>
         <input
@@ -67,7 +67,7 @@ const Registration = () => {
           required
         />
       </div>
-      <p class= "pass_requir_txt">Password must contain at least 8 characters 1
+      <p className= "pass_requir_txt">Password must contain at least 8 characters 1
         uppercase letter,1 number, 1 special character.
       </p>
       <div className="password_section">
@@ -99,8 +99,8 @@ const Registration = () => {
       <button type="submit" className="Register_in_box">
         <h2>Register</h2>
       </button>
-      <div className="Create_account">
-        Already have an account? <a href="#">Log in</a>
+      <div className="Log_in">
+        Already have an account? <a href="#" class="create_or_login">Log in</a>
       </div>
     </form>
   </div>

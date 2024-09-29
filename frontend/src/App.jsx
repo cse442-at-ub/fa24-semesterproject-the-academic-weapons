@@ -7,6 +7,7 @@ import {HashRouter, Routes, Route} from 'react-router-dom'
 import Settings from "./Page/Settings";
 import Login from './Page/Login';
 import Dashboard from './Page/Dashboard';
+import Registration from './Page/Registration';
 import Navbar from './Component/Navbar';
 import {useState} from "react";
 import AddTransaction from "./Component/AddTransaction";
@@ -39,7 +40,8 @@ function App() {
           <header className="App-header">
             <Navbar openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
-              <Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/>
+            {/* UNDO THIS COMMENT IT WAS COMMENTED SO I CAN TEST MY PAGE<Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/> */}
+              <Route path="/" element={<Registration />} />
               <Route path={"/settings"} element={<Settings/>}/>
             </Routes>
               {showAddTransaction ? <AddTransaction closeModal={closeTransactionModal}/>:null}
