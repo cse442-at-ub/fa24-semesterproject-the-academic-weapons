@@ -1,5 +1,4 @@
-/* File: frontend/src/CSS Files/Login.css */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+/* File: frontend/src/CSS Files/Regristration.css */
 
 
 .RegisterContainer *
@@ -14,15 +13,16 @@
   width: 100vw; /* Full width of the viewport */
   margin: 0; /* Optional: Removes default margin */
   padding: 0; /* Optional: Removes default padding */
+  display: flex;
+  justify-content: space-evenly;    
+  align-items:center;
+  z-index: 0;
 }
 
 .Register_box
 {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-start;    
-    align-items: center;
-    width:  37dvw;
+   /* margin-top: 20px;*/ 
+    width:  35dvw;
     min-width: 420px;
     height: auto;
     flex-direction: column;
@@ -45,6 +45,7 @@
 
 .RegisterContainer h1{
     color: #FFFFFF;
+    font-family: 'Assistant';
 }
 
 .Register_section
@@ -62,42 +63,24 @@
     
 }
 
-.RegisterContainer .email_section {
-    margin-top: 20px;
-    flex-direction: column;
-    justify-content: center;
-    height: auto;
-    width: auto;
-    display: flex;
-    align-items: flex-start; /* Keep this to align children to the left */
-}
 
-.RegisterContainer .email_text, .password_text, .username_text {
+
+.RegisterContainer .email_text,.RegisterContainer .password_text,.RegisterContainer .username_text {
     color: #5661AC;
-    margin-left: 10px; /* Reset any default margins if needed Allowed it to go to left side*/
+    margin-left: 4px; /* Reset any default margins if needed Allowed it to go to left side*/
 }
 
-.RegisterContainer .username_section
-{
-    margin-top: 20px;
-    flex-direction: column;
-    justify-content: center;
-    height: auto;
-    width: auto;
-    display: flex;
-    align-items: flex-start; /* Keep this to align children to the left */
-}
 .pass_requir_txt
 {
-    margin-top: 20px;
+    margin-top: 10px;
     width: 25dvw;
     min-width: 250px;
     margin-bottom: 2px;
-    font-size: 19px;
+    font-size: 16px;
     color: #7984D2;
 }
 
-.password_section
+.RegisterContainer .password_section, .RegisterContainer .confirm_password_section,.RegisterContainer  .username_section,.RegisterContainer .email_section
 {
     margin-top: 20px;
     flex-direction: column;
@@ -124,9 +107,9 @@
     max-height: 77px;
     height: 6.5dvh;
     min-height: 20px;
-
-    width: 23dvw;
-    min-width: 240px;
+    max-width: 500px;
+    width: 30dvw;
+    min-width: 250px;
     background-color: #E0E0E0;
     outline:2px solid #A3AAD9;
     border-radius: 4px;
@@ -141,7 +124,9 @@
     margin-top: 20px;
     width: 20dvw;
     min-width: 250px;
-    height: 77px;
+    max-height: 77px;
+    height: 15dvh;
+    min-height: 50px;
     background-color: #E0E0E0;
     display: flex;
     justify-content: center;
@@ -161,7 +146,7 @@
 .RegisterContainer h2{
     color: #5661AC;
 }
-.Log_in
+.RegisterContainer .Log_in
 {
     margin-top: 20px;  
     color: #7984D2;
@@ -169,13 +154,69 @@
 }
 
 
-.create_or_login
+.RegisterContainer .create_or_login
 {
     transition: color .2s ease, transform .2s ease;
 }
 
-.create_or_login:hover
+.RegisterContainer .create_or_login:hover
 {
     color: #5567B3;
     transform:scale(1.2)
 }
+
+
+/* Below will be mobile changed*/
+
+@media screen and (max-width: 600px) {
+
+    .RegisterContainer .Register_box {
+        width: 90vw;
+        min-width: unset; /* Let it shrink naturally on smaller screens */
+    }
+
+    .RegisterContainer .Register_Title {
+        width: 80vw;
+        height: 100px;
+        min-width: unset; /* Let it adjust for smaller screens */
+    }
+
+    .RegisterContainer .Register_section {
+        width: 90vw;
+        margin-top: 10px;
+        outline: none;
+    }
+
+    .RegisterContainer .pass_requir_txt {
+        width: 85vw;
+        font-size: 16px; /* Make it slightly smaller for mobile */
+
+    }
+
+    .RegisterContainer input {
+        width: 65vw;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .RegisterContainer .Register_in_box {
+        width: 50vw;
+        height: 10dvh; /* Adjust height */
+    }
+
+    .RegisterContainer .Log_in {
+        font-size: 18px;
+    }
+
+    .RegisterContainer .create_or_login {
+        font-size: 16px;
+        transform: scale(1); /* Reset scale effect */
+    }
+    .RegisterContainer .password_section, .RegisterContainer .confirm_password_section,.RegisterContainer  .username_section,.RegisterContainer .email_section
+    {
+        margin-top: 10px;
+
+    }
+
+}
+

@@ -40,8 +40,8 @@ function App() {
           <header className="App-header">
             <Navbar openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
-            {/* UNDO THIS COMMENT IT WAS COMMENTED SO I CAN TEST MY PAGE<Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/> */}
-              <Route path="/" element={<Registration />} />
+            <Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/> 
+             {/*  <Route path="/" element={<Login />} /> */}
               <Route path={"/settings"} element={<Settings/>}/>
             </Routes>
               {showAddTransaction ? <AddTransaction closeModal={closeTransactionModal}/>:null}

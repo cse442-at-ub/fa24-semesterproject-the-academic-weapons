@@ -4,19 +4,27 @@ import { useNavigate } from 'react-router-dom';
 import '../CSS Files/Registration.css';
 
 const Registration = () => {
+  const [email,setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmpassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
   const handleRegristration = async (e) => {
     e.preventDefault();
+    //Checking if password are the same
+    if(password !== confirmpassword)
+    {
+      alert('Passwords do not Match!')
+      return 
+    }
     try {
       const response = await fetch(`${process.env.REACT_APP_API_PATH}/routes/registration.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({email, username, password }),
       });
   
       if (!response.ok) {
@@ -49,17 +57,17 @@ const Registration = () => {
         <label htmlFor="username" className="email_text">Email</label>
         <input
           type="email"
-          id="username"
-          name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          id="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
       </div>
       <div className="username_section">
         <label htmlFor="username" className="username_text">Username</label>
         <input
-          type="email"
+          type="text"
           id="username"
           name="username"
           value={username}
@@ -89,8 +97,8 @@ const Registration = () => {
           type="password"
           id="password"
           name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={confirmpassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           required
           pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}"
           title="Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character."
