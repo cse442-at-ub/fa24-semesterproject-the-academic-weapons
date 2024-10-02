@@ -19,6 +19,12 @@
   z-index: 0;
 }
 
+.RegisterContainer  .create_or_login
+{
+    cursor: pointer;
+    margin-left: 5px;
+}
+
 .Register_box
 {
    /* margin-top: 20px;*/ 
