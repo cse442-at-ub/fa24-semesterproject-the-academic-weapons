@@ -19,7 +19,7 @@ const Registration = () => {
       return 
     }
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_PATH}/routes/registration.php`, {
+      const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/registration.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const Registration = () => {
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while trying to registr.');
+      alert('An error occurred while trying to register.');
     }
   };
   

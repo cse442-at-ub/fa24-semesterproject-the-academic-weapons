@@ -86,8 +86,9 @@ function App() {
             <Navbar pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
             <Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/> 
-             {/*  <Route path="/" element={<Login />} /> */}
+              <Route path="/login" element={<Login />} />
               <Route path={"/settings"} element={<Settings/>}/>
+              <Route path="/registration" element={<Registration />} />
             </Routes>
               {showAddTransaction ? <AddTransaction closeModal={closeTransactionModal}/>:null}
               {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}
