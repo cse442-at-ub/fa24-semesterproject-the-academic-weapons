@@ -1,11 +1,13 @@
 <?php
-$servername = "127.0.0.1";
-$username = "mjlyskaw";
-$password = "50393887";
-$dbname = "cse442_2024_fall_team_an_db";
+
+    $servername = "https://se-dev.cse.buffalo.edu/phpmyadmin/"; // Replace with the correct server hostname if different
+    $username = "zcsanger"; // Replace with your MySQL username
+    $password = "50404629"; // Replace with your MySQL password
+    $dbname = "zcsanger_db"; // Your database name
+
 
 // Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+$conn = mysqli_connect($servername, $username, $password, $dbname,);
 
 // Check connection
 if (!$conn) {
