@@ -24,7 +24,7 @@ const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
         }
     }
 
-    const NewPFP = (e) => {
+    const newPFP = (e) => {
         changePFP(e);
         savePFP(e)
         closeModal();
@@ -39,7 +39,7 @@ const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
                 </div>
                 <div className={"change_pfp_options_container"}>
                     {Object.values(pfpMap).map((pic, index) =>
-                    <div onClick={e => setNewPFP(index)} className={"profile_picture_container"} key={index}>
+                    <div onClick={e => newPFP(index)} className={"profile_picture_container"} key={index}>
                         <img className={"profile_picture_option"} src={pic} alt={"Profile picture option " + index}/>
                     </div>
                     )}
