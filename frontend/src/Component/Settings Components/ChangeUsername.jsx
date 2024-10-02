@@ -10,7 +10,7 @@ const ChangeUsername = ({ closeModal, changeUsername }) => {
     }
 
     const saveUsernameToDatabase = async () => {
-        let url = `${import.meta.env.VITE_API_PATH}/routes/save-username`
+        let url = `${import.meta.env.VITE_API_PATH}/routes/change_username.php`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
