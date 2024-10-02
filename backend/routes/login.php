@@ -22,21 +22,21 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     exit;
 }
 
-// Retrieve username and password
-$username = $data['username'] ?? null;
+// Retrieve username (or email) and password
+$usernameOrEmail = $data['username'] ?? null;
 $password = $data['password'] ?? null;
 
-if (empty($username) || empty($password)) {
-    echo json_encode(['success' => false, 'message' => 'Username and password are required']);
+if (empty($usernameOrEmail) || empty($password)) {
+    echo json_encode(['success' => false, 'message' => 'Username or email and password are required']);
     exit;
 }
 
 // Log user input for debugging
-error_log("Inputted username: " . $username);
+error_log("Inputted username/email: " . $usernameOrEmail);
 error_log("Inputted password: " . $password); // Be cautious with logging passwords
 
-// Prepare SQL statement
-$sql = "SELECT * FROM users WHERE username = ?";
+// Prepare SQL statement to check if the username or email exists
+$sql = "SELECT * FROM users WHERE username = ? OR email = ?";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
@@ -44,16 +44,16 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param("s", $username);
+$stmt->bind_param("ss", $usernameOrEmail, $usernameOrEmail);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
     
-    // Direct comparison of passwords
-    if ($password === $user['password']) {
-        echo json_encode(['success' => true]);
+    // Verify the hashed password
+    if (password_verify($password, $user['password'])) {
+        echo json_encode(['success' => true, 'message' => 'Login successful']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Invalid password']);
     }

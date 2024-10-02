@@ -76,7 +76,7 @@ const Login = () => {
         <h2>Log in</h2>
       </button>
       <div className="Create_account">
-        Don't have an account? <a href="#">Sign up</a>
+        Don't have an account? <a href="#"  class="create_or_login">Sign up</a>
       </div>
     </form>
   </div>

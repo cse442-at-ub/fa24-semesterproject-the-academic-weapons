@@ -11,10 +11,12 @@
     margin-top: 5%;
     margin-inline: auto;
     width: 80vw;
-    height: 80vh;
+    height: fit-content;
+    padding-bottom: 20px;
+    min-height: 80vh;
     position: relative;
     background-color: white;
-    border: 3px solid #A3AAD9;
+    border: 3px solid #8884d8;
     border-radius: 10px;
 }
 
@@ -41,17 +43,23 @@
 .divider_line {
     height: 3px;
     background-color: #A3AAD9;
-    margin-bottom: 20px;
 }
 
 .settings_modal_content {
     width: 100%;
     height: fit-content;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+}
+
+.settings_change_label {
+    width: 100%;
+    margin-inline: auto;
+    margin-bottom: 20px;
 }
 
 .settings_tab_content {
+    margin-inline: auto;
     width: 80%;
     height: 100%;
 }
@@ -79,26 +87,14 @@
     background-color: white;
 }
 
-/*.settings_button_active:hover {*/
-/*    background-color: #8884d8;*/
-/*    color: white;*/
-/*    border: 1px solid rgba(0, 0, 0, 0);*/
-/*}*/
-
 .settings_button_active {
     background-color: #8884d8;
     color: white;
 }
 
-/*.settings_button_inactive:hover {*/
-/*    color: #8884d8;*/
-/*    background-color: white;*/
-/*    border: 1px solid #8884d8;*/
-/*}*/
-
-
 .settings_tab_rows {
-    width: 100%;
+    margin-inline: auto;
+    width: 90%;
     display: flex;
     flex-direction: column;
 }
@@ -107,17 +103,21 @@
     width: 100%;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 30px;
 }
 
 .settings_tab_row button {
-    height: 40px;
+    cursor: pointer;
+    min-height: 40px;
+    height: fit-content;
     border-radius: 10px;
-    width: 100px;
+    min-width: 100px;
+    max-width: 200px;
     font-size: 20px;
     transition: background-color 0.3s ease;
-    margin-right: 40px;
+    margin-inline: auto;
 }
 
 .settings_tab_row_button {
@@ -142,6 +142,7 @@
     background-color: #a10000;
     color: white;
     border: 1px solid #a10000;
+    padding: 10px;
 }
 
 .delete_account_button:hover {
@@ -152,4 +153,30 @@
 
 .settings_profile_picture {
     vertical-align: middle;
+}
+
+.settings_top_tabs_container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 30px;
+    font-size: 20px;
+}
+
+.settings_top_tab_button_active, .settings_top_tab_button_inactive {
+    padding: 10px;
+    text-align: center;
+    width: 50%;
+    border-top: 3px solid #8884d8;
+    border-bottom: 3px solid #8884d8;
+    font-weight: bold;
+}
+
+.settings_top_tab_button_active {
+    color: white;
+    background-color: #8884d8;
+}
+
+.settings_top_tab_button_inactive {
+    color: #8884d8;
 }

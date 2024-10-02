@@ -1,9 +1,9 @@
 <?php
 
-    $servername = "https://se-dev.cse.buffalo.edu/phpmyadmin/"; // Replace with the correct server hostname if different
-    $username = "zcsanger"; // Replace with your MySQL username
-    $password = "50404629"; // Replace with your MySQL password
-    $dbname = "zcsanger_db"; // Your database name
+$servername = "127.0.0.1";
+$username = "root";
+$password = "";
+$dbname = "test";
 
 
 // Create connection
