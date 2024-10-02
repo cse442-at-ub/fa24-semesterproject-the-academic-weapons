@@ -1,10 +1,32 @@
-import React from "react"
+import React, {useState} from "react"
 
 
 const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
 
-    const setNewPFP = (e) => {
+    const savePFP = async (e) => {
+        let url = `${import.meta.env.VITE_API_PATH}/routes/change_profile.php`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({e}),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        if (!data.success) {
+            alert(data.message || 'Saving new profile picture failed!');
+        }
+    }
+
+    const NewPFP = (e) => {
         changePFP(e);
+        savePFP(e)
         closeModal();
     }
 
