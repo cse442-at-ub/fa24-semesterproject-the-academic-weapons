@@ -12,6 +12,8 @@ import Navbar from './Component/Navbar';
 import {useEffect, useState} from "react";
 import AddTransaction from "./Component/AddTransaction";
 import Homepage from "./Page/Homepage.jsx";
+import ForgotPassword from "./Page/ForgotPassword.jsx";
+import ResetPassword from "./Page/ResetPassword.jsx";
 import img0 from "./Assets/Profile Pictures/Person1.svg"
 import img1 from "./Assets/Profile Pictures/Person2.svg"
 import img2 from "./Assets/Profile Pictures/Person3.svg"
@@ -20,6 +22,7 @@ import img4 from "./Assets/Profile Pictures/Person5.svg"
 import img5 from "./Assets/Profile Pictures/Person6.svg"
 import img6 from "./Assets/Profile Pictures/Person7.svg"
 import img7 from "./Assets/Profile Pictures/Person8.svg"
+
 
 function App() {
     const [showAddTransaction, setShowAddTransaction] = useState(false);
@@ -88,6 +91,8 @@ function App() {
             <Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/> 
              {/*  <Route path="/" element={<Login />} /> */}
               <Route path={"/settings"} element={<Settings/>}/>
+              <Route path={"/forget-password"} element={<ForgotPassword/>}/>
+              <Route path={"/reset-password"} element={<ResetPassword/>}/>
             </Routes>
               {showAddTransaction ? <AddTransaction closeModal={closeTransactionModal}/>:null}
               {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}

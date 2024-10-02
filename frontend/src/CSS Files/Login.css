@@ -106,6 +106,7 @@
     align-self: flex-end;
     margin-right: 5px;
     margin-top: 5px;
+    cursor: pointer;
     transition: color .2s ease, transform .2s ease;
 }
 
