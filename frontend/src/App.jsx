@@ -88,11 +88,11 @@ function App() {
           <header className="App-header">
             <Navbar pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
-            <Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/> 
-             {/*  <Route path="/" element={<Login />} /> */}
+            <Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/> =
               <Route path={"/settings"} element={<Settings/>}/>
               <Route path={"/forget-password"} element={<ForgotPassword/>}/>
               <Route path={"/reset-password"} element={<ResetPassword/>}/>
+              <Route path="/registration" element={<Registration />} />
             </Routes>
               {showAddTransaction ? <AddTransaction closeModal={closeTransactionModal}/>:null}
               {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}
