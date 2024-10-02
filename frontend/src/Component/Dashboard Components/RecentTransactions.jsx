@@ -16,7 +16,7 @@ const transactions = [
   { name: 'Netflix Subscription', amount: '$20.19' },
 ];
 
-const RecentTransactions = ({ openModal,}) => {
+const RecentTransactions = ({ openModal}) => {
   return (
     <div className="recent-transactions">
       <div className="transactions-header">

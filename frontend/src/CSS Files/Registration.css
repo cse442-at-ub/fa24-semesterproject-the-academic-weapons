@@ -1,11 +1,13 @@
-/* File: frontend/src/CSS Files/Login.css */
+/* File: frontend/src/CSS Files/Regristration.css */
 
-.LoginContainer * {
+
+.RegisterContainer *
+{
     margin: 0 auto;
     padding: 0;
 }
 
-.LoginContainer {
+.RegisterContainer {
   overflow-x: hidden; /* Prevents overflow in both x and y directions */
   height: 100vh; /* Full height of the viewport */
   width: 100vw; /* Full width of the viewport */
@@ -13,16 +15,13 @@
   padding: 0; /* Optional: Removes default padding */
   display: flex;
   justify-content: space-evenly;    
-  align-items: center;
+  align-items:center;
   z-index: 0;
 }
 
-
-
-
-.Login_box
+.Register_box
 {
-
+   /* margin-top: 20px;*/ 
     width:  35dvw;
     min-width: 420px;
     height: auto;
@@ -30,7 +29,7 @@
       
 }
 
-.Login_Title
+.Register_Title
 {
     display: flex;
     justify-content: center;
@@ -38,21 +37,20 @@
     background-color: #A3AAD9;
     width: 32dvw;
     min-width: 350px;
-    height: 180px;
+    height: 150px;
     border-radius: 10px;
     
     
 }
 
-
-.LoginContainer h1{
+.RegisterContainer h1{
     color: #FFFFFF;
     font-family: 'Assistant';
 }
 
-.LoginContainer .login_section
+.Register_section
 {
-    margin-top: 40px;
+    margin-top: 20px;
     width: 100%;
     height: auto;
     background-color: #F2F4F7;
@@ -65,62 +63,70 @@
     
 }
 
-.LoginContainer .email_section,.LoginContainer .password_section {
-    margin-top: 35px;
+
+
+.RegisterContainer .email_text,.RegisterContainer .password_text,.RegisterContainer .username_text {
+    color: #5661AC;
+    margin-left: 4px; /* Reset any default margins if needed Allowed it to go to left side*/
+}
+
+.pass_requir_txt
+{
+    margin-top: 10px;
+    width: 25dvw;
+    min-width: 250px;
+    margin-bottom: 2px;
+    font-size: 16px;
+    color: #7984D2;
+}
+
+.RegisterContainer .password_section, .RegisterContainer .confirm_password_section,.RegisterContainer  .username_section,.RegisterContainer .email_section
+{
+    margin-top: 20px;
     flex-direction: column;
     justify-content: center;
     height: auto;
     width: auto;
     display: flex;
-    align-items: flex-start; /* Keep this to align children to the left */
+    align-items: flex-start;
 }
 
-.LoginContainer .email_text,.LoginContainer .password_text {
-    color: #5661AC;
-    margin-left: 4px; /* Reset any default margins if needed Allowed it to go to left side*/
+.confirm_password_section
+{
+    margin-top: 20px;
+    flex-direction: column;
+    justify-content: center;
+    height: 100px;
+    width: auto;
+    display: flex;
+    align-items: flex-start;
 }
 
+.RegisterContainer input{
 
-.LoginContainer input{
-
-    max-height: 90px;
-    height: 7.5dvh;
-    min-height: 50px;
-
+    max-height: 77px;
+    height: 6.5dvh;
+    min-height: 20px;
     max-width: 500px;
     width: 30dvw;
     min-width: 250px;
     background-color: #E0E0E0;
     outline:2px solid #A3AAD9;
     border-radius: 4px;
-    padding-left: 15px;
+    padding-left: 10px;
     font-size: 18px;
     border: none;
 }
 
 
-.LoginContainer .forgot_password
+.Register_in_box
 {
-    color:#5661AC;
-    margin: 0;
-    align-self: flex-end;
-    margin-right: 5px;
-    margin-top: 5px;
-    transition: color .2s ease, transform .2s ease;
-}
-
-.LoginContainer .forgot_password:hover
-{
-    color:#7c87c9;
-}
-
-
-.LoginContainer .log_in_box
-{
-    margin-top: 50px;
+    margin-top: 20px;
     width: 20dvw;
     min-width: 250px;
-    height: 77px;
+    max-height: 77px;
+    height: 15dvh;
+    min-height: 50px;
     background-color: #E0E0E0;
     display: flex;
     justify-content: center;
@@ -131,76 +137,84 @@
     transition: background-color .2s, box-shadow .2s;
 }
 
-.LoginContainer .log_in_box:hover
+.Register_in_box:hover
 {
     background-color: #D0D0D0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.LoginContainer h2{
+.RegisterContainer h2{
     color: #5661AC;
 }
-.LoginContainer .Create_account
+.RegisterContainer .Log_in
 {
-    margin-top: 15px;  
+    margin-top: 20px;  
     color: #7984D2;
     margin-bottom: 15px;
-    
 }
-.LoginContainer .create_or_login
+
+
+.RegisterContainer .create_or_login
 {
     transition: color .2s ease, transform .2s ease;
 }
 
-.LoginContainer .create_or_login:hover
+.RegisterContainer .create_or_login:hover
 {
     color: #5567B3;
-    transform:scale(1.1)
+    transform:scale(1.2)
 }
 
 
+/* Below will be mobile changed*/
+
 @media screen and (max-width: 600px) {
 
-    .LoginContainer .Login_box {
+    .RegisterContainer .Register_box {
         width: 90vw;
         min-width: unset; /* Let it shrink naturally on smaller screens */
     }
 
-    .LoginContainer .Login_Title {
+    .RegisterContainer .Register_Title {
         width: 80vw;
-        height: 120px;
+        height: 100px;
         min-width: unset; /* Let it adjust for smaller screens */
     }
 
-    .LoginContainer .login_section {
+    .RegisterContainer .Register_section {
         width: 90vw;
-        margin-top: 40px;
+        margin-top: 10px;
         outline: none;
     }
 
+    .RegisterContainer .pass_requir_txt {
+        width: 85vw;
+        font-size: 16px; /* Make it slightly smaller for mobile */
 
-    .LoginContainer input {
+    }
+
+    .RegisterContainer input {
         width: 65vw;
-        height: 60px;
+        height: 45px;
         font-size: 16px;
     }
 
-    .LoginContainer .login_in_box {
+    .RegisterContainer .Register_in_box {
         width: 50vw;
-        height: 12dvh; /* Adjust height */
+        height: 10dvh; /* Adjust height */
     }
 
-    .LoginContainer .Create_account {
+    .RegisterContainer .Log_in {
         font-size: 18px;
     }
 
-    .LoginContainer .create_or_login {
+    .RegisterContainer .create_or_login {
         font-size: 16px;
         transform: scale(1); /* Reset scale effect */
     }
-    .LoginContainer .password_section, .LoginContainer .email_section
+    .RegisterContainer .password_section, .RegisterContainer .confirm_password_section,.RegisterContainer  .username_section,.RegisterContainer .email_section
     {
-        margin-top: 30px;
+        margin-top: 10px;
 
     }
 

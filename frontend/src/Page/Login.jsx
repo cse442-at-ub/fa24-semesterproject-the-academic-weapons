@@ -11,7 +11,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/routes/login.php', {
+      const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/login.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +27,9 @@ const Login = () => {
       console.log(data); // Log response data for debugging
   
       if (data.success) {
-        navigate('/dashboard');
+        sessionStorage.setItem("User", "1")
+        navigate('/');
+        window.location.reload()
       } else {
         alert(data.message || 'Login failed');
       }
@@ -39,25 +41,47 @@ const Login = () => {
   
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleLogin}>
-        <h2>Login</h2>
+    <div className='LoginContainer'>
+    <div className="Login_box">
+    <div className="Login_Title">
+      <h1>Wealth Wise</h1>
+    </div>
+    <form className="login_section" onSubmit={handleLogin}>
+      <div className="email_section">
+        <label htmlFor="username" className="email_text">Email</label>
         <input
-          type="text"
-          placeholder="Username"
+          type="email"
+          id="username"
+          name="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          required
         />
+      </div>
+      <div className="password_section">
+        <label htmlFor="password" className="password_text">Password</label>
         <input
           type="password"
-          placeholder="Password"
+          id="password"
+          name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
+          pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}"
+          title="Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character."
         />
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  );
+        <a className="forgot_password" href="#">Forgot Password</a>
+      </div>
+      <button type="submit" className="log_in_box">
+        <h2>Log in</h2>
+      </button>
+      <div className="Create_account">
+        Don't have an account? <a href="#"  class="create_or_login">Sign up</a>
+      </div>
+    </form>
+  </div>
+  </div>
+);
 };
 
 export default Login;
