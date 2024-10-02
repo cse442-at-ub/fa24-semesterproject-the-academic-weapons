@@ -15,7 +15,7 @@ const Registration = () => {
     //Checking if password are the same
     if(password !== confirmpassword)
     {
-      alert('Passwords do not match!')
+      alert('Passwords do not Match!')
       return 
     }
     try {
