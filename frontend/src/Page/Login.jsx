@@ -70,7 +70,7 @@ const Login = () => {
           pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}"
           title="Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character."
         />
-        <a className="forgot_password" href="#">Forgot Password</a>
+        <a className="forgot_password" onClick={e => navigate('/forget-password')}>Forgot Password</a>
       </div>
       <button type="submit" className="log_in_box">
         <h2>Log in</h2>

@@ -110,6 +110,14 @@
     align-self: flex-end;
     margin-right: 5px;
     margin-top: 5px;
+    cursor: pointer;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+.forgot_password:hover {
+  color: #0056b3; /* Color on hover */
+  background-color: #e9ecef; /* Background highlight on hover */
+
+  border-radius: 4px; /* Rounded corners */
 }
 
 .log_in_box

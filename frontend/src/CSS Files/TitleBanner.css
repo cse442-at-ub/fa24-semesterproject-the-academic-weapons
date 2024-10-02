@@ -1,0 +1,16 @@
+.title-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #A3AAD9;
+  width: 30vw;
+  min-width: 290px;
+  height: 150px;
+  border-radius: 10px;
+  margin: 30px auto; /* Center horizontally */
+}
+
+.title-banner h1 {
+  color: #FFFFFF;
+  font-size: 2rem;
+}

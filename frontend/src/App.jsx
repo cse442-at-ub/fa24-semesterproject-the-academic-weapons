@@ -11,6 +11,8 @@ import Navbar from './Component/Navbar';
 import {useState} from "react";
 import AddTransaction from "./Component/AddTransaction";
 import Homepage from "./Page/Homepage.jsx";
+import ForgotPassword from "./Page/ForgotPassword.jsx";
+import ResetPassword from "./Page/ResetPassword.jsx";
 
 
 function App() {
@@ -41,6 +43,8 @@ function App() {
             <Routes>
               <Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/>
               <Route path={"/settings"} element={<Settings/>}/>
+              <Route path={"/forget-password"} element={<ForgotPassword/>}/>
+              <Route path={"/reset-password"} element={<ResetPassword/>}/>
             </Routes>
               {showAddTransaction ? <AddTransaction closeModal={closeTransactionModal}/>:null}
               {showSettings ? <Settings closeSettings={closeSettings}/>:null}
