@@ -15,7 +15,7 @@ const Registration = () => {
     //Checking if password are the same
     if(password !== confirmpassword)
     {
-      alert('Passwords do not Match!')
+      alert('Passwords do not match!')
       return 
     }
     try {
@@ -41,7 +41,7 @@ const Registration = () => {
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while trying to registr.');
+      alert('An error occurred while trying to register.');
     }
   };
   
