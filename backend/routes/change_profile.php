@@ -57,6 +57,8 @@ $user_id = $_SESSION['id'];
 $sql = "UPDATE users SET profile_picture = ? WHERE id = ?";
 $stmt = $conn->prepare($sql);
 
+
+
 if (!$stmt) {
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $conn->error]);
     exit;
