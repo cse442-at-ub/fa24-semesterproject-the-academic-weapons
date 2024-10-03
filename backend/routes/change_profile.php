@@ -15,46 +15,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 header('Content-Type: application/json');
 
 // Check if the user is logged in
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    echo json_encode(['success' => false, 'message' => 'User not logged in']);
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+//     echo json_encode(['success' => false, 'message' => 'User not logged in']);
+//     exit;
+// }
+
+// Get JSON input
+$data = json_decode(file_get_contents('php://input'), true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    echo json_encode(['success' => false, 'message' => 'Invalid JSON: ' . json_last_error_msg()]);
     exit;
 }
 
-// Check if a file was uploaded
-if (!isset($_FILES['profile_picture']) || $_FILES['profile_picture']['error'] !== UPLOAD_ERR_OK) {
-    echo json_encode(['success' => false, 'message' => 'File upload error']);
-    exit;
-}
+// Retrieve new pfp
+$pfp = $data['pfp'] ?? 0;
 
-// Validate the uploaded file (e.g., check file type and size)
-$allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-$file_type = $_FILES['profile_picture']['type'];
-$file_size = $_FILES['profile_picture']['size'];
-
-if (!in_array($file_type, $allowed_types) || $file_size > 2 * 1024 * 1024) { // 2MB limit
-    echo json_encode(['success' => false, 'message' => 'Invalid file type or size']);
-    exit;
-}
-
-// Move the uploaded file to a designated directory
-$upload_dir = '../uploads/profile_pictures/';
-if (!is_dir($upload_dir)) {
-    mkdir($upload_dir, 0777, true);
-}
-
-$file_name = basename($_FILES['profile_picture']['name']);
-$target_file = $upload_dir . $file_name;
-
-if (!move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target_file)) {
-    echo json_encode(['success' => false, 'message' => 'Failed to move uploaded file']);
+if (empty($pfp)) {
+    echo json_encode(['success' => false, 'message' => 'New pfp is required']);
     exit;
 }
 
 // Get the current user's ID from the session
-$user_id = $_SESSION['id'];
+$user_id = $data['userID'];
 
-// Prepare SQL statement to update the profile picture path
-$sql = "UPDATE users SET profile_picture = ? WHERE id = ?";
+// Prepare SQL statement to update the pfp
+$sql = "UPDATE users SET avatar = ? WHERE id = ?";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
@@ -62,11 +47,11 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param("si", $target_file, $user_id);
+$stmt->bind_param("si", $pfp, $user_id);
 if ($stmt->execute()) {
     echo json_encode(['success' => true, 'message' => 'Profile picture updated successfully']);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Failed to update profile picture']);
+    echo json_encode(['success' => false, 'message' => 'Failed to update username']);
 }
 
 $stmt->close(); // Close the statement

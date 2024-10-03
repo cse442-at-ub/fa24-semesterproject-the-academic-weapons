@@ -15,10 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 header('Content-Type: application/json');
 
 // Check if the user is logged in
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    echo json_encode(['success' => false, 'message' => 'User not logged in']);
-    exit;
-}
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+//     echo json_encode(['success' => false, 'message' => 'User not logged in']);
+//     exit;
+// }
 
 // Get JSON input
 $data = json_decode(file_get_contents('php://input'), true);
@@ -28,7 +28,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 // Retrieve new username
-$new_username = $data['new_username'] ?? null;
+$new_username = $data['newUsername'] ?? 'Default';
 
 if (empty($new_username)) {
     echo json_encode(['success' => false, 'message' => 'New username is required']);
@@ -36,7 +36,7 @@ if (empty($new_username)) {
 }
 
 // Get the current user's ID from the session
-$user_id = $_SESSION['id'];
+$user_id = $data['userID'];
 
 // Prepare SQL statement to update the username
 $sql = "UPDATE users SET username = ? WHERE id = ?";

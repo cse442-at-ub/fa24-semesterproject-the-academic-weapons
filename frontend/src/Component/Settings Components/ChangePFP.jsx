@@ -1,16 +1,29 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
+import {useNavigate} from "react-router-dom";
 
 
 const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
+    const navigate = useNavigate();
+    const userID = sessionStorage.getItem('User');
 
-    const savePFP = async (e) => {
+    useEffect(() => {
+
+        if (!userID) {
+            sessionStorage.removeItem('User');
+            navigate('/')
+            window.location.reload();
+        }
+
+    })
+
+    const savePFP = async (pfp) => {
         let url = `${import.meta.env.VITE_API_PATH}/routes/change_profile.php`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({e}),
+            body: JSON.stringify({pfp, userID}),
         });
 
         if (!response.ok) {
