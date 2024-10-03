@@ -50,10 +50,10 @@ $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
-    
+
     // Verify the hashed password
     if (password_verify($password, $user['password'])) {
-        echo json_encode(['success' => true, 'message' => 'Login successful']);
+        echo json_encode(['success' => true, 'message' => 'Login successful', 'id' => $user['id'], 'username' => $user['username'], 'pfp' => $user['avatar']]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Invalid password']);
     }

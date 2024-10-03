@@ -3,7 +3,7 @@ import './CSS Files/Navbar.css';
 import './CSS Files/AddTransaction.css'
 import './CSS Files/Settings.css'
 import './CSS Files/Settings Components/ChangeModals.css'
-import {HashRouter, Routes, Route} from 'react-router-dom'
+import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
 import Settings from "./Page/Settings";
 import Login from './Page/Login';
 import Dashboard from './Page/Dashboard';
@@ -39,7 +39,7 @@ function App() {
             let getPFP = sessionStorage.getItem('pfp');
 
             if (getUsername) setUsername(getUsername);
-            if (getPFP) setPFP(parseInt(getPFP));
+            if (getPFP) setPFP(parseInt(getPFP) || 0);
             setIsLoaded(true);
         }
 
@@ -96,6 +96,7 @@ function App() {
             </Routes>
               {showAddTransaction ? <AddTransaction closeModal={closeTransactionModal}/>:null}
               {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}
+
           </header>
         </div>
       </HashRouter>
