@@ -1,10 +1,43 @@
 .highest-spending {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     font-weight: bold;
+    min-height: 300px; /* Set a minimum height */
+    max-height: 600px;
   }
   
-  .highest-spending h2 {
-    color: #8884d8;
-    font-size: 2rem;
+.high_spend_container
+{
+  width: auto;
+  min-height: 300px; /* Set a minimum height */
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+  .highest-spending h3 {
+    justify-self: center;
+    width: 250px;
+    height: auto;
+    overflow: hidden;
+    color: #5661AC;
+    border-radius: 20px;
+    margin:15px;
+    display: block;
+    font-size: 1.25rem;
+    word-wrap: break-word;
+    border: 3px dotted #ccc; 
+    padding: 5px;
+    
+  }
+
+  
+
+/* Meant for when dynamic input is given Perhaps truncate after couple characters like 25 */
+  .highest-spending h3.dynamic
+  {
+    white-space: normal;
   }
   

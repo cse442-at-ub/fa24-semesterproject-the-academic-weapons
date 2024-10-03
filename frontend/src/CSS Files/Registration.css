@@ -22,8 +22,9 @@
 
 .RegisterContainer  .create_or_login
 {
+    display: inline-block;
     cursor: pointer;
-    margin-left: 5px;
+    width: auto;
 }
 
 .Register_box

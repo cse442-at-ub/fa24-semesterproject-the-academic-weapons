@@ -79,13 +79,7 @@ const Login = () => {
               <h2>Log in</h2>
             </button>
             <div className="Create_account">
-              Don't have an account?
-              <div
-                  className="create_or_login"
-                  onClick={() => navigate('/registration')}
-              >
-                Sign up
-              </div>
+              Don't have an account? <div className="create_or_login" onClick={() => navigate('/registration')}> Sign up</div>
             </div>
           </form>
         </div>

@@ -4,30 +4,35 @@ import MainPieChart from '../Component/Dashboard Components/MainPieChart';
 import BarChartComponent from '../Component/Dashboard Components/BarChartComponent.jsx';
 import RecentTransactions from '../Component/Dashboard Components/RecentTransactions';
 import HighestSpending from '../Component/Dashboard Components/HighestSpending';
+import Navbar from "../Component/Navbar.jsx";
 
 const Dashboard = ({openModal}) => {
   return (
     <div className="dashboard">
             <div className="dashboard-content">
-        {/* Upper-left box - Pie Chart */}
+        {/*- Pie Chart */}
         <div className="box pie-chart-box">
+        <h2 className="Category_spend_txt">Category Spending</h2>
           <MainPieChart />
+          
         </div>
 
-        {/* Upper middle - Bar Chart (spans 2 columns) */}
+        {/* - Bar Chart  */}
         <div className="box bar-chart-box">
           <BarChartComponent />
         </div>
 
-        {/* Right column - Recent Transactions (spans 2 rows) */}
+
+        {/*  - Recent Transactions  */}
         <div className="box recent-transactions-box">
           <RecentTransactions openModal={openModal} />
         </div>
 
-        {/* Lower-left box - Highest Spending Category */}
+        {/* - Highest Spending Category */}
         <div className="box highest-spending-box">
-          <HighestSpending />
-        </div>
+      <HighestSpending />
+      </div>
+
       </div>
     </div>
   );

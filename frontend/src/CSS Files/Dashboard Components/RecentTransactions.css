@@ -3,6 +3,9 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  
+  min-height: 300px; /* Set a minimum height */
+  max-height: 600px;
 }
 
 .transactions-header {
@@ -33,19 +36,67 @@
   background-color: #6b5fb5;
 }
 
+
+
 .transactions-list {
-  margin-top: 10px;
- 
+  
+  background-color: #D9D9D9;
+  width: auto;
+  height: 500px;
+  overflow-x: hidden;
+  margin: 10px 10px 10px 10px;
+  border-radius: 5px;
   overflow-y: auto;
 }
 
-.transaction {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #f0f0f0;
+/* THIS PART WILL BE TESTING OF HOVERING OVER scollwheel thingy */
+/* .transactions-list::-webkit-scrollbar 
+{
+  width: 0;
 }
 
+.transactions-list:hover::-webkit-scrollbar 
+{
+  width: 8px;
+}
+
+.transactions-list::-webkit-scrollbar-track 
+{
+  background:transparent;
+}
+
+.transactions-list::-webkit-scrollbar-thumb 
+{
+  background: rgba(168, 31, 31, 0.3);
+  border-radius: 10px;
+}
+
+.transactions-list:hover::-webkit-scrollbar-thumb:hover
+{
+  background: rgba(196, 8, 8, 0.5);
+} */
+
+/* END OF SCROLL TESTING didnt work :( */
+
+
+
+/* This seems to be each item part  */
+.transaction {
+  background-color: #F2F4F7;
+  width: 250px;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  font-size: 1.25rem;
+  margin:15px;
+  border-radius: 20px;
+}
+/* This seems to be the money sign part  */
 .transaction span {
+
   font-size: 1rem;
+}
+.transaction_amount
+{
+  font-weight: bold;
 }
