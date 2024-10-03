@@ -3,7 +3,7 @@ import logo from '../logo.svg';
 import person1 from '../Assets/Profile Pictures/Person1.svg'
 import {Link, useLocation, useNavigate} from "react-router-dom";
 
-const Navbar = ({ openModal, openSettings }) => {
+const Navbar = ({ openModal, openSettings, pfpMap, pfp }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const userID = sessionStorage.getItem("User")
@@ -31,7 +31,7 @@ const Navbar = ({ openModal, openSettings }) => {
                 <div onClick={openModal}>Add Transaction</div>
             </div>
             <div className="navbar-profile">
-                <img onClick={openSettings} src={person1} alt="Profile Icon" className="profile-icon"/>
+                <img onClick={openSettings} src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon"/>
                 <div onClick={logout}>Log Out</div>
             </div>
         </nav>

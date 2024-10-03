@@ -6,6 +6,7 @@ import TitleBanner from '../Component/TitleBanner.jsx';
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -13,6 +14,11 @@ const ResetPassword = () => {
 
   // Get token from URL (assuming the token is passed as a query parameter)
   const token = searchParams.get('token');
+
+  // Automatically set the code from the token in the URL if available
+  useState(() => {
+    if (token) setCode(token);
+  }, [token]);
 
   const validatePassword = (pwd) => {
     if (pwd.length < 8) return 'Password must be at least 8 characters long.';
@@ -42,12 +48,12 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_PATH}/reset-password.php`, {
+      const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/reset-password.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password, token }),
+        body: JSON.stringify({ password, token: code }),
       });
 
       if (!response.ok) {
@@ -76,9 +82,23 @@ const ResetPassword = () => {
       <div className="reset-password-box">
         <div className="reset-password-title">
           <h2>Reset Password</h2>
-          <p>Enter a new password to reset your account password.</p>
+          <p>Enter the token and a new password to reset your account password.</p>
         </div>
+
         <form onSubmit={handleResetPassword} className="reset-password-form">
+          {/* Code input section */}
+          <div className="code-section">
+            <label htmlFor="code">Code</label>
+            <input
+              type="text"
+              id="code"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              required
+              placeholder="Enter the code"
+            />
+          </div>
+
           <div className="password-section">
             <label htmlFor="password">New Password</label>
             <input
@@ -87,6 +107,7 @@ const ResetPassword = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              placeholder="Enter a new Password"
               pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}"
               title="Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character."
             />
@@ -99,11 +120,12 @@ const ResetPassword = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              placeholder="Please Confirm Password"
             />
           </div>
           {error && <p className="error-message">{error}</p>}
           {message && <p className="success-message">{message}</p>}
-          <button type="submit" className="reset-button" onClick={() => navigate('/')}>Reset Password</button>
+          <button type="submit" className="reset-button">Reset Password</button>
           <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
         </form>
       </div>

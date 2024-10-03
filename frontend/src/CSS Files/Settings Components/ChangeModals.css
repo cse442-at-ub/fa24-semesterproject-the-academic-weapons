@@ -105,3 +105,26 @@
     width: 100%;
     margin-inline: auto;
 }
+
+.change_pfp_options_container {
+    justify-content: space-around;
+    gap: 30px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 240px;
+}
+
+.profile_picture_container {
+    margin-inline: auto;
+    margin-bottom: 20px;
+    width: fit-content;
+    height: fit-content;
+    cursor: pointer;
+}
+
+.profile_picture_option {
+    height: 50px;
+    width: 50px;
+}
