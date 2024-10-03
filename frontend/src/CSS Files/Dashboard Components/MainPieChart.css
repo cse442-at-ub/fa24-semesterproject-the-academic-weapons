@@ -8,6 +8,12 @@
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
     width: 450px; /* Fixed width to prevent resizing */
-    height: 450px; /* Fixed height */
+    height: auto; /* Changed to auto so that each box doesnt take unneccesary Y axis stuff */
+    /* HOWEVEV we need to test min height so it doenst break perhaps*/
   }
   
+ /* Fixed height */ 
+ .dashboard-content .Category_spend_txt
+  {
+    text-align: center;
+  }

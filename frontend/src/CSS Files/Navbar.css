@@ -5,12 +5,14 @@
     background-image: url("../Assets/Background.png");
     padding: 10px 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    gap: 20px;
   }
 
   .navbar-logo {
     display: flex;
     align-items: center;
     cursor: pointer;
+    margin-right: auto;
   }
 
   .logo-image {
@@ -27,7 +29,6 @@
 
   .navbar-links {
     display: flex;
-    gap: 30px;
   }
 
   .navbar-links a, .navbar-links div {
@@ -41,6 +42,7 @@
   .navbar-profile {
     display: flex;
     align-items: center;
+    gap: 20px;
   }
 
   .profile-icon {
@@ -48,6 +50,11 @@
     width: 30px;
     height: 30px;
     margin-right: 10px;
+    transition: transform .2s ease-in-out;
+  }
+  .profile-icon:hover
+  {
+    transform: scale(1.15);
   }
 
   .navbar-profile a {
@@ -57,3 +64,14 @@
     font-weight: bold;
   }
   
+  .navbar .logout_text
+  {
+    transition: transform .2s ease-in, color .2s, ease-in;
+    color: black;
+  }
+  .navbar .logout_text:hover
+  {
+    color: rgb(129, 129, 129);
+    cursor: pointer;
+  }
+

@@ -1,7 +1,12 @@
 .App {
-    height: 100vh;
-    width: 100vw;
+    height: auto;
+    width: auto;
     color: black;
     background-image: url("./Assets/Background.png");
     background-repeat: repeat;
 }
+
+/* Changed height and width to auto
+    then make sure your container 
+    makes use of height and width so it can adjust accoridingly
+*/

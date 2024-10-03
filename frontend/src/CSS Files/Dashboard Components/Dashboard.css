@@ -3,18 +3,27 @@
   display: flex;
   flex-direction: column;
   background-color: #f0f0f0;
-  min-height: 100vh;
+  height: auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  min-width: 650px;
 }
 
-/* Grid layout with 2 rows and 4 columns */
+
+/* Grid layout with 2 rows and 4 columns */ /* This will be cut out since i think it might be best to use flexboxes instead, so it can wrap if size is to small
+Plus with wrap we could add the feature of moving boxes since flex would be resposible of change where to move it and adjusting it*/
 .dashboard-content {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  grid-gap: 20px;
-  padding: 20px;
+  display: flex;
+  flex: 1 1 auto;
+  gap: 10px;
+  padding: 10px;
   background-color: #f0f0f0;
   margin-top: 20px;
+  width: auto; /* Width might be weird cuz padding on each side  */
+  box-sizing: border-box;
+  flex-wrap: wrap;
 }
 
 /* Common styles for all boxes */
@@ -23,31 +32,43 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  flex: 0 1 auto;
+  max-width: auto;
+  width: auto;
+  height: auto;
+  margin: auto;
+  /* Currently there is no option for growing the size unless we crea
+  max width for everything sooooooo that needs to be adjusted for */
 }
 
-/* Pie Chart - Upper-left box */
+/* Pie Chart -Category box Upper-left box */
 .pie-chart-box {
-  grid-column: 1;
-  grid-row: 1;
+  min-height: 400px; /* Set a minimum height */
+  max-height: 800px;
+  
+
 }
 
 /* Bar Chart - Spans upper middle two boxes */
 .bar-chart-box {
-  grid-column: 2 / span 2;
-  grid-row: 1;
+  min-height: 300px; /* Set a minimum height */
+  max-height: 600px;
+
 }
 
 /* Recent Transactions - Spans entire right column (2 rows) */
 .recent-transactions-box {
-  grid-column: 4;
-  grid-row: 1 / span 2;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 300px; /* Set a minimum height */
+  max-height: 600px;
+  
 }
 
 /* Highest Spending - Lower-left box */
 .highest-spending-box {
-  grid-column: 1;
-  grid-row: 2;
+  min-height: 300px; /* Set a minimum height */
+  max-height: 600px;
+  
 }

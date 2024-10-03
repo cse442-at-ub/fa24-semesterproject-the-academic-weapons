@@ -3,10 +3,14 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'rec
 import '../../CSS Files/Dashboard Components/BarChartComponent.css';
 
 const barData = [
-  { name: 'Food', value: 1.4 },
-  { name: 'Clothes', value: 2.4 },
-  { name: 'Subscriptions', value: 95.2 },
-  { name: 'Gas', value: 1 },
+  { name: 'Sep', value: 45 },
+  { name: 'Oct', value: 2.4 },
+  { name: 'Nov', value: 95.2 },
+  { name: 'Dec', value: 3 },
+  { name: 'Jan', value: 42 },
+  { name: 'Feb', value: 11 },
+  { name: 'Mar', value: 15 },
+  { name: 'Apr', value: 65 },
 ];
 
 const BarChartComponent = () => {
@@ -15,12 +19,19 @@ const BarChartComponent = () => {
       {/* Add button in top right */}
       <div className="bar-chart-header">
         <h3>Monthly Spending</h3>
-        <button className="add-button">Add</button>
+        
       </div>
       
       {/* Center the bar chart */}
       <div className="bar-chart-wrapper">
-        <BarChart width={300} height={200} data={barData}>
+        {/* Graph width needs to be able to adjust like 
+          max-width: 650px;
+          min-width: 400px;
+          max-height: 400px;
+          min-height: 200px;
+          So move it dynamically especially with mobile
+        */}
+        <BarChart width={600} height={400} data={barData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
