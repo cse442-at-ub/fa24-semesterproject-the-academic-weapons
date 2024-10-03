@@ -66,7 +66,7 @@ $resetLink = "https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/zcsanger/#/reset-p
 
 // Email details
 $subject = "Password Reset Request";
-$body = "Hello,\n\nClick the link below to reset your password:\n$resetLink\n\nThis link will expire in 1 hour.\n\nIf you did not request a password reset, please ignore this email.";
+$body = "Hello,\n\nPlease see your code below:\nCode: $token\nClick the link below to reset your password:\n$resetLink\n\nThis link will expire in 1 hour.\n\nIf you did not request a password reset, please ignore this email.";
 $headers = 'From: no-reply@yourdomain.com';
 
 // Send the email
