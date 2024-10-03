@@ -1,9 +1,9 @@
 <?php
 
 $servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$dbname = "test";
+$username = "mjlyskaw";
+$password = "50393887";
+$dbname = "cse442_2024_fall_team_an_db";
 
 
 // Create connection

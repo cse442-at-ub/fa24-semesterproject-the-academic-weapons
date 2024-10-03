@@ -7,17 +7,21 @@
 
 .LoginContainer {
   overflow-x: hidden; /* Prevents overflow in both x and y directions */
-  height: 100vh; /* Full height of the viewport */
+  height: 110vh; /* Full height of the viewport */
   width: 100vw; /* Full width of the viewport */
   margin: 0; /* Optional: Removes default margin */
   padding: 0; /* Optional: Removes default padding */
   display: flex;
-  justify-content: space-evenly;    
+  justify-content: space-evenly;
   align-items: center;
   z-index: 0;
 }
 
-
+.LoginContainer  .create_or_login
+{
+    cursor: pointer;
+    margin-left: 5px;
+}
 
 
 .Login_box
@@ -40,7 +44,7 @@
     min-width: 350px;
     height: 180px;
     border-radius: 10px;
-    
+    cursor: pointer;
     
 }
 
@@ -206,4 +210,3 @@
     }
 
 }
-

@@ -1,7 +1,20 @@
 import React, { useEffect, useState } from "react";
+import {useNavigate} from "react-router-dom";
 
 const ChangeUsername = ({ closeModal, changeUsername }) => {
     const [newUsername, setNewUsername] = useState('');
+    const navigate = useNavigate();
+    const userID = sessionStorage.getItem('User');
+
+    useEffect(() => {
+
+        if (!userID) {
+            sessionStorage.removeItem('User');
+            navigate('/')
+            window.location.reload();
+        }
+
+    })
 
     const updateUsername = () => {
         changeUsername(newUsername);
@@ -10,13 +23,13 @@ const ChangeUsername = ({ closeModal, changeUsername }) => {
     }
 
     const saveUsernameToDatabase = async () => {
-        let url = `${import.meta.env.VITE_API_PATH}/routes/save-username`
+        let url = `${import.meta.env.VITE_API_PATH}/routes/change_username.php`
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({newUsername}),
+            body: JSON.stringify({newUsername, userID}),
         });
 
         if (!response.ok) {

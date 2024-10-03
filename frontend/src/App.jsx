@@ -3,7 +3,7 @@ import './CSS Files/Navbar.css';
 import './CSS Files/AddTransaction.css'
 import './CSS Files/Settings.css'
 import './CSS Files/Settings Components/ChangeModals.css'
-import {HashRouter, Routes, Route} from 'react-router-dom'
+import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
 import Settings from "./Page/Settings";
 import Login from './Page/Login';
 import Dashboard from './Page/Dashboard';
@@ -39,7 +39,7 @@ function App() {
             let getPFP = sessionStorage.getItem('pfp');
 
             if (getUsername) setUsername(getUsername);
-            if (getPFP) setPFP(parseInt(getPFP));
+            if (getPFP) setPFP(parseInt(getPFP) || 0);
             setIsLoaded(true);
         }
 
@@ -88,14 +88,15 @@ function App() {
           <header className="App-header">
             <Navbar pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
-            <Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/> 
-             {/*  <Route path="/" element={<Login />} /> */}
+            <Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/> =
               <Route path={"/settings"} element={<Settings/>}/>
               <Route path={"/forget-password"} element={<ForgotPassword/>}/>
               <Route path={"/reset-password"} element={<ResetPassword/>}/>
+              <Route path="/registration" element={<Registration />} />
             </Routes>
               {showAddTransaction ? <AddTransaction closeModal={closeTransactionModal}/>:null}
               {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}
+
           </header>
         </div>
       </HashRouter>

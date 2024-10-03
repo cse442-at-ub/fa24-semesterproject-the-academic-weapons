@@ -1,10 +1,45 @@
-import React from "react"
+import React, {useEffect, useState} from "react"
+import {useNavigate} from "react-router-dom";
 
 
 const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
+    const navigate = useNavigate();
+    const userID = sessionStorage.getItem('User');
 
-    const setNewPFP = (e) => {
+    useEffect(() => {
+
+        if (!userID) {
+            sessionStorage.removeItem('User');
+            navigate('/')
+            window.location.reload();
+        }
+
+    })
+
+    const savePFP = async (pfp) => {
+        let url = `${import.meta.env.VITE_API_PATH}/routes/change_profile.php`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({pfp, userID}),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        if (!data.success) {
+            alert(data.message || 'Saving new profile picture failed!');
+        }
+    }
+
+    const newPFP = (e) => {
         changePFP(e);
+        savePFP(e)
         closeModal();
     }
 
@@ -17,7 +52,7 @@ const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
                 </div>
                 <div className={"change_pfp_options_container"}>
                     {Object.values(pfpMap).map((pic, index) =>
-                    <div onClick={e => setNewPFP(index)} className={"profile_picture_container"} key={index}>
+                    <div onClick={e => newPFP(index)} className={"profile_picture_container"} key={index}>
                         <img className={"profile_picture_option"} src={pic} alt={"Profile picture option " + index}/>
                     </div>
                     )}

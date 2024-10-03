@@ -9,14 +9,21 @@
 
 .RegisterContainer {
   overflow-x: hidden; /* Prevents overflow in both x and y directions */
-  height: 100vh; /* Full height of the viewport */
+  height: fit-content; /* Full height of the viewport */
   width: 100vw; /* Full width of the viewport */
   margin: 0; /* Optional: Removes default margin */
-  padding: 0; /* Optional: Removes default padding */
+  padding-bottom: 50px; /* Optional: Removes default padding */
+    padding-top: 20px;
   display: flex;
   justify-content: space-evenly;    
   align-items:center;
   z-index: 0;
+}
+
+.RegisterContainer  .create_or_login
+{
+    cursor: pointer;
+    margin-left: 5px;
 }
 
 .Register_box
@@ -39,7 +46,9 @@
     min-width: 350px;
     height: 150px;
     border-radius: 10px;
-    
+    cursor: pointer;
+    color: #FFFFFF;
+    font-family: 'Assistant';
     
 }
 
@@ -219,4 +228,3 @@
     }
 
 }
-
