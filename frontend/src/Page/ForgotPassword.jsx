@@ -16,44 +16,46 @@ const ForgotPassword = () => {
   };
 
   const handleForgotPassword = async (e) => {
-    e.preventDefault();
-    setMessage('');
-    setError('');
+  e.preventDefault();
+  setMessage('');
+  setError('');
 
-    // Validate email format
-    if (!isValidEmail(email)) {
-      setError('Please enter a valid email address.');
-      return;
+  if (!isValidEmail(email)) {
+    setError('Please enter a valid email address.');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/forgot-password.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    // Check the status before reading the body
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
 
-    try {
-      // Send request to your server (replace with your actual API endpoint)
-      const response = await fetch(`${import.meta.env.VITE_API_PATH}/forgot-password.php`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+    // Read the response body only once
+    const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        setMessage('Password recovery link has been sent to your email.');
-        // Redirect to reset-password page if successful
-        setTimeout(() => navigate(`/reset-password?email=${encodeURIComponent(email)}`), 1500);
-      } else {
-        setError(data.message || 'An error occurred. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setError('An error occurred while trying to send the recovery email.');
+    // Handle the success response
+    if (data.success) {
+      setMessage('Password recovery link has been sent to your email.');
+      setTimeout(() => navigate(`/reset-password?email=${encodeURIComponent(email)}`), 1500);
+    } else {
+      setError(data.message || 'An error occurred. Please try again.');
     }
-  };
+  } catch (error) {
+    console.error('Error:', error);
+    setError('An error occurred while trying to send the recovery email.');
+  }
+};
+
+
 
   return (
     <div className="forgot-password-container">
