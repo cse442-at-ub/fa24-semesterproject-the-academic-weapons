@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import '../CSS Files/ResetPassword.css';
 import TitleBanner from '../Component/TitleBanner.jsx';
@@ -6,19 +6,19 @@ import TitleBanner from '../Component/TitleBanner.jsx';
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [code, setCode] = useState('');
+  const [token, setToken] = useState(''); // Changed from `code` to `token`
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   // Get token from URL (assuming the token is passed as a query parameter)
-  const token = searchParams.get('token');
+  const urlToken = searchParams.get('token');
 
-  // Automatically set the code from the token in the URL if available
-  useState(() => {
-    if (token) setCode(token);
-  }, [token]);
+  // Automatically set the token from the URL if available
+  useEffect(() => {
+    if (urlToken) setToken(urlToken);
+  }, [urlToken]);
 
   const validatePassword = (pwd) => {
     if (pwd.length < 8) return 'Password must be at least 8 characters long.';
@@ -47,13 +47,16 @@ const ResetPassword = () => {
       return;
     }
 
+    // Debugging: Log payload before sending
+    console.log('Request Payload:', JSON.stringify({ password, token }));
+
     try {
       const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/reset-password.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password, token: code }),
+        body: JSON.stringify({ password, token }), // Send `token` instead of `code`
       });
 
       if (!response.ok) {
@@ -65,7 +68,10 @@ const ResetPassword = () => {
       if (data.success) {
         setMessage(data.message);
         // Redirect to login page after a successful reset
-        setTimeout(() => navigate('/login'), 2000);
+        //setTimeout(() => navigate('/'), 2000);
+        sessionStorage.setItem("User", "1")
+        navigate('/');
+        window.location.reload()
       } else {
         setError(data.message || 'Failed to reset password. Please try again.');
       }
@@ -88,14 +94,14 @@ const ResetPassword = () => {
         <form onSubmit={handleResetPassword} className="reset-password-form">
           {/* Code input section */}
           <div className="code-section">
-            <label htmlFor="code">Code</label>
+            <label htmlFor="token">Token</label> {/* Changed label to "Token" */}
             <input
               type="text"
-              id="code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
+              id="token"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
               required
-              placeholder="Enter the code"
+              placeholder="Enter the token"
             />
           </div>
 
@@ -107,7 +113,7 @@ const ResetPassword = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Enter a new Password"
+              placeholder="Enter a new password"
               pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}"
               title="Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character."
             />
@@ -120,7 +126,7 @@ const ResetPassword = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              placeholder="Please Confirm Password"
+              placeholder="Please confirm password"
             />
           </div>
           {error && <p className="error-message">{error}</p>}

@@ -30,7 +30,7 @@
     gap: 30px;
   }
 
-  .navbar-links a, .navbar-links div {
+  .navbar-links a, .navbar-links div, navbar-Logout {
     cursor: pointer;
     text-decoration: none;
     color: black;
@@ -41,6 +41,7 @@
   .navbar-profile {
     display: flex;
     align-items: center;
+    cursor: pointer;
   }
 
   .profile-icon {

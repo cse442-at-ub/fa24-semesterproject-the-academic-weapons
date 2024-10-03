@@ -32,7 +32,7 @@ const Navbar = ({ openModal, openSettings, pfpMap, pfp }) => {
             </div>
             <div className="navbar-profile">
                 <img onClick={openSettings} src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon"/>
-                <div onClick={logout}>Log Out</div>
+                <div className="navbar-Logout" onClick={logout}>Log Out</div>
             </div>
         </nav>
     );
