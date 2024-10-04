@@ -1,74 +1,71 @@
-/* Dashboard layout */
-.dashboard {
-  display: flex;
-  flex-direction: column;
-  background-color: #f0f0f0;
-  height: auto;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  min-width: 650px;
-}
-
-
-/* Grid layout with 2 rows and 4 columns */ /* This will be cut out since i think it might be best to use flexboxes instead, so it can wrap if size is to small
-Plus with wrap we could add the feature of moving boxes since flex would be resposible of change where to move it and adjusting it*/
+/* Grid layout for the dashboard */
 .dashboard-content {
-  display: flex;
-  flex: 1 1 auto;
-  gap: 10px;
-  padding: 10px;
-  background-color: #f0f0f0;
-  margin-top: 20px;
-  width: auto; /* Width might be weird cuz padding on each side  */
-  box-sizing: border-box;
-  flex-wrap: wrap;
-}
-
-/* Common styles for all boxes */
-.box {
-  background-color: white;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* Three columns layout */
+  grid-template-rows: auto auto; /* Two rows layout */
+  grid-gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
+}
+
+/* Box styling */
+.box {
+  background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  flex: 0 1 auto;
-  max-width: auto;
-  width: auto;
-  height: auto;
-  margin: auto;
-  /* Currently there is no option for growing the size unless we crea
-  max width for everything sooooooo that needs to be adjusted for */
-}
-
-/* Pie Chart -Category box Upper-left box */
-.pie-chart-box {
-  min-height: 400px; /* Set a minimum height */
-  max-height: 800px;
-  
-
-}
-
-/* Bar Chart - Spans upper middle two boxes */
-.bar-chart-box {
-  min-height: 300px; /* Set a minimum height */
-  max-height: 600px;
-
-}
-
-/* Recent Transactions - Spans entire right column (2 rows) */
-.recent-transactions-box {
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 300px; /* Set a minimum height */
-  max-height: 600px;
-  
+  justify-content: center;
+  align-items: center;
 }
 
-/* Highest Spending - Lower-left box */
+/* Pie Chart Box (center of the grid) */
+.pie-chart-box {
+  grid-column: 2; /* Place in the center column */
+  grid-row: 1;    /* Place in the first row */
+}
+
+/* Highest Spending Category (left of the pie chart) */
 .highest-spending-box {
-  min-height: 300px; /* Set a minimum height */
-  max-height: 600px;
-  
+  grid-column: 1; /* Left column */
+  grid-row: 1;    /* Place in the first row */
+}
+
+/* Recent Transactions (right of the pie chart) */
+.recent-transactions-box {
+  grid-column: 3; /* Right column */
+  grid-row: 1;    /* Place in the first row */
+}
+
+/* Bar Chart Box (bottom of the grid, spanning full width) */
+.bar-chart-box {
+  grid-column: 1 / 4; /* Span all three columns */
+  grid-row: 2;        /* Place in the second row */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .dashboard-content {
+    grid-template-columns: 1fr; /* Stack all components vertically on small screens */
+    grid-template-rows: auto; /* One row layout */
+  }
+
+  /* Override the stacking order */
+  .bar-chart-box {
+    grid-row: 1; /* First in stack */
+  }
+
+  .pie-chart-box {
+    grid-row: 2; /* Second in stack */
+  }
+
+  .highest-spending-box {
+    grid-row: 3; /* Third in stack */
+  }
+
+  .recent-transactions-box {
+    grid-row: 4; /* Last in stack */
+  }
 }
