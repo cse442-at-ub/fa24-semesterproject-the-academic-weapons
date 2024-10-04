@@ -30,6 +30,7 @@ function App() {
     const [pfp, setPFP] = useState(0);
     const [username, setUsername] = useState("DefaultName")
     const [isLoaded, setIsLoaded] = useState(false)
+    const [transactions, setTransactions] = useState([]);
 
 
     useEffect(() => {
@@ -54,6 +55,19 @@ function App() {
         5: img5,
         6: img6,
         7: img7
+    }
+
+    const addTransaction = (newItem) => {
+        const newTransactions = transactions;
+        newTransactions.push(newItem)
+        setTransactions(newTransactions);
+    }
+
+    const removeTransaction = (id) => {
+        const removeIdx = transactions.findIndex(transaction => transaction.id === id);
+        const newTransactions = transactions
+        newTransactions.splice(removeIdx, 1);
+        setTransactions(newTransactions)
     }
 
     const openTransactionModal = () => {
@@ -88,13 +102,13 @@ function App() {
           <header className="App-header">
             <Navbar pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
-            <Route path={"/"} element={<Homepage openModal={openTransactionModal}/>}/> =
+            <Route path={"/"} element={<Homepage transactions={transactions} openModal={openTransactionModal}/>}/> =
               <Route path={"/settings"} element={<Settings/>}/>
               <Route path={"/forget-password"} element={<ForgotPassword/>}/>
               <Route path={"/reset-password"} element={<ResetPassword/>}/>
               <Route path="/registration" element={<Registration />} />
             </Routes>
-              {showAddTransaction ? <AddTransaction closeModal={closeTransactionModal}/>:null}
+              {showAddTransaction ? <AddTransaction addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>:null}
               {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}
 
           </header>

@@ -1,20 +1,140 @@
 .add_trans_modal_container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin-inline: auto;
+    width: 100vw;
+    height: 120vh;
+    max-height: 100%;
+    overflow-y: auto;
+    background-color: #5661AC;
+    margin-bottom: 20px;
+}
+
+.add_trans_modal_container_inside {
     position: absolute;
     top: 0;
     left: 0;
     margin-inline: auto;
     width: 100vw;
-    height: 100vh;
-    background-color: #5661AC;
-}
-
-.add_trans_modal_container_inside {
-    position: absolute;
-    top: 50px;
-    left: 50px;
-    margin-inline: auto;
-    width: 100vw;
-    height: calc(100vh - 50px);
+    height: calc(120vh - 50px);
     background-color: #7984D2;
     border-top-left-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.add_trans_input_form_container {
+    margin-top: 20px;
+    width: 50%;
+}
+
+.add_trans_title {
+    font-size: 45px;
+    text-align: center;
+    color: white;
+    font-weight: normal;
+    font-family: Arial, sans-serif;
+}
+
+.add_trans_form_input_group {
+    width: 60%;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.add_trans_input_label {
+    font-size: 25px;
+    color: white;
+    margin-bottom: 2px;
+}
+
+.required_field {
+    color: red;
+}
+
+.add_trans_input_field {
+    padding-inline: 10px;
+    font-size: 20px;
+    height: 40px;
+    outline: 1px solid rgba(0, 0, 0, 0);
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 5px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.add_trans_add_btn {
+    border: 1px solid rgb(0,0,0,0);
+    background-color: white;
+    border-radius: 30px;
+    font-size: 25px;
+    margin-top: 20px;
+    width: 200px;
+    padding: 10px;
+    margin-inline: auto;
+    cursor: pointer;
+    transition: background-color .3s ease;
+}
+
+.add_trans_add_btn:hover {
+    background-color: #d3d3d3;
+}
+
+.add_trans_close_text {
+    text-align: center;
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color .3s ease;
+}
+
+.add_trans_close_text:hover {
+    color: #d3d3d3;
+}
+
+.add_trans_added_box_container {
+    margin-top: 20px;
+    width: 50%;
+}
+
+.add_trans_added_box {
+    padding: 10px;
+    border-radius: 10px;
+    margin-inline: auto;
+    background-color: white;
+    width: 85%;
+    height: 360px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    overflow-y: scroll;
+}
+
+.add_trans_added_save_exit_container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.add_trans_added_transaction_item {
+    margin-top: 15px;
+    background-color: #d9d9d9;
+    width: 90%;
+    margin-inline: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+
+}
+
+.add_trans_added_item_text {
+    font-size: 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.add_trans_added_text {
+    margin: 5px;
 }

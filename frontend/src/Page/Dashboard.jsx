@@ -6,7 +6,7 @@ import RecentTransactions from '../Component/Dashboard Components/RecentTransact
 import HighestSpending from '../Component/Dashboard Components/HighestSpending';
 import Navbar from "../Component/Navbar.jsx";
 
-const Dashboard = ({openModal}) => {
+const Dashboard = ({openModal, transactions}) => {
   return (
     <div className="dashboard">
             <div className="dashboard-content">
@@ -25,7 +25,7 @@ const Dashboard = ({openModal}) => {
 
         {/*  - Recent Transactions  */}
         <div className="box recent-transactions-box">
-          <RecentTransactions openModal={openModal} />
+          <RecentTransactions transactions={transactions} openModal={openModal} />
         </div>
 
         {/* - Highest Spending Category */}
