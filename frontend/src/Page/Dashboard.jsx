@@ -5,7 +5,7 @@ import BarChartComponent from '../Component/Dashboard Components/BarChartCompone
 import RecentTransactions from '../Component/Dashboard Components/RecentTransactions';
 import HighestSpending from '../Component/Dashboard Components/HighestSpending';
 
-const Dashboard = ({openModal}) => {
+const Dashboard = ({openModal, transactions}) => {
   return (
     <div className="dashboard">
             <div className="dashboard-content">
@@ -21,7 +21,7 @@ const Dashboard = ({openModal}) => {
 
         {/* Right column - Recent Transactions (spans 2 rows) */}
         <div className="box recent-transactions-box">
-          <RecentTransactions openModal={openModal} />
+          <RecentTransactions transactions={transactions} openModal={openModal} />
         </div>
 
         {/* Lower-left box - Highest Spending Category */}

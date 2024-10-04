@@ -13,13 +13,16 @@
 
 .add_trans_modal_container_inside {
     position: absolute;
-    top: 50px;
-    left: 50px;
+    top: 0;
+    left: 0;
     margin-inline: auto;
     width: 100vw;
     height: calc(120vh - 50px);
     background-color: #7984D2;
     border-top-left-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .add_trans_input_form_container {
@@ -90,4 +93,48 @@
 
 .add_trans_close_text:hover {
     color: #d3d3d3;
+}
+
+.add_trans_added_box_container {
+    margin-top: 20px;
+    width: 50%;
+}
+
+.add_trans_added_box {
+    padding: 10px;
+    border-radius: 10px;
+    margin-inline: auto;
+    background-color: white;
+    width: 85%;
+    height: 360px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    overflow-y: scroll;
+}
+
+.add_trans_added_save_exit_container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.add_trans_added_transaction_item {
+    margin-top: 15px;
+    background-color: #d9d9d9;
+    width: 90%;
+    margin-inline: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+
+}
+
+.add_trans_added_item_text {
+    font-size: 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.add_trans_added_text {
+    margin: 5px;
 }

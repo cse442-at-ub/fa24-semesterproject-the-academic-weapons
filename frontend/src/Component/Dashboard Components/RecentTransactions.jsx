@@ -1,22 +1,22 @@
 import React from 'react';
 import '../../CSS Files/Dashboard Components/RecentTransactions.css';
 
-const transactions = [
-  { name: 'Netflix Subscription', amount: '$20.19' },
-  { name: 'Hotdog', amount: '$1.50' },
-  { name: 'Netflix Subscription', amount: '$20.19' },
-  { name: 'Netflix Subscription', amount: '$20.19' },
-  { name: 'Netflix Subscription', amount: '$20.19' },
-  { name: 'Hotdog', amount: '$1.50' },
-  { name: 'Netflix Subscription', amount: '$20.19' },
-  { name: 'Netflix Subscription', amount: '$20.19' },
-  { name: 'Netflix Subscription', amount: '$20.19' },
-  { name: 'Hotdog', amount: '$1.50' },
-  { name: 'Netflix Subscription', amount: '$20.19' },
-  { name: 'Netflix Subscription', amount: '$20.19' },
-];
+// const transactions = [
+//   { name: 'Netflix Subscription', amount: '$20.19' },
+//   { name: 'Hotdog', amount: '$1.50' },
+//   { name: 'Netflix Subscription', amount: '$20.19' },
+//   { name: 'Netflix Subscription', amount: '$20.19' },
+//   { name: 'Netflix Subscription', amount: '$20.19' },
+//   { name: 'Hotdog', amount: '$1.50' },
+//   { name: 'Netflix Subscription', amount: '$20.19' },
+//   { name: 'Netflix Subscription', amount: '$20.19' },
+//   { name: 'Netflix Subscription', amount: '$20.19' },
+//   { name: 'Hotdog', amount: '$1.50' },
+//   { name: 'Netflix Subscription', amount: '$20.19' },
+//   { name: 'Netflix Subscription', amount: '$20.19' },
+// ];
 
-const RecentTransactions = ({ openModal}) => {
+const RecentTransactions = ({ openModal, transactions}) => {
   return (
     <div className="recent-transactions">
       <div className="transactions-header">
@@ -32,7 +32,8 @@ const RecentTransactions = ({ openModal}) => {
         {transactions.map((transaction, index) => (
           <div className="transaction" key={index}>
             <span>{transaction.name}</span>
-            <span>{transaction.amount}</span>
+            <span>{transaction.price}</span>
+            <span>{transaction.date}</span>
           </div>
         ))}
       </div>

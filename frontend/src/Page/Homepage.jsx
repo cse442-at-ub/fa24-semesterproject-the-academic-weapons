@@ -3,7 +3,7 @@ import Dashboard from "./Dashboard.jsx";
 import Login from "./Login.jsx";
 
 
-const Homepage = ( {openTransactionModal} ) => {
+const Homepage = ( {openTransactionModal, transactions} ) => {
     const userID = sessionStorage.getItem("User")
 
 
@@ -14,7 +14,7 @@ const Homepage = ( {openTransactionModal} ) => {
           <Login/>
         </>
       ) : (
-        <Dashboard openModal={openTransactionModal}/>
+        <Dashboard transactions={transactions} openModal={openTransactionModal}/>
       )}
     </div>
     );
