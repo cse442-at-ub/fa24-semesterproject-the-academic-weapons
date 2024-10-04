@@ -19,12 +19,13 @@
 
 .LoginContainer  .create_or_login
 {
+    display: inline-block;
     cursor: pointer;
-    margin-left: 5px;
+    width: auto;
 }
 
 
-.Login_box
+.LoginContainer .Login_box
 {
 
     width:  35dvw;
