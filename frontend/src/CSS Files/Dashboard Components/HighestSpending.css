@@ -6,38 +6,36 @@
     font-weight: bold;
     min-height: 300px; /* Set a minimum height */
     max-height: 600px;
+    width: fit-content;
   }
   
 .high_spend_container
 {
-  width: auto;
-  min-height: 300px; /* Set a minimum height */
-  max-height: 600px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /*max-width: 90vw;*/
+  height: 200px;
+  overflow-y: scroll;
 }
 
-  .highest-spending h3 {
-    justify-self: center;
-    width: 250px;
-    height: auto;
-    overflow: hidden;
-    color: #5661AC;
-    border-radius: 20px;
-    margin:15px;
-    display: block;
-    font-size: 1.25rem;
-    word-wrap: break-word;
-    border: 3px dotted #ccc; 
-    padding: 5px;
-    
-  }
+.highest-spending h2 {
+    width: 90%;
+}
 
-  
-
-/* Meant for when dynamic input is given Perhaps truncate after couple characters like 25 */
-  .highest-spending h3.dynamic
-  {
-    white-space: normal;
-  }
+.highest-spending div {
+  justify-self: center;
+  width: fit-content;
+  height: auto;
+  color: #5661AC;
+  border-radius: 20px;
+  display: block;
+  word-wrap: break-word;
+  border: 3px dotted #ccc;
+  padding: 5px;
+  margin-inline: auto;
+    margin-bottom: 10px;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
   

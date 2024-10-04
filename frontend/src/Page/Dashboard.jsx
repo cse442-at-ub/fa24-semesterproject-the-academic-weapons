@@ -11,25 +11,33 @@ const Dashboard = ({ openModal, transactions }) => {
     <div className="dashboard">
       <div className="dashboard-content">
         {/*- Pie Chart */}
-        <div className="box pie-chart-box">
+        <div className="box">
+        <div className="pie-chart-box">
           <h2 className="Category_spend_txt">Category Spending</h2>
           <MainPieChart />
         </div>
-
-        {/* - Highest Spending Category */}
-        <div className="box highest-spending-box">
-          <HighestSpending />
-        </div>
-
-        {/*  - Recent Transactions  */}
-        <div className="box recent-transactions-box">
-          <RecentTransactions transactions={transactions} openModal={openModal} />
         </div>
 
         {/* - Bar Chart  */}
-        <div className="box bar-chart-box">
-          <BarChartComponent />
+        <div className="box">
+          <div className={'bar-chart-box'}>
+            <BarChartComponent />
+          </div>
         </div>
+
+        {/*  - Recent Transactions  */}
+        <div className="box">
+        <div className="recent-transactions-box">
+          <RecentTransactions transactions={transactions} openModal={openModal} />
+        </div>
+        </div>
+
+        {/* - Highest Spending Category */}
+          <div className="box">
+        <div className=" highest-spending-box">
+          <HighestSpending />
+        </div>
+      </div>
       </div>
     </div>
   );

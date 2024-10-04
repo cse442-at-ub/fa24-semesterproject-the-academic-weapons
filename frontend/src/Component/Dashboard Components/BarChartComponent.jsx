@@ -36,7 +36,7 @@ const BarChartComponent = () => {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Legend />
+            <Legend width={80} />
           <Bar dataKey="value" fill="#8884d8" />
         </BarChart>
       </div>

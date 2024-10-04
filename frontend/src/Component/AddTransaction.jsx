@@ -60,7 +60,7 @@ const AddTransaction = ({closeModal, addTransaction, removeTransaction}) => {
                             <div key={index} className={'add_trans_added_transaction_item'}>
                                 <div className={'add_trans_added_item_text'}>
                                     <div className={'add_trans_added_text'}>{transaction.name}</div>
-                                    <div className={'add_trans_added_text'}>{transaction.price}</div>
+                                    <div className={'add_trans_added_text'}>{"$"+transaction.price}</div>
                                     <div className={'add_trans_added_text'}>{transaction.category}</div>
                                     <div className={'add_trans_added_text'}>{transaction.date}</div>
                                 </div>

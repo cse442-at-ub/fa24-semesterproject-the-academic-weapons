@@ -32,7 +32,7 @@ const RecentTransactions = ({ openModal, transactions}) => {
         {transactions.map((transaction, index) => (
           <div className="transaction" key={index}>
             <span>{transaction.name}</span>
-            <span>{transaction.price}</span>
+            <span>{"$"+transaction.price}</span>
             <span>{transaction.date}</span>
           </div>
         ))}
