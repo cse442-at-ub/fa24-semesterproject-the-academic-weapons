@@ -46,7 +46,7 @@ $userId = $user['id'];
 
 // Create a unique token for password reset
 $token = bin2hex(random_bytes(32));
-$expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+$expiry = date('Y-m-d H:i:s', strtotime('+24 hour'));
 
 // Store the token and expiry in the database
 $updateQuery = "UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?";
@@ -66,7 +66,7 @@ $resetLink = "https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/zcsanger/#/reset-p
 
 // Email details
 $subject = "Password Reset Request";
-$body = "Hello,\n\nPlease see your code below:\nCode: $token\nClick the link below to reset your password:\n$resetLink\n\nThis link will expire in 1 hour.\n\nIf you did not request a password reset, please ignore this email.";
+$body = "Hello,\n\nPlease see your code below:\nCode: $token\nClick the link below to reset your password:\n$resetLink\n\nThis link will expire in 24 hour.\n\nIf you did not request a password reset, please ignore this email.";
 $headers = 'From: no-reply@yourdomain.com';
 
 // Send the email
