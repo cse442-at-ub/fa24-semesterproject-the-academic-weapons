@@ -7,7 +7,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Consistent shadow */
-    width: 450px; /* Same fixed width */
+    max-width: 80%; /* Same fixed width */
     height: 450px; /* Same fixed height */
   }
   

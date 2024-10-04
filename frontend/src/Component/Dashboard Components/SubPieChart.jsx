@@ -3,17 +3,17 @@ import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
 import '../../CSS Files/Dashboard Components/SubPieChart.css';
 
 const subDataMap = {
-  'Category 1': [
-    { name: 'Sub-Category 1', value: 150 },
-    { name: 'Sub-Category 2', value: 250 },
+  'Food': [
+    { name: 'Hotdog', value: 150 },
+    { name: 'Banana', value: 250 },
   ],
-  'Category 2': [
-    { name: 'Sub-Category 1', value: 100 },
-    { name: 'Sub-Category 2', value: 200 },
+  'Subscriptions': [
+    { name: 'Netflix', value: 100 },
+    { name: 'Hulu', value: 200 },
   ],
   Other: [
-    { name: 'Sub-Category 1', value: 100 },
-    { name: 'Sub-Category 2', value: 200 },
+    { name: 'Wax', value: 100 },
+    { name: 'Gloves', value: 200 },
   ],
 };
 
@@ -25,11 +25,11 @@ const SubPieChart = ({ category, onBack }) => {
     return (
       <div className="sub-pie-container">
         <button onClick={onBack}>Back</button>
-        <PieChart width={400} height={400}> {/* Same size as main chart */}
+        <PieChart width={280} height={400}> {/* Same size as main chart */}
           <Pie
             data={subData}
-            cx={200}
-            cy={200}
+            cx={140}
+            cy={140}
             labelLine={false}
             outerRadius={80}
             fill="#8884d8"
@@ -39,7 +39,7 @@ const SubPieChart = ({ category, onBack }) => {
               <Cell key={`cell-${index}`} fill={colors[index]} />
             ))}
           </Pie>
-          <Legend />
+          <Legend width={280} />
           <Tooltip />
         </PieChart>
       </div>

@@ -1,10 +1,17 @@
+.dashboard {
+  max-width: 100vw;
+}
+
 /* Grid layout for the dashboard */
 .dashboard-content {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* Three columns layout */
+  flex-direction: row;
+  max-width: 100vw;
+  grid-template-columns: 1fr 1fr; /* Three columns layout */
   grid-template-rows: auto auto; /* Two rows layout */
   grid-gap: 20px;
-  max-width: 1200px;
+  flex-wrap: wrap;
+  /*max-width: 50vw;*/
   margin: 0 auto;
   padding: 20px;
 }
@@ -14,58 +21,93 @@
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  /*padding: 20px;*/
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 45vw;
+  /*overflow: hidden;*/
 }
 
 /* Pie Chart Box (center of the grid) */
 .pie-chart-box {
-  grid-column: 2; /* Place in the center column */
+  margin-inline: auto;
+  max-width: 100%;
+  grid-column: 1; /* Place in the center column */
   grid-row: 1;    /* Place in the first row */
+  padding-bottom: 20px;
+
 }
 
 /* Highest Spending Category (left of the pie chart) */
 .highest-spending-box {
-  grid-column: 1; /* Left column */
-  grid-row: 1;    /* Place in the first row */
+  margin-inline: auto;
+  max-width: 100%;
+  grid-column: 2; /* Left column */
+  grid-row: 2;    /* Place in the first row */
 }
 
 /* Recent Transactions (right of the pie chart) */
 .recent-transactions-box {
-  grid-column: 3; /* Right column */
-  grid-row: 1;    /* Place in the first row */
+  padding-bottom: 20px;
+  margin-inline: auto;
+  grid-column: 1; /* Right column */
+  grid-row: 2;    /* Place in the first row */
+    max-width: 100%;
+
 }
 
 /* Bar Chart Box (bottom of the grid, spanning full width) */
 .bar-chart-box {
-  grid-column: 1 / 4; /* Span all three columns */
-  grid-row: 2;        /* Place in the second row */
+  margin-inline: auto;
+  max-width: 100%;
+  grid-column: 2 ; /* Span all three columns */
+  grid-row: 1;        /* Place in the second row */
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
+
+  .dashboard {
+    width: 100vw;
+  }
+
+  .box {
+    margin-inline: auto;
+    max-width: 90vw;
+  }
+
   .dashboard-content {
+    padding-inline: 0;
+    margin-inline: auto;
     grid-template-columns: 1fr; /* Stack all components vertically on small screens */
     grid-template-rows: auto; /* One row layout */
   }
 
   /* Override the stacking order */
   .bar-chart-box {
+    max-width: 90vw;
     grid-row: 1; /* First in stack */
+    grid-column: 1;
   }
 
   .pie-chart-box {
+    margin-inline: auto;
+    max-width: 90vw;
     grid-row: 2; /* Second in stack */
+    grid-column: 1;
   }
 
   .highest-spending-box {
+    max-width: 90vw;
     grid-row: 3; /* Third in stack */
+    grid-column: 1;
   }
 
   .recent-transactions-box {
+    max-width: 90vw;
     grid-row: 4; /* Last in stack */
+    grid-column: 1;
   }
 }
