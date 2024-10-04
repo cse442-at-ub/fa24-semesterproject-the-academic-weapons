@@ -41,7 +41,7 @@
 
   .navbar-profile {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 20px;
     cursor: pointer;
   }

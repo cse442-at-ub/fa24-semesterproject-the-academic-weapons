@@ -4,8 +4,12 @@
     align-items: center;
     text-align: center;
     font-weight: bold;
-    min-height: 300px; /* Set a minimum height */
-    max-height: 600px;
+    min-height: 400px; /* Set a minimum height */
+    max-height: 700px;
+  
+    max-width: 320px;
+    min-width: 220px;
+    width: auto;
   }
   
 .high_spend_container
@@ -19,7 +23,8 @@
 
   .highest-spending h3 {
     justify-self: center;
-    width: 250px;
+    max-width: 300px;
+    min-width: 170px;
     height: auto;
     overflow: hidden;
     color: #5661AC;

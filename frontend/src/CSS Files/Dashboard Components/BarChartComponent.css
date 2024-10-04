@@ -10,3 +10,11 @@
   justify-content: center;
   align-items: center;
 }
+
+.bar-chart-wrapper
+{
+  max-width: 450px; /* Fixed width to prevent resizing */
+  min-width: 220px;
+  min-height: 300px;
+  max-height: 450px;
+}

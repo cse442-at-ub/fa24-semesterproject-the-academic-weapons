@@ -14,9 +14,9 @@ const Navbar = ({ openModal, openSettings, pfpMap, pfp }) => {
         window.location.reload()
     }
 
-     if (!userID) {
-        return null;
-     }
+    //  if (!userID) {
+    //     return null;
+    //  }
 
     return (
         <nav className="navbar">

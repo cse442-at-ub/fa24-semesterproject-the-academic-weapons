@@ -4,8 +4,11 @@
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   
-  min-height: 300px; /* Set a minimum height */
-  max-height: 600px;
+  min-height: 400px; /* Set a minimum height */
+  max-height: 700px;
+
+  max-width: 400px;
+  min-width: 220px;
 }
 
 .transactions-header {
@@ -38,11 +41,14 @@
 
 
 
+
+
 .transactions-list {
   
   background-color: #D9D9D9;
   width: auto;
-  height: 500px;
+  min-height: 400px; /* Set a minimum height */
+  max-height: 600px;
   overflow-x: hidden;
   margin: 10px 10px 10px 10px;
   border-radius: 5px;
@@ -83,7 +89,8 @@
 /* This seems to be each item part  */
 .transaction {
   background-color: #F2F4F7;
-  width: 250px;
+  max-width: 400px;
+  min-width: 180px;
   display: flex;
   justify-content: space-between;
   padding: 20px;

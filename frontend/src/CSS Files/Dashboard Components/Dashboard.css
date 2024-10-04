@@ -8,7 +8,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  min-width: 650px;
+  min-width: 250px;
 }
 
 
@@ -17,7 +17,7 @@ Plus with wrap we could add the feature of moving boxes since flex would be resp
 .dashboard-content {
   display: flex;
   flex: 1 1 auto;
-  gap: 10px;
+  gap: 25px;
   padding: 10px;
   background-color: #f0f0f0;
   margin-top: 20px;
@@ -32,8 +32,8 @@ Plus with wrap we could add the feature of moving boxes since flex would be resp
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  flex: 0 1 auto;
-  max-width: auto;
+  flex: 1 1 auto;
+  width: auto;
   width: auto;
   height: auto;
   margin: auto;
@@ -43,16 +43,19 @@ Plus with wrap we could add the feature of moving boxes since flex would be resp
 
 /* Pie Chart -Category box Upper-left box */
 .pie-chart-box {
-  min-height: 400px; /* Set a minimum height */
-  max-height: 800px;
-  
-
+  max-width: 470px; /* Fixed width to prevent resizing */
+  min-width: 240px;
+  min-height: 330px;
+  max-height: 510px;
 }
 
 /* Bar Chart - Spans upper middle two boxes */
 .bar-chart-box {
-  min-height: 300px; /* Set a minimum height */
-  max-height: 600px;
+  max-width: 470px; /* Fixed width to prevent resizing */
+  min-width: 250px;
+  min-height: 330px;
+  max-height: 470px;
+
 
 }
 
@@ -61,14 +64,20 @@ Plus with wrap we could add the feature of moving boxes since flex would be resp
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 300px; /* Set a minimum height */
-  max-height: 600px;
+  min-height: 400px; /* Set a minimum height */
+  max-height: 700px;
+
+  max-width: 400px;
+  min-width: 250px;
   
 }
 
 /* Highest Spending - Lower-left box */
 .highest-spending-box {
-  min-height: 300px; /* Set a minimum height */
-  max-height: 600px;
+  min-height: 400px; /* Set a minimum height */
+  max-height: 700px;
+
+  max-width: 340px;
+  min-width: 240px;
   
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 import '../../CSS Files/Dashboard Components/BarChartComponent.css';
 
@@ -13,13 +13,35 @@ const barData = [
   { name: 'Apr', value: 65 },
 ];
 
+
 const BarChartComponent = () => {
+  const [chartSize, setChartSize] = useState({ width: 450, height: 400 });
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    // Function to update chart dimensions based on container size
+    const updateChartSize = () => {
+      if (containerRef.current) {
+        const { offsetWidth } = containerRef.current;
+        const newSize = Math.min(Math.max(offsetWidth, 220), 450); // Bound width between 220 and 450
+        const newHeight = Math.min(Math.max((newSize / 1.5), 300), 450); // Adjust height proportionally within min/max bounds
+        setChartSize({ width: newSize, height: newHeight });
+      }
+    };
+
+    updateChartSize(); // Initial size setting
+    window.addEventListener('resize', updateChartSize); // Handle window resize
+
+    return () => {
+      window.removeEventListener('resize', updateChartSize);
+    };
+  }, []);
+
   return (
-    <div className="bar-chart-component">
-      {/* Add button in top right */}
+    <div className="bar-chart-component" ref={containerRef}>
+      {/* Header */}
       <div className="bar-chart-header">
         <h3>Monthly Spending</h3>
-        
       </div>
       
       {/* Center the bar chart */}
@@ -31,7 +53,7 @@ const BarChartComponent = () => {
           min-height: 200px;
           So move it dynamically especially with mobile
         */}
-        <BarChart width={600} height={400} data={barData}>
+          <BarChart width={chartSize.width} height={chartSize.height} data={barData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
@@ -43,5 +65,6 @@ const BarChartComponent = () => {
     </div>
   );
 };
+
 
 export default BarChartComponent;

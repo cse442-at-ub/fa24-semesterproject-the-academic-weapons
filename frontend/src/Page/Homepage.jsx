@@ -11,7 +11,8 @@ const Homepage = ( {openTransactionModal} ) => {
         <div>
       {!userID ? (
         <>
-          <Login/>
+         <Dashboard openModal={openTransactionModal}/>
+          {/* <Login/> */}
         </>
       ) : (
         <Dashboard openModal={openTransactionModal}/>
