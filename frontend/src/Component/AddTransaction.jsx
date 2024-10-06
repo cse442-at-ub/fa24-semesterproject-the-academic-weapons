@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-const AddTransaction = ({closeModal, addTransaction, removeTransaction}) => {
+import {MdDelete} from "react-icons/md";
+
+const AddTransaction = ({closeModal, addTransaction, removeTransaction, maxTransID, updateMaxTransID}) => {
     const todayDate = new Date().toISOString().substr(0,10)
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
@@ -7,10 +9,16 @@ const AddTransaction = ({closeModal, addTransaction, removeTransaction}) => {
     const [date, setDate] = useState(todayDate);
     const [newTransactions, setNewTransactions] = useState([])
 
+    useEffect(() => {
+
+    }, [newTransactions])
+
     const handleAddTransaction = (e) => {
         e.preventDefault();
         const addNewTrans = newTransactions;
-        addNewTrans.push({"name": name, "price": price, "category": category, "date": date});
+        const newID = maxTransID + 1;
+        addNewTrans.push({"id": newID, "name": name, "price": price, "category": category, "date": date});
+        updateMaxTransID(newID);
         setNewTransactions(addNewTrans)
         setName('')
         setPrice('')
@@ -23,6 +31,13 @@ const AddTransaction = ({closeModal, addTransaction, removeTransaction}) => {
         newTransactions.forEach(item => addTransaction(item));
         closeModal();
     }
+
+     const deleteTransaction = ( delID ) => {
+        const delTrans = [...newTransactions];
+        const index = delTrans.findIndex(trans => trans.id === delID);
+        delTrans.splice(index, 1);
+        setNewTransactions(delTrans);
+     }
 
 
     return (
@@ -45,7 +60,7 @@ const AddTransaction = ({closeModal, addTransaction, removeTransaction}) => {
                         </div>
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Date</label>
-                            <input className={'add_trans_input_field'} value={date} defaultValue={todayDate} type={"date"} onChange={e => setDate(e.target.value)}/>
+                            <input className={'add_trans_input_field'} value={date} type={"date"} onChange={e => setDate(e.target.value)}/>
                         </div>
                         <div className={'add_trans_form_input_group'}>
                             <button type={"submit"} onClick={e => handleAddTransaction(e)} className={"add_trans_add_btn"}>Add</button>
@@ -57,12 +72,13 @@ const AddTransaction = ({closeModal, addTransaction, removeTransaction}) => {
                     <h1 className={'add_trans_title'}>Added</h1>
                     <div className={'add_trans_added_box'}>
                         {newTransactions.map((transaction, index) => (
-                            <div key={index} className={'add_trans_added_transaction_item'}>
+                            <div key={transaction.id} className={'add_trans_added_transaction_item'}>
                                 <div className={'add_trans_added_item_text'}>
                                     <div className={'add_trans_added_text'}>{transaction.name}</div>
                                     <div className={'add_trans_added_text'}>{"$"+transaction.price}</div>
                                     <div className={'add_trans_added_text'}>{transaction.category}</div>
                                     <div className={'add_trans_added_text'}>{transaction.date}</div>
+                                    <div onClick={e => deleteTransaction(transaction.id)}><MdDelete /></div>
                                 </div>
                             </div>
                         ))}

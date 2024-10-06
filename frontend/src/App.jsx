@@ -31,20 +31,49 @@ function App() {
     const [username, setUsername] = useState("DefaultName")
     const [isLoaded, setIsLoaded] = useState(false)
     const [transactions, setTransactions] = useState([]);
+    const [maxTransID, setMaxTransID] = useState(1);
+    const userID = sessionStorage.getItem('User')
 
 
     useEffect(() => {
 
-        if (!isLoaded) {
-            let getUsername = sessionStorage.getItem('username');
-            let getPFP = sessionStorage.getItem('pfp');
+        if (userID) {
+            if (!isLoaded) {
+                let getUsername = sessionStorage.getItem('username');
+                let getPFP = sessionStorage.getItem('pfp');
 
-            if (getUsername) setUsername(getUsername);
-            if (getPFP) setPFP(parseInt(getPFP) || 0);
-            setIsLoaded(true);
+                if (getUsername) setUsername(getUsername);
+                if (getPFP) setPFP(parseInt(getPFP) || 0);
+                getTransactions();
+                setIsLoaded(true);
+            }
         }
 
-    })
+    }, [isLoaded])
+
+    const getTransactions = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php?id=${userID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            let userData = await response.json();
+            if (userData) {
+                console.log(userData)
+                setTransactions(userData)
+                if (userData.length > 0) {
+                    let transIDs = userData.filter(trans => trans.id)
+                    setMaxTransID(Math.max(transIDs))
+                }
+            } else {
+                console.error("Error getting transactions...")
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     const pfpMap = {
         0: img0,
@@ -61,13 +90,53 @@ function App() {
         const newTransactions = transactions;
         newTransactions.push(newItem)
         setTransactions(newTransactions);
+        saveTransactions(newItem)
+    }
+
+    const updateMaxTransID = (e) => {
+        setMaxTransID(e)
+    }
+
+    const saveTransactions = async (saveItem) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({userID, saveItem}),
+            });
+            if (!response.ok) {
+                console.error("Error getting transactions...")
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const saveRemoveTransaction = async (removeID) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({userID, removeID}),
+            });
+            if (!response.ok) {
+                console.error("Error getting transactions...")
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
     const removeTransaction = (id) => {
-        const removeIdx = transactions.findIndex(transaction => transaction.id === id);
-        const newTransactions = transactions
+        const newTransactions = [...transactions]
+        const removeIdx = newTransactions.findIndex(transaction => transaction.id === id);
         newTransactions.splice(removeIdx, 1);
         setTransactions(newTransactions)
+        saveRemoveTransaction(id);
     }
 
     const openTransactionModal = () => {
@@ -102,13 +171,13 @@ function App() {
           <header className="App-header">
             <Navbar pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
-            <Route path={"/"} element={<Homepage transactions={transactions} openTransactionModal={openTransactionModal}/>}/> =
+            <Route path={"/"} element={<Homepage deleteTransaction={removeTransaction} transactions={transactions} openTransactionModal={openTransactionModal}/>}/> =
               <Route path={"/settings"} element={<Settings/>}/>
               <Route path={"/forget-password"} element={<ForgotPassword/>}/>
               <Route path={"/reset-password"} element={<ResetPassword/>}/>
               <Route path="/registration" element={<Registration />} />
             </Routes>
-              {showAddTransaction ? <AddTransaction addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>:null}
+              {showAddTransaction ? <AddTransaction maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>:null}
               {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}
 
           </header>

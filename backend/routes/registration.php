@@ -38,7 +38,7 @@ error_log("Inputted username: " . $username);
 error_log("Inputted password: " . $password); // Be cautious with logging passwords
 
 // Check if the email or username already exists
-$sql = "SELECT * FROM users WHERE email = ? OR username = ?";
+$sql = "SELECT * FROM users WHERE email = ?";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
@@ -46,12 +46,12 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param("ss", $email, $username);
+$stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    echo json_encode(['success' => false, 'message' => 'Email or username already exists.']);
+    echo json_encode(['success' => false, 'message' => 'Email already exists.']);
     $stmt->close(); // Close the statement
     $conn->close(); // Close the connection
     exit;

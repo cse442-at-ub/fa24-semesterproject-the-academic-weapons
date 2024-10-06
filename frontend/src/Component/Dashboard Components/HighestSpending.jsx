@@ -6,7 +6,7 @@ const HighestSpending = () => {
     <div className="highest-spending">
       
       <h2>Highest Spending Category</h2>
-      <div class="high_spend_container">
+      <div className="high_spend_container">
         {/* Static text for now, can be dynamic but truncate there words cuz how dare they make it so long >: (*/}
         <div>Subscriptions</div> {/* Static text for now, can be dynamic */}
         <div>Subscriptions wwwwwwwwwwwwwwwwwwwwwwwwlong text</div> {/* Static text for now, can be dynamic */}
