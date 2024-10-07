@@ -80,14 +80,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
 
-    $auth_stmt->bind_param("is", $id, $token);
+    $auth_stmt->bind_param("is", $userID, $token);
 
     $auth_stmt->execute();
 
     $auth_result = $auth_stmt->get_result();
 
     if ($auth_result->num_rows === 0) {
-        echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $id]);
+        echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $userID]);
         exit;
     }
 
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->close(); // Close the connection
 
     // Return success message
-    echo json_encode(array("message" => "Transactions successfully inserted"));
+    echo json_encode(['success' => true, "message" => "Transactions successfully inserted"]);
 
 }
 
@@ -136,14 +136,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     $auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
 
-    $auth_stmt->bind_param("is", $id, $token);
+    $auth_stmt->bind_param("is", $userID, $token);
 
     $auth_stmt->execute();
 
     $auth_result = $auth_stmt->get_result();
 
     if ($auth_result->num_rows === 0) {
-        echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $id]);
+        echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $userID]);
         exit;
     }
 
@@ -161,6 +161,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $conn->close(); // Close the connection
 
     // Return success message
-    echo json_encode(array("message" => "Transactions successfully inserted"));
+    echo json_encode(['success' => true, "message" => "Transactions successfully inserted"]);
 
 }

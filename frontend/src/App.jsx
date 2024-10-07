@@ -96,7 +96,7 @@ function App() {
     }
 
     const addTransaction = (newItem) => {
-        const newTransactions = transactions;
+        const newTransactions = [...transactions];
         newTransactions.push(newItem)
         setTransactions(newTransactions);
         saveTransactions(newItem)
@@ -124,7 +124,7 @@ function App() {
                 sessionStorage.clear()
                 window.location.reload()
             }
-
+            setIsLoaded(false);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -148,6 +148,7 @@ function App() {
                 sessionStorage.clear()
                 window.location.reload()
             }
+            setIsLoaded(false);
         } catch (error) {
             console.error('Error:', error);
         }
