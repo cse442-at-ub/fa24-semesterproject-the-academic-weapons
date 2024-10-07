@@ -37,21 +37,35 @@ if (empty($pfp)) {
 
 // Get the current user's ID from the session
 $user_id = $data['userID'];
+$token = $data['userToken'];
+
+$auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
+
+$auth_stmt->bind_param("is", $user_id, $token);
+
+$auth_stmt->execute();
+
+$auth_result = $auth_stmt->get_result();
+
+if ($auth_result->num_rows === 0) {
+    echo json_encode(['success' => false, 'auth' => false, 'message' => 'Failed to authenticate User: ' . $user_id]);
+    exit;
+}
 
 // Prepare SQL statement to update the pfp
 $sql = "UPDATE users SET avatar = ? WHERE id = ?";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . $conn->error]);
+    echo json_encode(['success' => false, 'auth' => true, 'message' => 'Database error: ' . $conn->error]);
     exit;
 }
 
 $stmt->bind_param("si", $pfp, $user_id);
 if ($stmt->execute()) {
-    echo json_encode(['success' => true, 'message' => 'Profile picture updated successfully']);
+    echo json_encode(['success' => true, 'auth' => true,  'message' => 'Profile picture updated successfully']);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Failed to update username']);
+    echo json_encode(['success' => false, 'auth' => true, 'message' => 'Failed to update username']);
 }
 
 $stmt->close(); // Close the statement

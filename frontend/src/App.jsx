@@ -32,12 +32,13 @@ function App() {
     const [isLoaded, setIsLoaded] = useState(false)
     const [transactions, setTransactions] = useState([]);
     const [maxTransID, setMaxTransID] = useState(1);
-    const userID = sessionStorage.getItem('User')
+    const userID = sessionStorage.getItem('User');
+    const userToken = sessionStorage.getItem('auth_token');
 
 
     useEffect(() => {
 
-        if (userID) {
+        if (userID && userToken) {
             if (!isLoaded) {
                 let getUsername = sessionStorage.getItem('username');
                 let getPFP = sessionStorage.getItem('pfp');
@@ -53,23 +54,31 @@ function App() {
 
     const getTransactions = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php?id=${userID}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php?id=${userID}&token=${userToken}`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 }
             });
-            let userData = await response.json();
-            if (userData) {
-                console.log(userData)
-                setTransactions(userData)
-                if (userData.length > 0) {
-                    let transIDs = userData.filter(trans => trans.id)
+            let reply = await response.json();
+
+            if (!response.ok) {
+                console.error("Error getting transactions...")
+            }
+
+            if (reply.success) {
+                setTransactions(reply.transactions)
+                if (reply.transactions.length > 0) {
+                    let transIDs = reply.transactions.filter(trans => trans.id)
                     setMaxTransID(Math.max(transIDs))
                 }
             } else {
-                console.error("Error getting transactions...")
+                alert("Invalid user credentials, please sign in again...")
+                sessionStorage.clear()
+                window.location.reload()
             }
+
+
         } catch (error) {
             console.error('Error:', error);
         }
@@ -104,11 +113,18 @@ function App() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({userID, saveItem}),
+                body: JSON.stringify({userID, userToken, saveItem}),
             });
             if (!response.ok) {
-                console.error("Error getting transactions...")
+                console.error("Error saving transactions...")
             }
+            const reply = await response.json()
+            if (!reply.success) {
+                alert("Invalid user credentials, please sign in again...")
+                sessionStorage.clear()
+                window.location.reload()
+            }
+
         } catch (error) {
             console.error('Error:', error);
         }
@@ -121,10 +137,16 @@ function App() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({userID, removeID}),
+                body: JSON.stringify({userID, userToken, removeID}),
             });
             if (!response.ok) {
-                console.error("Error getting transactions...")
+                console.error("Error deleting transactions...")
+            }
+            const reply = await response.json()
+            if (!reply.success) {
+                alert("Invalid user credentials, please sign in again...")
+                sessionStorage.clear()
+                window.location.reload()
             }
         } catch (error) {
             console.error('Error:', error);

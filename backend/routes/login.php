@@ -23,20 +23,20 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 // Retrieve username (or email) and password
-$usernameOrEmail = $data['username'] ?? null;
+$email = $data['email'] ?? null;
 $password = $data['password'] ?? null;
 
-if (empty($usernameOrEmail) || empty($password)) {
-    echo json_encode(['success' => false, 'message' => 'Username or email and password are required']);
+if (empty($email) || empty($password)) {
+    echo json_encode(['success' => false, 'message' => 'Email and password are required']);
     exit;
 }
 
 // Log user input for debugging
-error_log("Inputted username/email: " . $usernameOrEmail);
+error_log("Inputted email: " . $email);
 error_log("Inputted password: " . $password); // Be cautious with logging passwords
 
-// Prepare SQL statement to check if the username or email exists
-$sql = "SELECT * FROM users WHERE username = ? OR email = ?";
+// Prepare SQL statement to check if email exists
+$sql = "SELECT * FROM users WHERE email = ?";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
@@ -44,16 +44,34 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param("ss", $usernameOrEmail, $usernameOrEmail);
+$stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
+
     $user = $result->fetch_assoc();
 
     // Verify the hashed password
     if (password_verify($password, $user['password'])) {
-        echo json_encode(['success' => true, 'message' => 'Login successful', 'id' => $user['id'], 'username' => $user['username'], 'pfp' => $user['avatar']]);
+        $token = bin2hex(random_bytes(32));
+        $expiry = date('Y-m-d H:i:s', strtotime('+24 hour'));
+
+        $updateQuery = "UPDATE users SET auth_token = ?, auth_token_expire = ? WHERE id = ?";
+
+        $updateStmt = $conn->prepare($updateQuery);
+        if (!$updateStmt) {
+            echo json_encode(['success' => false, 'message' => 'Failed to prepare update statement: ' . $conn->error]);
+            exit;
+        }
+        $updateStmt->bind_param("ssi", $token, $expiry, $user['id']);
+
+        if (!$updateStmt->execute()) {
+            echo json_encode(['success' => false, 'message' => 'Update query execution failed: ' . $updateStmt->error]);
+            exit;
+        }
+
+        echo json_encode(['success' => true, 'message' => 'Login successful', 'id' => $user['id'], 'username' => $user['username'], 'pfp' => $user['avatar'], 'auth_token' => $token]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Invalid password']);
     }
@@ -63,4 +81,3 @@ if ($result->num_rows > 0) {
 
 $stmt->close(); // Close the statement
 $conn->close(); // Close the connection
-?>

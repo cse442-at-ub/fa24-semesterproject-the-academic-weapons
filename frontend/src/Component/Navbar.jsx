@@ -9,7 +9,7 @@ const Navbar = ({ openModal, openSettings, pfpMap, pfp }) => {
     const userID = sessionStorage.getItem("User")
 
     const logout = () => {
-        sessionStorage.removeItem("User")
+        sessionStorage.clear()
         navigate("/")
         window.location.reload()
     }

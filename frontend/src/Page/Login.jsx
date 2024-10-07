@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import '../CSS Files/Login.css';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   window.scrollTo(0, 0);
@@ -17,7 +17,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({username, password}),
+        body: JSON.stringify({email, password}),
       });
 
       if (!response.ok) {
@@ -31,6 +31,7 @@ const Login = () => {
         sessionStorage.setItem('username', data.username)
         sessionStorage.setItem('pfp', data.pfp)
         sessionStorage.setItem("User", data.id)
+        sessionStorage.setItem("auth_token", data.auth_token)
         navigate('/');
         window.location.reload()
       } else {
@@ -51,13 +52,13 @@ const Login = () => {
           </div>
           <form className="login_section" onSubmit={handleLogin}>
             <div className="email_section">
-              <label htmlFor="username" className="email_text">Email</label>
+              <label htmlFor="email" className="email_text">Email</label>
               <input
                   type="email"
-                  id="username"
-                  name="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  id="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
               />
             </div>
@@ -70,8 +71,6 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}"
-                  title="Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character."
               />
               <a className="forgot_password" onClick={e => navigate('/forget-password')}>Forgot Password</a>
             </div>
@@ -79,7 +78,8 @@ const Login = () => {
               <h2>Log in</h2>
             </button>
             <div className="Create_account">
-              Don't have an account? <div className="create_or_login" onClick={() => navigate('/registration')}> Sign up</div>
+              Don't have an account? <div className="create_or_login" onClick={() => navigate('/registration')}> Sign
+              up</div>
             </div>
           </form>
         </div>

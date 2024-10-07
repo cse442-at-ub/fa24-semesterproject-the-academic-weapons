@@ -2,21 +2,6 @@ import React from 'react';
 import '../../CSS Files/Dashboard Components/RecentTransactions.css';
 import {MdDelete} from "react-icons/md";
 
-// const transactions = [
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Hotdog', amount: '$1.50' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Hotdog', amount: '$1.50' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Hotdog', amount: '$1.50' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-// ];
-
 
 const RecentTransactions = ({ openModal, transactions, deleteTransaction}) => {
 

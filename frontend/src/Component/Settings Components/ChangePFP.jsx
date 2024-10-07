@@ -5,10 +5,11 @@ import {useNavigate} from "react-router-dom";
 const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
     const navigate = useNavigate();
     const userID = sessionStorage.getItem('User');
+    const userToken = sessionStorage.getItem('auth_token')
 
     useEffect(() => {
 
-        if (!userID) {
+        if (!userID || !userToken) {
             sessionStorage.removeItem('User');
             navigate('/')
             window.location.reload();
@@ -23,7 +24,7 @@ const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({pfp, userID}),
+            body: JSON.stringify({pfp, userID, userToken}),
         });
 
         if (!response.ok) {
@@ -31,6 +32,13 @@ const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
         }
 
         const data = await response.json();
+
+        if (!data.auth) {
+            alert("Invalid user credentials, please sign in again...")
+            sessionStorage.clear()
+            window.location.reload()
+            return
+        }
 
         if (!data.success) {
             alert(data.message || 'Saving new profile picture failed!');

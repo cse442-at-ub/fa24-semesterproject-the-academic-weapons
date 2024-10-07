@@ -79,4 +79,3 @@ if ($insertStmt->execute()) {
 
 $insertStmt->close(); // Close the statement
 $conn->close(); // Close the connection
-?>
