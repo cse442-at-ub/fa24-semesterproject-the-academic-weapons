@@ -80,4 +80,3 @@ if (mail($email, $subject, $body, $headers)) {
 $stmt->close();
 $updateStmt->close();
 $conn->close();
-?>

@@ -9,7 +9,7 @@ const Navbar = ({ openModal, openSettings, pfpMap, pfp }) => {
     const userID = sessionStorage.getItem("User")
 
     const logout = () => {
-        sessionStorage.removeItem("User")
+        sessionStorage.clear()
         navigate("/")
         window.location.reload()
     }
@@ -37,7 +37,7 @@ const Navbar = ({ openModal, openSettings, pfpMap, pfp }) => {
             */}
             <div className="navbar-profile">
                 <img onClick={openSettings} src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon"/>
-                <div onClick={logout} class="logout_text">Log Out</div>
+                <div onClick={logout} className="logout_text">Log Out</div>
             </div>
         </nav>
     );

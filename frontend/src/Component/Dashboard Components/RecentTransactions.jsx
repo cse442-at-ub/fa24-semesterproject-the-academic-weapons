@@ -1,23 +1,10 @@
 import React from 'react';
 import '../../CSS Files/Dashboard Components/RecentTransactions.css';
-
-// const transactions = [
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Hotdog', amount: '$1.50' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Hotdog', amount: '$1.50' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Hotdog', amount: '$1.50' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-//   { name: 'Netflix Subscription', amount: '$20.19' },
-// ];
+import {MdDelete} from "react-icons/md";
 
 
-const RecentTransactions = ({ openModal, transactions}) => {
+const RecentTransactions = ({ openModal, transactions, deleteTransaction}) => {
+
   return (
     <div className="recent-transactions">
       <div className="transactions-header">
@@ -34,6 +21,7 @@ const RecentTransactions = ({ openModal, transactions}) => {
             <span>{transaction.name}</span>
             <span>{"$"+transaction.price}</span>
             <span>{transaction.date}</span>
+              <span onClick={e => deleteTransaction(transaction.id)}><MdDelete /></span>
           </div>
         ))}
       </div>

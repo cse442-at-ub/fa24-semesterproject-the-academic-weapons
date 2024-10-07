@@ -93,4 +93,3 @@ if ($updateStmt->execute()) {
 $updateStmt->close();
 $stmt->close();
 $conn->close();
-?>

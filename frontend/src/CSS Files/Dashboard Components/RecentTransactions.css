@@ -90,7 +90,9 @@
   display: flex;
   justify-content: space-between;
   font-size: 1.25rem;
-  margin:15px;
+  margin-inline: auto;
+  margin-top: 20px;
+  padding: 10px;
   border-radius: 20px;
 }
 /* This seems to be the money sign part  */

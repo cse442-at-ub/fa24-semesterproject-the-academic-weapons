@@ -6,7 +6,7 @@ import RecentTransactions from '../Component/Dashboard Components/RecentTransact
 import HighestSpending from '../Component/Dashboard Components/HighestSpending';
 import Navbar from "../Component/Navbar.jsx";
 
-const Dashboard = ({ openModal, transactions }) => {
+const Dashboard = ({ openModal, transactions, deleteTransaction }) => {
   return (
     <div className="dashboard">
       <div className="dashboard-content">
@@ -28,7 +28,7 @@ const Dashboard = ({ openModal, transactions }) => {
         {/*  - Recent Transactions  */}
         <div className="box">
         <div className="recent-transactions-box">
-          <RecentTransactions transactions={transactions} openModal={openModal} />
+          <RecentTransactions deleteTransaction={deleteTransaction} transactions={transactions} openModal={openModal} />
         </div>
         </div>
 
