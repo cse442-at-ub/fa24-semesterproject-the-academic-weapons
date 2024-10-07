@@ -1,21 +1,33 @@
 /* File: frontend/src/CSS Files/Login.css */
 
 .LoginContainer * {
-    margin: 0 auto;
+    margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    
+}
+.LoginContainer .Login_box, .LoginContainer .Login_Title, .LoginContainer input {
+    margin: 0 auto; /* Ensure these elements are centered */
+    text-align: center; /* Align text */
 }
 
 .LoginContainer {
-  overflow-x: hidden; /* Prevents overflow in both x and y directions */
-  height: 110vh; /* Full height of the viewport */
-  width: 100vw; /* Full width of the viewport */
-  margin: 0; /* Optional: Removes default margin */
-  padding: 0; /* Optional: Removes default padding */
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  z-index: 0;
-}
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-direction: column; /* Ensure that items are stacked vertically */
+    width: 100vw; 
+    height: 100vh; 
+    /* Current issue is that login page has issue with loading all in page if height is too small 
+    This seems to be becasue before loading this page we load app and height is auto so it then takes this height
+    As of now the flex item is centered only cuz of the height taking 100 perent so it can center correctly vertically 
+    For now its fine since the smallest it can be would be iphone SE and it works for that but other then that it would break */
+    margin: 0; 
+    padding: 0; 
+    overflow-x: hidden; /* Prevent horizontal overflow */
+    box-sizing: border-box; 
+    text-align: center;
+  }
 
 .LoginContainer  .create_or_login
 {
@@ -28,9 +40,9 @@
 .LoginContainer .Login_box
 {
 
-    width:  35dvw;
+    width:  35vw;
     min-width: 420px;
-    height: auto;
+    min-height: 250px;
     flex-direction: column;
       
 }
@@ -41,7 +53,7 @@
     justify-content: center;
     align-items: center;
     background-color: #A3AAD9;
-    width: 32dvw;
+    width: 32vw;
     min-width: 350px;
     height: 180px;
     border-radius: 10px;
@@ -91,9 +103,8 @@
     max-height: 90px;
     height: 7.5dvh;
     min-height: 50px;
-
     max-width: 500px;
-    width: 30dvw;
+    width: 30vw;
     min-width: 250px;
     background-color: #E0E0E0;
     outline:2px solid #A3AAD9;
@@ -124,7 +135,7 @@
 .LoginContainer .log_in_box
 {
     margin-top: 50px;
-    width: 20dvw;
+    width: 20vw;
     min-width: 250px;
     height: 77px;
     background-color: #E0E0E0;
@@ -166,6 +177,10 @@
 
 
 @media screen and (max-width: 600px) {
+    .LoginContainer .Login_box, .LoginContainer .Login_Title, .LoginContainer input {
+        margin: 0 auto; /* Ensure these elements are centered */
+        text-align: center; /* Align text */
+    }
 
     .LoginContainer .Login_box {
         width: 90vw;
