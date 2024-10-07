@@ -28,7 +28,6 @@
     cursor: pointer;
     text-decoration: underline;
     color: #7984D2;
-    float: bottom;
 }
 
 .change_cancel:hover {
@@ -76,6 +75,19 @@
     transition: background-color 0.3s ease;
     color: #5661AC;
     background-color: #E0E0E0;
+}
+
+.change_button_disabled {
+    height: 40px;
+    border-radius: 10px;
+    width: 50%;
+    border: 2px solid #A3AAD9;
+    font-size: 20px;
+    margin-inline: auto;
+    margin-bottom: 25px;
+    transition: background-color 0.3s ease;
+    color: #6972ac;
+    background-color: #c6c6c6;
 }
 
 .change_button:hover {

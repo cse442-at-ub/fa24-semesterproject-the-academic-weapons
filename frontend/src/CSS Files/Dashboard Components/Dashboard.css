@@ -50,12 +50,12 @@
 
 /* Recent Transactions (right of the pie chart) */
 .recent-transactions-box {
-  padding-bottom: 20px;
+  /*padding-bottom: 20px;*/
   margin-inline: auto;
   grid-column: 1; /* Right column */
   grid-row: 2;    /* Place in the first row */
-    max-width: 100%;
-
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Bar Chart Box (bottom of the grid, spanning full width) */
