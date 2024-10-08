@@ -32,6 +32,11 @@ function App() {
     const [isLoaded, setIsLoaded] = useState(false)
     const [transactions, setTransactions] = useState([]);
     const [maxTransID, setMaxTransID] = useState(1);
+    // Add Goals section
+    const [showAddGoal, setShowAddGoal] = useState(false);
+    const [goals, setGoals] = useState([]);
+    const [maxGoalID, setMaxGoalID] = useState(1);
+    // Add Goals section
     const userID = sessionStorage.getItem('User');
     const userToken = sessionStorage.getItem('auth_token');
 
@@ -187,6 +192,25 @@ function App() {
         setUsername(e);
         sessionStorage.setItem('username', e)
     }
+// GOALS MODAL SECTION
+    const openGoalModal = () => {
+        setShowAddGoal(true);
+    };
+
+    const closeGoalModal = () => {
+        setShowAddGoal(false);
+    };
+
+    const addGoal = (newGoal) => {
+        setGoals([...goals, newGoal]);
+        // Save goal logic goes here if needed
+    };
+
+    const updateMaxGoalID = (newID) => {
+        setMaxGoalID(newID);
+    };
+
+// GOALS MODAL SECTION END
 
   return (
       <HashRouter>
@@ -201,6 +225,7 @@ function App() {
               <Route path="/registration" element={<Registration />} />
             </Routes>
               {showAddTransaction ? <AddTransaction maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>:null}
+              {showAddGoal && <AddGoal maxGoalID={maxGoalID} updateMaxGoalID={updateMaxGoalID} addGoal={addGoal} closeModal={closeGoalModal} />}
               {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}
 
           </header>

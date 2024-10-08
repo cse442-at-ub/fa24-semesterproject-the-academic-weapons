@@ -66,6 +66,15 @@
   grid-row: 1;        /* Place in the second row */
 }
 
+/* Recent Transactions (right of the pie chart) */
+.goals-list-box {
+  /*padding-bottom: 20px;*/
+  margin-inline: auto;
+  grid-column: 1; /* Right column */
+  grid-row: 2;    /* Place in the first row */
+  width: 100%;
+  max-width: 100%;
+}
 /* Responsive design */
 @media (max-width: 768px) {
 
@@ -106,6 +115,12 @@
   }
 
   .recent-transactions-box {
+    max-width: 90vw;
+    grid-row: 4; /* Last in stack */
+    grid-column: 1;
+  }
+
+  .goals-list-box {
     max-width: 90vw;
     grid-row: 4; /* Last in stack */
     grid-column: 1;
