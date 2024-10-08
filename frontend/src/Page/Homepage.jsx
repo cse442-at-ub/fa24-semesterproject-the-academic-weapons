@@ -10,10 +10,9 @@ const Homepage = ( {openTransactionModal, transactions, deleteTransaction} ) => 
 
     return (
         <div>
-      {!userID ? (
+      {!userID || !userToken ? (
         <>
-                <Dashboard deleteTransaction={deleteTransaction} transactions={transactions} openModal={openTransactionModal}/>
-          {/* <Login/> */}
+          <Login/>
         </>
       ) : (
         <Dashboard deleteTransaction={deleteTransaction} transactions={transactions} openModal={openTransactionModal}/>
