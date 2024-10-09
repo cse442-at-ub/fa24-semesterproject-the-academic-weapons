@@ -8,6 +8,7 @@ import Settings from "./Page/Settings";
 import Login from './Page/Login';
 import Dashboard from './Page/Dashboard';
 import Registration from './Page/Registration';
+import Income from './Page/Income';
 import Navbar from './Component/Navbar';
 import {useEffect, useState} from "react";
 import AddTransaction from "./Component/AddTransaction";
@@ -224,6 +225,7 @@ function App() {
               <Route path={"/forget-password"} element={<ForgotPassword/>}/>
               <Route path={"/reset-password"} element={<ResetPassword/>}/>
               <Route path="/registration" element={<Registration />} />
+              <Route path="/income" element={<Income />} />
             </Routes>
               {showAddTransaction ? <AddTransaction maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>:null}
               {showAddGoal && <AddGoal maxGoalID={maxGoalID} updateMaxGoalID={updateMaxGoalID} addGoal={addGoal} closeModal={closeGoalModal} />}
