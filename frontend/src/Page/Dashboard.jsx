@@ -45,7 +45,7 @@ const Dashboard = ({ openModal, transactions, deleteTransaction, goals = [], del
         {/* - Goals Category */}
         <div className="box">
           <div className="goals-list-box">
-            <GoalsList goals={goalsState} deleteGoal={deleteGoal} />
+            <GoalsList goals={goalsState} deleteGoal={deleteGoal} openModal={openModal} />
           </div>
         </div>
       </div>
