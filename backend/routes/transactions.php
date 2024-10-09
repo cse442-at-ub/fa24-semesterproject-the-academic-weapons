@@ -22,6 +22,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         $auth_result = $auth_stmt->get_result();
 
+        // Check for date filters
+        $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : null;
+        $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : null;
+
+        // Prepare SQL query with optional date filtering
+        $query = "SELECT * FROM transactions WHERE user_id = ?";
+        if ($start_date && $end_date) {
+            $query .= " AND date BETWEEN ? AND ?";
+        }
+
+        $stmt = $conn->prepare($query);
+        if ($start_date && $end_date) {
+            $stmt->bind_param("iss", $id, $start_date, $end_date);
+        } else {
+            $stmt->bind_param("i", $id);
+        }
+
+
+
+
         if ($auth_result->num_rows === 0) {
             echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $id]);
             exit;
