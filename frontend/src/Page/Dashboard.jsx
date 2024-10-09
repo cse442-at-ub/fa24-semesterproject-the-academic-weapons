@@ -3,7 +3,7 @@ import '../CSS Files/Dashboard Components/Dashboard.css';
 import MainPieChart from '../Component/Dashboard Components/MainPieChart';
 import BarChartComponent from '../Component/Dashboard Components/BarChartComponent.jsx';
 import RecentTransactions from '../Component/Dashboard Components/RecentTransactions';
-import HighestSpending from '../Component/Dashboard Components/HighestSpending';
+import HighestSpending from '../Component/Dashboard Components/IncomeChart.jsx';
 import GoalsList from '../Component/Dashboard Components/Goals.jsx';
 import Navbar from "../Component/Navbar.jsx";
 
