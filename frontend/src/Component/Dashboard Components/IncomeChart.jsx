@@ -1,12 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { useNavigate } from 'react-router-dom';
-import '../../CSS Files/Dashboard Components/IncomeChart.css'; // Ensure to create this CSS file for styling
+import '../../CSS Files/Dashboard Components/IncomeChart.css'; // Ensure this CSS file exists for styling
 
-const IncomeChart = () => {
-  const income = 500; // Static income value
-  const expenses = 50; // Static expenses value
+const IncomeChart = ({ triggerFetch }) => {
+  const [expenses, setExpenses] = useState(0); // Dynamic expenses value
+  const income = 100; // Static income value
   const navigate = useNavigate();
+
+  // Replace with actual user ID and token
+  const userID = sessionStorage.getItem('User');
+  const userToken = sessionStorage.getItem('auth_token');
+
+  const fetchExpenses = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php?id=${userID}&token=${userToken}`);
+      const data = await response.json();
+
+      if (data.success) {
+        const totalExpenses = data.transactions.reduce((total, transaction) => total + parseFloat(transaction.price), 0);
+        setExpenses(totalExpenses); // Set the total expenses from transactions
+      } else {
+        console.error("Error fetching expenses:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching expenses:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch expenses initially when the component mounts
+    fetchExpenses();
+  }, [userID, userToken]);
+
+  // Trigger fetch when a new transaction is added
+  useEffect(() => {
+    if (triggerFetch) {
+      fetchExpenses();
+    }
+  }, [triggerFetch]);
 
   const data = [
     { name: 'Income', value: income },
@@ -37,7 +69,7 @@ const IncomeChart = () => {
       <p>Total Income: ${income}</p>
       <p>Total Expenses: ${expenses}</p>
       <button className="income-button" onClick={() => navigate('/income')}>
-        Got to Income
+        Go to Income
       </button>
     </div>
   );
