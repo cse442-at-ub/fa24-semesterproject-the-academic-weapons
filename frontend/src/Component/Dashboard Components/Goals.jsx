@@ -14,7 +14,7 @@ const GoalsList = ({ deleteGoal }) => {
     useEffect(() => {
         const interval = setInterval(() => {
             fetchGoals();
-        }, 5000); // Fetch goals every 5 seconds
+        }, 1000); // Fetch goals every 5 seconds
 
         fetchGoals(); // Initial fetch
 
@@ -49,10 +49,30 @@ const GoalsList = ({ deleteGoal }) => {
         setShowAddGoalModal(false);
     };
 
-    const handleDeleteGoal = (goalId) => {
-        deleteGoal(goalId);
-        setGoalsState(prevGoals => prevGoals.filter(goal => goal.id !== goalId));
-    };
+    const handleDeleteGoal = async (goalId) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID: userID,
+                userToken: userToken,
+                goalID: goalId,
+            }),
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            setGoalsState(prevGoals => prevGoals.filter(goal => goal.id !== goalId));
+        } else {
+            console.error('Error deleting goal:', result.message);
+        }
+    } catch (error) {
+        console.error('An error occurred while deleting the goal:', error);
+    }
+};
 
     return (
         <div className="goals-list">
