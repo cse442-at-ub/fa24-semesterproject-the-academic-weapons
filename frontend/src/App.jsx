@@ -22,6 +22,7 @@ import img4 from "./Assets/Profile Pictures/Person5.svg"
 import img5 from "./Assets/Profile Pictures/Person6.svg"
 import img6 from "./Assets/Profile Pictures/Person7.svg"
 import img7 from "./Assets/Profile Pictures/Person8.svg"
+import AddGoal from "./Component/AddGoals.jsx";
 
 
 function App() {

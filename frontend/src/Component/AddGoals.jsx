@@ -1,33 +1,108 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdDelete } from "react-icons/md";
 import '../CSS Files/AddGoals.css';
 
-const AddGoal = ({ closeModal, addGoal, removeGoal, maxGoalID, updateMaxGoalID }) => {
+const AddGoals = ({ closeModal, maxGoalID, updateMaxGoalID }) => {
     const todayDate = new Date().toISOString().substr(0, 10);
     const [goalName, setGoalName] = useState('');
     const [cost, setCost] = useState('');
     const [date, setDate] = useState(todayDate);
-    const [newGoals, setNewGoals] = useState([]);
+    const [goals, setGoals] = useState([]);
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
 
-    const handleAddGoal = (e) => {
+    const userID = sessionStorage.getItem('User');
+    const userToken = sessionStorage.getItem('auth_token');
+
+    useEffect(() => {
+        fetchGoals();
+    }, []);
+
+    const fetchGoals = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php?id=${userID}&token=${userToken}`);
+            const result = await response.json();
+
+            if (result.success) {
+                setGoals(result.goals);
+            } else {
+                setError(result.message);
+            }
+        } catch (err) {
+            setError('An error occurred while fetching goals.');
+        }
+    };
+
+    const handleAddGoal = async (e) => {
         e.preventDefault();
-        const newID = maxGoalID + 1;
-        const newGoal = { id: newID, name: goalName, cost, date };
-        setNewGoals([...newGoals, newGoal]);
-        updateMaxGoalID(newID);
-        setGoalName('');
-        setCost('');
-        setDate(todayDate);
+        setError('');
+        if (!goalName || !cost) {
+            setError('Goal name and cost are required.');
+            return;
+        }
+
+        const newGoal = { name: goalName, cost: parseFloat(cost), date };
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userID: userID,
+                    userToken: userToken,
+                    goal: newGoal,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Update local state after successfully adding the goal to the backend
+                const newID = maxGoalID + 1;
+                const addedGoal = { id: newID, ...newGoal };
+                setGoals([...goals, addedGoal]);
+                updateMaxGoalID(newID);
+                setGoalName('');
+                setCost('');
+                setDate(todayDate);
+                setMessage('Goal successfully added.');
+            } else {
+                setError(result.message || 'An error occurred while adding the goal.');
+            }
+        } catch (error) {
+            console.error('Error adding goal:', error);
+            setError('An error occurred while trying to add the goal.');
+        }
     };
 
-    const handleSaveAndExit = () => {
-        newGoals.forEach(goal => addGoal(goal));
-        closeModal();
-    };
+    const deleteGoal = async (goalID) => {
+        setError('');
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userID: userID,
+                    userToken: userToken,
+                    goalID: goalID,
+                }),
+            });
 
-    const deleteGoal = (delID) => {
-        const updatedGoals = newGoals.filter(goal => goal.id !== delID);
-        setNewGoals(updatedGoals);
+            const result = await response.json();
+
+            if (result.success) {
+                setGoals(goals.filter(goal => goal.id !== goalID));
+                setMessage('Goal successfully deleted.');
+            } else {
+                setError(result.message || 'An error occurred while deleting the goal.');
+            }
+        } catch (error) {
+            console.error('Error deleting goal:', error);
+            setError('An error occurred while trying to delete the goal.');
+        }
     };
 
     return (
@@ -35,7 +110,7 @@ const AddGoal = ({ closeModal, addGoal, removeGoal, maxGoalID, updateMaxGoalID }
             <div className={"add_goal_modal_container_inside"}>
                 <div className={"add_goal_input_form_container"}>
                     <h1 className={"add_goal_title"}>Add Goal</h1>
-                    <form>
+                    <form onSubmit={handleAddGoal}>
                         <div className={'add_goal_form_input_group'}>
                             <label className={"add_goal_input_label"}>Name<span className={'required_field'}>*</span></label>
                             <input className={'add_goal_input_field'} type="text" value={goalName} required onChange={e => setGoalName(e.target.value)} />
@@ -49,7 +124,7 @@ const AddGoal = ({ closeModal, addGoal, removeGoal, maxGoalID, updateMaxGoalID }
                             <input className={'add_goal_input_field'} type="date" value={date} onChange={e => setDate(e.target.value)} />
                         </div>
                         <div className={'add_goal_form_input_group'}>
-                            <button type="submit" className={"add_goal_add_btn"} onClick={handleAddGoal}>Add</button>
+                            <button type="submit" className={"add_goal_add_btn"}>Add</button>
                         </div>
                     </form>
                     <div className={"add_goal_close_text"} onClick={closeModal}>Cancel</div>
@@ -57,7 +132,7 @@ const AddGoal = ({ closeModal, addGoal, removeGoal, maxGoalID, updateMaxGoalID }
                 <div className={'add_goal_added_box_container'}>
                     <h1 className={'add_goal_title'}>Added Goals</h1>
                     <div className={'add_goal_added_box'}>
-                        {newGoals.map(goal => (
+                        {goals.map(goal => (
                             <div key={goal.id} className={'add_goal_added_goal_item'}>
                                 <div className={'add_goal_added_item_text'}>
                                     <div className={'add_goal_added_text'}>{goal.name}</div>
@@ -68,8 +143,10 @@ const AddGoal = ({ closeModal, addGoal, removeGoal, maxGoalID, updateMaxGoalID }
                             </div>
                         ))}
                     </div>
+                    {error && <p className="error-message">{error}</p>}
+                    {message && <p className="success-message">{message}</p>}
                     <div className={'add_goal_added_save_exit_container'}>
-                        <button onClick={handleSaveAndExit} className={"add_goal_add_btn"}>Save and Exit</button>
+                        <button onClick={closeModal} className={"add_goal_add_btn"}>Save and Exit</button>
                     </div>
                 </div>
             </div>
@@ -77,4 +154,4 @@ const AddGoal = ({ closeModal, addGoal, removeGoal, maxGoalID, updateMaxGoalID }
     );
 };
 
-export default AddGoal;
+export default AddGoals;
