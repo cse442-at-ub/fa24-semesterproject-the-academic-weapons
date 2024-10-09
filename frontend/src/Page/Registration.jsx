@@ -18,6 +18,10 @@ const Registration = () => {
       alert('Passwords do not Match!')
       return
     }
+    if (!email.endsWith('@buffalo.edu')) {
+      alert('Only @buffalo.edu emails are allowed!');
+      return;
+    }
     try {
       const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/registration.php`, {
         method: 'POST',
