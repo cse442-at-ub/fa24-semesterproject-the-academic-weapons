@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import '../../CSS Files/Dashboard Components/RecentTransactions.css';
-import {MdDelete} from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { BiSolidPencil } from "react-icons/bi";
 
-
-const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, transactions, deleteTransaction}) => {
-  // Add state for start date and end date
+const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, transactions, deleteTransaction }) => {
+    // Add state for start date and end date
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [filteredTransactions, setFilteredTransactions] = useState(transactions);
+    const [filteredTransactions, setFilteredTransactions] = useState([]);
 
     // Function to filter and sort transactions based on start and end dates
     const filterTransactions = () => {
@@ -39,17 +38,17 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
         openEditModal();
     }
 
-  return (
-    <div className="recent-transactions">
-      <div className="transactions-header">
-        <h3>Recent Transactions</h3>
-        <button className="add-button" onClick={openModal}>Add Item
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 5V19M5 12H19" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-      </div>
-      <div className="transactions-filter">
+    return (
+        <div className="recent-transactions">
+            <div className="transactions-header">
+                <h3>Recent Transactions</h3>
+                <button className="add-button" onClick={openModal}>Add Item
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 5V19M5 12H19" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div className="transactions-filter">
                 <div className="date-input-group">
                     <label className="date-label" htmlFor="start-date">Start:</label>
                     <input
@@ -69,21 +68,20 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
                     />
                 </div>
             </div>
-      <div className="transactions-list">
-        {transactions.map((transaction, index) => (
-          <div className="transaction" key={transaction.id}>
-              <span className={"icon_button"} onClick={e => handleEditTransaction(transaction)}><BiSolidPencil /></span>
-            <span>{transaction.name}</span>
-            <span>{"$"+transaction.price}</span>
-            <span>{transaction.date}</span>
-              <span className={"icon_button"} onClick={e => deleteTransaction(transaction.id)}><MdDelete /></span>
-          </div>
-        ))}
-      </div>
 
-    </div>
-  );
+            <div className="transactions-list">
+                {filteredTransactions.map((transaction) => (
+                    <div className="transaction" key={transaction.id}>
+                        <span className="icon_button" onClick={() => handleEditTransaction(transaction)}><BiSolidPencil /></span>
+                        <span>{transaction.name}</span>
+                        <span>{"$" + transaction.price}</span>
+                        <span>{transaction.date}</span>
+                        <span className="icon_button" onClick={e => handleEditTransaction(transaction)}><BiSolidPencil/></span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 };
 
 export default RecentTransactions;
-
