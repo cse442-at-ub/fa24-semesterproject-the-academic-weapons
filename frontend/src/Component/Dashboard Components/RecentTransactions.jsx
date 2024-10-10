@@ -7,8 +7,7 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
     // Add state for start date and end date
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [filteredTransactions, setFilteredTransactions] = useState(transactions);
-
+    const [filteredTransactions, setFilteredTransactions] = useState([]);
 
     // Function to filter and sort transactions based on start and end dates
     const filterTransactions = () => {
@@ -73,11 +72,11 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
             <div className="transactions-list">
                 {filteredTransactions.map((transaction) => (
                     <div className="transaction" key={transaction.id}>
-                        <span className="icon_button" onClick={e => handleEditTransaction(transaction)}><BiSolidPencil /></span>
+                        <span className="icon_button" onClick={() => handleEditTransaction(transaction)}><BiSolidPencil /></span>
                         <span>{transaction.name}</span>
                         <span>{"$" + transaction.price}</span>
                         <span>{transaction.date}</span>
-                        <span className="icon_button" onClick={() => deleteTransaction(transaction.id)}><MdDelete/></span>
+                        <span className="icon_button" onClick={e => handleEditTransaction(transaction)}><BiSolidPencil/></span>
                     </div>
                 ))}
             </div>
