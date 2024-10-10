@@ -58,11 +58,7 @@
     height: 180px;
     border-radius: 10px;
     cursor: pointer;
-    
-}
-
-
-.LoginContainer h1{
+    font-size: clamp(15px, 2vw, 40px);
     color: #FFFFFF;
     font-family: 'Assistant';
 }
@@ -99,7 +95,7 @@
 
 
 .LoginContainer input{
-
+    text-align: left;
     max-height: 90px;
     height: 7.5dvh;
     min-height: 50px;
@@ -204,6 +200,7 @@
         width: 65vw;
         height: 60px;
         font-size: 16px;
+        text-align: left;
     }
 
     .LoginContainer .login_in_box {
