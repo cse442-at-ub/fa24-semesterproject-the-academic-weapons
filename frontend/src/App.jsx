@@ -3,6 +3,7 @@ import './CSS Files/Navbar.css';
 import './CSS Files/AddTransaction.css'
 import './CSS Files/Settings.css'
 import './CSS Files/Settings Components/ChangeModals.css'
+import './CSS Files/EditTransaction.css'
 import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
 import Settings from "./Page/Settings";
 import Login from './Page/Login';
@@ -24,15 +25,18 @@ import img5 from "./Assets/Profile Pictures/Person6.svg"
 import img6 from "./Assets/Profile Pictures/Person7.svg"
 import img7 from "./Assets/Profile Pictures/Person8.svg"
 import AddGoal from "./Component/AddGoals.jsx";
+import EditTransaction from "./Component/EditTransaction.jsx";
 
 
 function App() {
     const [showAddTransaction, setShowAddTransaction] = useState(false);
+    const [showEditTransaction, setShowEditTransaction] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [pfp, setPFP] = useState(0);
     const [username, setUsername] = useState("DefaultName")
     const [isLoaded, setIsLoaded] = useState(false)
     const [transactions, setTransactions] = useState([]);
+    const [editTransaction, setEditTransaction] = useState({});
     const [maxTransID, setMaxTransID] = useState(1);
     // Add Goals section
     const [showAddGoal, setShowAddGoal] = useState(false);
@@ -109,6 +113,21 @@ function App() {
         saveTransactions(newItem)
     }
 
+    const saveEditTransaction = (updated) => {
+        const editedTransactions = [...transactions];
+        const editedIndex = editedTransactions.findIndex(trans => trans.id === updated.id)
+        editedTransactions[editedIndex].name = updated.name;
+        editedTransactions[editedIndex].price = updated.price;
+        editedTransactions[editedIndex].category = updated.category;
+        editedTransactions[editedIndex].date = updated.date;
+        setTransactions(editedTransactions);
+        updateDatabaseTransactions(updated);
+    }
+
+    const updateEditTransaction = (transaction) => {
+        setEditTransaction(transaction);
+    }
+
     const updateMaxTransID = (e) => {
         setMaxTransID(e)
     }
@@ -124,6 +143,30 @@ function App() {
             });
             if (!response.ok) {
                 console.error("Error saving transactions...")
+            }
+            const reply = await response.json()
+            if (!reply.success) {
+                alert("Invalid user credentials, please sign in again...")
+                sessionStorage.clear()
+                window.location.reload()
+            }
+            setIsLoaded(false);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const updateDatabaseTransactions = async (updateItem) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
+                method: 'UPDATE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({userID, userToken, updateItem}),
+            });
+            if (!response.ok) {
+                console.error("Error updating transactions...")
             }
             const reply = await response.json()
             if (!reply.success) {
@@ -177,6 +220,14 @@ function App() {
         setShowAddTransaction(false);
     }
 
+    const openEditModal = () => {
+        setShowEditTransaction(true);
+    }
+
+    const closeEditModal = () => {
+        setShowEditTransaction(false);
+    }
+
     const openSettings = () => {
         setShowSettings(true);
     }
@@ -220,13 +271,14 @@ function App() {
           <header className="App-header">
             <Navbar pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
-            <Route path={"/"} element={<Homepage deleteTransaction={removeTransaction} transactions={transactions} openTransactionModal={openTransactionModal}/>}/> =
+            <Route path={"/"} element={<Homepage openEditModal={openEditModal} updateEditTransaction={updateEditTransaction} deleteTransaction={removeTransaction} transactions={transactions} openTransactionModal={openTransactionModal}/>}/> =
               <Route path={"/settings"} element={<Settings/>}/>
               <Route path={"/forget-password"} element={<ForgotPassword/>}/>
               <Route path={"/reset-password"} element={<ResetPassword/>}/>
               <Route path="/registration" element={<Registration />} />
               <Route path="/income" element={<Income />} />
             </Routes>
+              {showEditTransaction ? <EditTransaction oldTransaction={editTransaction} closeModal={closeEditModal}/>:null}
               {showAddTransaction ? <AddTransaction maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>:null}
               {showAddGoal && <AddGoal maxGoalID={maxGoalID} updateMaxGoalID={updateMaxGoalID} addGoal={addGoal} closeModal={closeGoalModal} />}
               {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}

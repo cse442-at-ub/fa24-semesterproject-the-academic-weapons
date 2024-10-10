@@ -1,9 +1,16 @@
 import React from 'react';
 import '../../CSS Files/Dashboard Components/RecentTransactions.css';
 import {MdDelete} from "react-icons/md";
+import { BiSolidPencil } from "react-icons/bi";
 
 
-const RecentTransactions = ({ openModal, transactions, deleteTransaction}) => {
+const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, transactions, deleteTransaction}) => {
+
+    const handleEditTransaction = (transaction) => {
+        console.log(transaction)
+        updateEditTransaction(transaction);
+        openEditModal();
+    }
 
   return (
     <div className="recent-transactions">
@@ -18,10 +25,11 @@ const RecentTransactions = ({ openModal, transactions, deleteTransaction}) => {
       <div className="transactions-list">
         {transactions.map((transaction, index) => (
           <div className="transaction" key={index}>
+              <span className={"icon_button"} onClick={e => handleEditTransaction(transaction)}><BiSolidPencil /></span>
             <span>{transaction.name}</span>
             <span>{"$"+transaction.price}</span>
             <span>{transaction.date}</span>
-              <span onClick={e => deleteTransaction(transaction.id)}><MdDelete /></span>
+              <span className={"icon_button"} onClick={e => deleteTransaction(transaction.id)}><MdDelete /></span>
           </div>
         ))}
       </div>
