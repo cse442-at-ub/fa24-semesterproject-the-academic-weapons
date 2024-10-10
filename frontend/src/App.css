@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300&display=swap');
+
 .App {
     height: auto;
     width: auto;
@@ -6,7 +8,6 @@
     background-repeat: repeat;
 }
 
-/* Changed height and width to auto
-    then make sure your container 
-    makes use of height and width so it can adjust accoridingly
-*/
+.icon_button {
+    cursor: pointer;
+}

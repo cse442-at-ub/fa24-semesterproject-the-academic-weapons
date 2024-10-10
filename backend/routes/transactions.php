@@ -4,7 +4,7 @@ include '../config/db.php'; // Ensure this sets up $conn
 
 // Handle CORS
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, DELETE");
+header("Access-Control-Allow-Methods: POST, GET, DELETE, UPDATE");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             exit;
         }
 
-            // Prepare the SQL query
+        // Prepare the SQL query
         $stmt = $conn->prepare("SELECT * FROM transactions WHERE user_id = ?");
         $stmt->bind_param("i", $id);
 
@@ -39,16 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $transactions = array();
 
 //         Check if any row was returned
-         if ($result->num_rows > 0) {
-             // Fetch the data and send it back as JSON
-             // Initialize an array to store the transactions
+        if ($result->num_rows > 0) {
+            // Fetch the data and send it back as JSON
+            // Initialize an array to store the transactions
 
-             // Fetch all rows and add them to the transactions array
-             while ($row = $result->fetch_assoc()) {
-                 $transactions[] = $row;
-             }
-         }
-         echo json_encode(['success' => true, 'transactions' => $transactions]);
+            // Fetch all rows and add them to the transactions array
+            while ($row = $result->fetch_assoc()) {
+                $transactions[] = $row;
+            }
+        }
+        echo json_encode(['success' => true, 'transactions' => $transactions]);
 
         // Close the statement
         $stmt->close();
@@ -113,6 +113,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Return success message
     echo json_encode(['success' => true, "message" => "Transactions successfully inserted"]);
+
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'UPDATE') {
+    // Get JSON input
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        echo json_encode(['success' => false, 'message' => 'Invalid JSON: ' . json_last_error_msg()]);
+        exit;
+    }
+
+    // Retrieve id and transaction data
+    $userID = $data['userID'] ?? null;
+    $token = $data['userToken'] ?? null;
+    $transaction = $data['updateItem'] ?? null;
+
+    if (empty($userID) || empty($transaction) || empty($token)) {
+        echo json_encode(['success' => false, 'message' => 'User ID and Token and Save Item are required']);
+        exit;
+    }
+
+    $auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
+
+    $auth_stmt->bind_param("is", $userID, $token);
+
+    $auth_stmt->execute();
+
+    $auth_result = $auth_stmt->get_result();
+
+    if ($auth_result->num_rows === 0) {
+        echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $userID]);
+        exit;
+    }
+
+
+    // Prepare an SQL statement to insert the transactions
+    $stmt = $conn->prepare("UPDATE transactions SET name = ?, price = ?, category = ?, date = ? WHERE id = ?");
+
+    // Loop through each transaction and insert it into the database
+    $name = $transaction['name'];
+    $price = $transaction['price'];
+    $category = $transaction['category'];
+    $date = $transaction['date'];
+    $item_id = $transaction['id'];
+
+    // Bind parameters (i for integer, d for decimal, s for strings)
+    $stmt->bind_param("sdssi", $name, $price, $category, $date, $item_id);
+
+    // Execute the prepared statement
+    $stmt->execute();
+
+    // Close the statement
+    $stmt->close();
+    $conn->close(); // Close the connection
+
+    // Return success message
+    echo json_encode(['success' => true, "message" => "Transactions successfully updated"]);
 
 }
 
