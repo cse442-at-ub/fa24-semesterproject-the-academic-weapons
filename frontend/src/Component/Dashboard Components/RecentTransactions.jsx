@@ -7,7 +7,6 @@ import { BiSolidPencil } from "react-icons/bi";
 const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, transactions, deleteTransaction}) => {
 
     const handleEditTransaction = (transaction) => {
-        console.log(transaction)
         updateEditTransaction(transaction);
         openEditModal();
     }

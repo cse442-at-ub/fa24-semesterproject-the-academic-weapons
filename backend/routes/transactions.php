@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'UPDATE') {
     // Retrieve id and transaction data
     $userID = $data['userID'] ?? null;
     $token = $data['userToken'] ?? null;
-    $transaction = $data['saveItem'] ?? null;
+    $transaction = $data['updateItem'] ?? null;
 
     if (empty($userID) || empty($transaction) || empty($token)) {
         echo json_encode(['success' => false, 'message' => 'User ID and Token and Save Item are required']);
@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'UPDATE') {
 
 
     // Prepare an SQL statement to insert the transactions
-    $stmt = $conn->prepare("UPDATE transactions SET (name, price, category, date) VALUES (?, ?, ?, ?)  WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE transactions SET name = ?, price = ?, category = ?, date = ? WHERE id = ?");
 
     // Loop through each transaction and insert it into the database
     $name = $transaction['name'];

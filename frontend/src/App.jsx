@@ -170,6 +170,7 @@ function App() {
             }
             const reply = await response.json()
             if (!reply.success) {
+                console.log(reply.message)
                 alert("Invalid user credentials, please sign in again...")
                 sessionStorage.clear()
                 window.location.reload()
@@ -278,7 +279,7 @@ function App() {
               <Route path="/registration" element={<Registration />} />
               <Route path="/income" element={<Income />} />
             </Routes>
-              {showEditTransaction ? <EditTransaction oldTransaction={editTransaction} closeModal={closeEditModal}/>:null}
+              {showEditTransaction ? <EditTransaction saveEditTransaction={saveEditTransaction} oldTransaction={editTransaction} closeModal={closeEditModal}/>:null}
               {showAddTransaction ? <AddTransaction maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>:null}
               {showAddGoal && <AddGoal maxGoalID={maxGoalID} updateMaxGoalID={updateMaxGoalID} addGoal={addGoal} closeModal={closeGoalModal} />}
               {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}
