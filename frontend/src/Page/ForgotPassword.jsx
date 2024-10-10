@@ -58,31 +58,34 @@ const ForgotPassword = () => {
 
 
   return (
-    <div className="forgot-password-container">
-      <TitleBanner />
-      <div className="forgot-password-box">
-        <div className="forgot-password-title">
-          <h2>Forgot Password</h2>
-          <p>Enter your account email to receive a password recovery link.</p>
+      <div className="forgot-password-container">
+        {/*<TitleBanner />*/}
+        <div onClick={event => navigate('/')} className="Login_Title">
+          <h1>Wealth Wise</h1>
         </div>
-        <form onSubmit={handleForgotPassword}>
-          <div className="email-section">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+        <div className="forgot-password-box">
+          <div className="forgot-password-title">
+            <h2>Forgot Password</h2>
+            <p>Enter your account email to receive a password recovery link.</p>
           </div>
-          {error && <p className="error-message">{error}</p>}
-          {message && <p className="success-message">{message}</p>}
-          <button type="submit" className="send-code-button">Send Code</button>
-          <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
-        </form>
+          <form onSubmit={handleForgotPassword}>
+            <div className="email-section">
+              <label htmlFor="email">Email</label>
+              <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+              />
+            </div>
+            {error && <p className="error-message">{error}</p>}
+            {message && <p className="success-message">{message}</p>}
+            <button type="submit" className="send-code-button">Send Code</button>
+            <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
+          </form>
+        </div>
       </div>
-    </div>
   );
 };
 
