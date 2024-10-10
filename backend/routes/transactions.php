@@ -8,23 +8,17 @@ header("Access-Control-Allow-Methods: POST, GET, DELETE");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($_GET['id']) && isset($_GET['token'])) {
         $id = intval($_GET['id']);  // Sanitize input by converting to integer
         $token = $_GET['token'];
-
-        $auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
-
-        $auth_stmt->bind_param("is", $id, $token);
-
-        $auth_stmt->execute();
-
-        $auth_result = $auth_stmt->get_result();
-
-        // Check for date filters
         $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : null;
         $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : null;
+
+        $auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
+        $auth_stmt->bind_param("is", $id, $token);
+        $auth_stmt->execute();
+        $auth_result = $auth_stmt->get_result();
 
         // Prepare SQL query with optional date filtering
         $query = "SELECT * FROM transactions WHERE user_id = ?";
@@ -39,17 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $stmt->bind_param("i", $id);
         }
 
-
-
-
         if ($auth_result->num_rows === 0) {
             echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $id]);
             exit;
         }
-
-            // Prepare the SQL query
-        $stmt = $conn->prepare("SELECT * FROM transactions WHERE user_id = ?");
-        $stmt->bind_param("i", $id);
 
         // Execute the query
         $stmt->execute();
@@ -58,17 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $result = $stmt->get_result();
         $transactions = array();
 
-//         Check if any row was returned
-         if ($result->num_rows > 0) {
-             // Fetch the data and send it back as JSON
-             // Initialize an array to store the transactions
-
-             // Fetch all rows and add them to the transactions array
-             while ($row = $result->fetch_assoc()) {
-                 $transactions[] = $row;
-             }
-         }
-         echo json_encode(['success' => true, 'transactions' => $transactions]);
+        // Check if any row was returned
+        if ($result->num_rows > 0) {
+            // Fetch all rows and add them to the transactions array
+            while ($row = $result->fetch_assoc()) {
+                $transactions[] = $row;
+            }
+        }
+        echo json_encode(['success' => true, 'transactions' => $transactions]);
 
         // Close the statement
         $stmt->close();

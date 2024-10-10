@@ -40,10 +40,34 @@
   background-color: #6b5fb5;
 }
 
+.transactions-filter {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: center;
+}
 
+.filter-date {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.filter-button {
+  background-color: #8884d8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.filter-button:hover {
+  background-color: #6b5fb5;
+}
 
 .transactions-list {
-  
   background-color: #D9D9D9;
   width: 100%;
   height: 500px;
@@ -53,22 +77,22 @@
 }
 
 /* THIS PART WILL BE TESTING OF HOVERING OVER scollwheel thingy */
-/* .transactions-list::-webkit-scrollbar 
+/* .transactions-list::-webkit-scrollbar
 {
   width: 0;
 }
 
-.transactions-list:hover::-webkit-scrollbar 
+.transactions-list:hover::-webkit-scrollbar
 {
   width: 8px;
 }
 
-.transactions-list::-webkit-scrollbar-track 
+.transactions-list::-webkit-scrollbar-track
 {
   background:transparent;
 }
 
-.transactions-list::-webkit-scrollbar-thumb 
+.transactions-list::-webkit-scrollbar-thumb
 {
   background: rgba(168, 31, 31, 0.3);
   border-radius: 10px;
@@ -80,8 +104,6 @@
 } */
 
 /* END OF SCROLL TESTING didnt work :( */
-
-
 
 /* This seems to be each item part  */
 .transaction {
@@ -95,9 +117,9 @@
   padding: 10px;
   border-radius: 20px;
 }
+
 /* This seems to be the money sign part  */
 .transaction span {
-
   font-size: 1rem;
   white-space: nowrap;
   overflow: hidden;
@@ -111,7 +133,6 @@
 }
 
 @media only screen and (max-width: 1000px) {
-
   .transaction {
     text-align: center;
     padding: 0;
@@ -129,6 +150,4 @@
     padding: 5px;
     max-width: 90%;
   }
-
-
 }
