@@ -24,7 +24,7 @@ const Dashboard = ({updateEditTransaction, openEditModal, openModal, transaction
         {/* - Bar Chart  */}
         <div className="box">
           <div className={'bar-chart-box'}>
-            <BarChartComponent />
+            <BarChartComponent transactions={transactions} />
           </div>
         </div>
 
