@@ -9,6 +9,7 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
     const [endDate, setEndDate] = useState('');
     const [filteredTransactions, setFilteredTransactions] = useState(transactions);
 
+
     // Function to filter and sort transactions based on start and end dates
     const filterTransactions = () => {
         // Filter transactions based on start and end dates
