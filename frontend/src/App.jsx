@@ -37,9 +37,9 @@ function App() {
     const [username, setUsername] = useState("DefaultName")
     const [isLoaded, setIsLoaded] = useState(false)
     const [transactions, setTransactions] = useState([]);
+    const [income, setIncome] = useState(0);
     const [editTransaction, setEditTransaction] = useState({});
     const [editGoal, setEditGoal] = useState({});
-
     const [maxTransID, setMaxTransID] = useState(1);
     // Add Goals section
     const [showAddGoal, setShowAddGoal] = useState(false);
@@ -61,11 +61,27 @@ function App() {
                 if (getPFP) setPFP(parseInt(getPFP) || 0);
                 getTransactions();
                 getGoals()
+                fetchIncome()
                 setIsLoaded(true);
             }
         }
 
     }, [isLoaded])
+
+    const fetchIncome = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}`); // Update to the correct endpoint
+            const data = await response.json();
+
+            if (data.success) {
+                setIncome(parseFloat(data.totalIncome)); // Set the total income from the database
+            } else {
+                console.error("Error fetching income:", data.message);
+            }
+        } catch (error) {
+            console.error("Error fetching income:", error);
+        }
+    };
 
     const getTransactions = async () => {
         try {
@@ -425,7 +441,7 @@ function App() {
                 deleteTransaction={removeTransaction}
                 transactions={transactions}
                 openTransactionModal={openTransactionModal}
-
+                income={income}
                 addGoal={addGoal}
                 deleteGoal={removeGoal}
                 goals={goals}
