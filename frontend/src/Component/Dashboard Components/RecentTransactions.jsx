@@ -8,6 +8,8 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [filteredTransactions, setFilteredTransactions] = useState([]);
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+    const [deleteID, setDeleteID] = useState(-1)
 
     // Function to filter and sort transactions based on start and end dates
     const filterTransactions = () => {
@@ -38,7 +40,20 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
         openEditModal();
     }
 
+    const handleDelete = (id) => {
+        setDeleteID(id);
+        setShowConfirmDelete(true);
+    }
+
+    const handleConfirmDelete = () => {
+        deleteTransaction(deleteID);
+        setShowConfirmDelete(false);
+    }
+
+
+
     return (
+        <>
         <div className="recent-transactions">
             <div className="transactions-header">
                 <h3>Recent Transactions</h3>
@@ -78,12 +93,25 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
                         <span>{transaction.name}</span>
                         <span>{"$" + transaction.price}</span>
                         <span>{transaction.date}</span>
-                        <span className="icon_button" onClick={e => deleteTransaction(transaction.id)}><MdDelete/></span>
+                        <span className="icon_button" onClick={e => handleDelete(transaction.id)}><MdDelete/></span>
                     </div>
                 ))}
                     </div>:<p style={{textAlign:"center", marginTop:"100px", color:"black"}}>Looks like you haven't added any transactions yet. <br/>Try <span onClick={openModal} style={{color:"#7984D2", textDecoration: "underline", cursor:"pointer"}}>adding a transaction</span></p>}
             </div>
         </div>
+            {showConfirmDelete ?
+            <div onClick={() => setShowConfirmDelete(false)} className={"edit_background"}>
+                <div onClick={e => e.stopPropagation()} className={"confirm_delete_modal"}>
+                    <div className={"confirm_delete_modal_text_container"}>
+                        <div className={"confirm_delete_modal_text"}>{"Are you sure you want to delete this transaction?"}</div>
+                    </div>
+                    <div className={"confirm_delete_button_tray"}>
+                        <button className={"delete_transaction_button"} onClick={handleConfirmDelete}>Delete</button>
+                        <button className={"cancel_delete_button"} onClick={() => setShowConfirmDelete(false)}>Cancel</button>
+                    </div>
+                </div>
+            </div>:null}
+            </>
     );
 };
 

@@ -3,64 +3,35 @@ import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 import '../../CSS Files/Dashboard Components/IncomeChart.css'; // Ensure this CSS file exists for styling
 
-const IncomeChart = ({ triggerFetch }) => {
+const IncomeChart = ({income, transactions }) => {
   const [expenses, setExpenses] = useState(0); // Dynamic expenses value
-  const [income, setIncome] = useState(0); // Dynamic income value fetched from backend
   const navigate = useNavigate();
-
+  const [data, setData] = useState([{ name: 'Income', value: income }, { name: 'Expenses', value: 0 }]);
+  const [isLoaded, setIsLoaded] = useState(false)
   const userID = sessionStorage.getItem('User');
   const userToken = sessionStorage.getItem('auth_token');
 
   // Fetch total income from the backend
-  const fetchIncome = async () => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}`); // Update to the correct endpoint
-      const data = await response.json();
 
-      if (data.success) {
-        setIncome(parseFloat(data.totalIncome)); // Set the total income from the database
-      } else {
-        console.error("Error fetching income:", data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching income:", error);
-    }
-  };
-
-  // Fetch expenses from the backend
-  const fetchExpenses = async () => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php?id=${userID}&token=${userToken}`);
-      const data = await response.json();
-
-      if (data.success) {
-        const totalExpenses = data.transactions.reduce((total, transaction) => total + parseFloat(transaction.price), 0);
-        setExpenses(totalExpenses); // Set the total expenses from transactions
-      } else {
-        console.error("Error fetching expenses:", data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching expenses:", error);
-    }
-  };
 
   useEffect(() => {
     // Fetch income and expenses initially when the component mounts
-    fetchIncome();
-    fetchExpenses();
-  }, [userID, userToken]);
-
-  // Trigger fetch when a new transaction is added
-  useEffect(() => {
-    if (triggerFetch) {
-      fetchExpenses();
+    if (transactions.length > 0) {
+      if (expenses === 0 || !isLoaded) {
+        getTotalTransactions(transactions)
+        setIsLoaded(true);
+      } else if (expenses > 0) {
+        setData([{ name: 'Income', value: income }, { name: 'Expenses', value: expenses },])
+        setIsLoaded(false);
+      }
     }
-  }, [triggerFetch]);
 
-  const data = [
-    { name: 'Income', value: income },
-    { name: 'Expenses', value: expenses },
-  ];
+  }, [userID, userToken, transactions, expenses]);
+
+  const getTotalTransactions = (inputTransactions) => {
+    let total = inputTransactions.reduce((total, transaction) => total + parseFloat(transaction.price), 0);
+    setExpenses(total)
+  }
 
   const COLORS = ['#00C49F', '#FF8042'];
 

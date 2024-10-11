@@ -7,6 +7,7 @@
     height: 120vh;
     max-height: 100%;
     overflow-y: auto;
+    z-index: 1000;
 }
 
 .edit_trans_modal_container {

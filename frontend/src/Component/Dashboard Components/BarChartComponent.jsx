@@ -100,7 +100,7 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
                   <XAxis dataKey="name" />
                   <YAxis tickFormatter={formatYAxis} /> {/* Y-axis now correctly formatted */}
                   <Tooltip formatter={tooltipFormatter} /> {/* Tooltip formatted with dollar sign and commas */}
-                  <Legend width={80} />
+                  {/*<Legend width={80} />*/}
                   <Bar dataKey="value" fill="#8884d8" />
                 </BarChart>
               </ResponsiveContainer>

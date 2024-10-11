@@ -139,6 +139,74 @@
   font-weight: bold;
 }
 
+.confirm_delete_modal {
+  position: relative;
+  top: 35vh;
+  background-color: white;
+  border: 2px solid #A3AAD9;
+  border-radius: 10px;
+  width: 30%;
+  min-width: 270px;
+  height: fit-content;
+  padding-bottom: 40px;
+  margin-inline: auto;
+}
+
+.confirm_delete_button_tray {
+  display: flex;
+  flex-direction: row;
+  margin-inline: auto;
+  width: fit-content;
+  gap: 20px;
+}
+
+.confirm_delete_button_tray button {
+  /*border: none;*/
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(15px, 2vw, 20px);
+}
+
+.delete_transaction_button {
+  border: 1px solid #a10000;
+  color: white;
+  background-color: #a10000;
+  transition: background-color .2s ease-in-out;
+}
+
+.delete_transaction_button:hover {
+  border: 1px solid #a10000;
+  color: #a10000;
+  background-color: white;
+}
+
+.cancel_delete_button {
+  border: 1px solid #5661AC;
+  background-color: white;
+  color: #5661AC;
+  transition: background-color .2s ease-in-out;
+}
+
+.cancel_delete_button:hover {
+  color: white;
+  background-color: #5661AC;
+}
+
+.confirm_delete_modal_text_container {
+  margin-inline: auto;
+  padding: 20px;
+}
+
+.confirm_delete_modal_text {
+  font-size: clamp(15px, 2vw, 20px);
+  color: #5661AC;
+  text-align: center;
+}
+
 @media only screen and (max-width: 1000px) {
   .transaction {
     text-align: center;
