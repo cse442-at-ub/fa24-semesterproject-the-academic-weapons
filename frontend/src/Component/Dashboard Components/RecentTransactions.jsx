@@ -76,7 +76,7 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
                         <span>{transaction.name}</span>
                         <span>{"$" + transaction.price}</span>
                         <span>{transaction.date}</span>
-                        <span className="icon_button" onClick={e => handleEditTransaction(transaction)}><BiSolidPencil/></span>
+                        <span className="icon_button" onClick={e => deleteTransaction(transaction.id)}><MdDelete/></span>
                     </div>
                 ))}
             </div>

@@ -16,8 +16,7 @@ const Dashboard = ({updateEditTransaction, openEditModal, openModal, transaction
         {/*- Pie Chart */}
         <div className="box">
           <div className="pie-chart-box">
-            <h2 className="Category_spend_txt">Category Spending</h2>
-            <MainPieChart />
+            <MainPieChart transactions={transactions} />
           </div>
         </div>
 
