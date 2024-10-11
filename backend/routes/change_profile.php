@@ -28,9 +28,9 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 // Retrieve new pfp
-$pfp = $data['pfp'] ?? 0;
+$pfp = $data['pfp'] ?? -1;
 
-if (empty($pfp)) {
+if ($pfp === -1) {
     echo json_encode(['success' => false, 'message' => 'New pfp is required']);
     exit;
 }

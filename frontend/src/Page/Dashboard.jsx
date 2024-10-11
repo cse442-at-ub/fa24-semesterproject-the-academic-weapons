@@ -3,11 +3,11 @@ import '../CSS Files/Dashboard Components/Dashboard.css';
 import MainPieChart from '../Component/Dashboard Components/MainPieChart';
 import BarChartComponent from '../Component/Dashboard Components/BarChartComponent.jsx';
 import RecentTransactions from '../Component/Dashboard Components/RecentTransactions';
-import HighestSpending from '../Component/Dashboard Components/HighestSpending';
+import HighestSpending from '../Component/Dashboard Components/IncomeChart.jsx';
 import GoalsList from '../Component/Dashboard Components/Goals.jsx';
 import Navbar from "../Component/Navbar.jsx";
 
-const Dashboard = ({ openModal, transactions, deleteTransaction, goals = [], deleteGoal }) => { // Default to an empty array
+const Dashboard = ({updateEditTransaction, openEditModal, openModal, transactions, deleteTransaction, goals = [], deleteGoal }) => { // Default to an empty array
   const [goalsState, setGoalsState] = useState(goals);
 
   return (
@@ -31,7 +31,7 @@ const Dashboard = ({ openModal, transactions, deleteTransaction, goals = [], del
         {/*  - Recent Transactions  */}
         <div className="box">
           <div className="recent-transactions-box">
-            <RecentTransactions deleteTransaction={deleteTransaction} transactions={transactions} openModal={openModal} />
+            <RecentTransactions updateEditTransaction={updateEditTransaction} openEditModal={openEditModal} deleteTransaction={deleteTransaction} transactions={transactions} openModal={openModal} />
           </div>
         </div>
 
@@ -45,7 +45,7 @@ const Dashboard = ({ openModal, transactions, deleteTransaction, goals = [], del
         {/* - Goals Category */}
         <div className="box">
           <div className="goals-list-box">
-            <GoalsList goals={goalsState} deleteGoal={deleteGoal} />
+            <GoalsList goals={goalsState} deleteGoal={deleteGoal} openModal={openModal} />
           </div>
         </div>
       </div>

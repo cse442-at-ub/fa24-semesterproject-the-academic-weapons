@@ -1,0 +1,10 @@
+/*NOTE: This component reuses a lot of classes from AddTransaction*/
+
+.edit_transaction_container {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: #6b5fb5;
+    position: fixed;
+}

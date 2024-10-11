@@ -18,6 +18,10 @@ const Registration = () => {
       alert('Passwords do not Match!')
       return
     }
+    if (!email.endsWith('@buffalo.edu')) {
+      alert('Only @buffalo.edu emails are allowed!');
+      return;
+    }
     try {
       const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/registration.php`, {
         method: 'POST',
@@ -50,7 +54,7 @@ const Registration = () => {
   return (
       <div className='RegisterContainer'>
         <div className="Register_box">
-          <div onClick={event => navigate('/')} className="Register_Title">
+          <div onClick={event => navigate('/')} className="Login_Title">
             <h1>Wealth Wise</h1>
           </div>
           <form className="Register_section" onSubmit={handleRegristration}>
