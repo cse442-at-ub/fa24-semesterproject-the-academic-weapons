@@ -4,7 +4,7 @@ import '../../CSS Files/Dashboard Components/BarChartComponent.css';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const BarChartComponent = ({ transactions }) => {
+const BarChartComponent = ({openTransactionModal, transactions }) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Default to current year
   const [availableYears, setAvailableYears] = useState([]);
   const [barData, setBarData] = useState([]);
@@ -105,7 +105,11 @@ const BarChartComponent = ({ transactions }) => {
                 </BarChart>
               </ResponsiveContainer>
           ) : (
-              <p>No transactions to display for the selected year.</p>
+              <p style={{textAlign:"center"}}>No transactions to display for the selected year.<br/>Try <span onClick={openTransactionModal} style={{
+                color: "#7984D2",
+                textDecoration: "underline",
+                cursor: "pointer"
+              }}>adding a transaction</span></p>
           )}
         </div>
       </div>

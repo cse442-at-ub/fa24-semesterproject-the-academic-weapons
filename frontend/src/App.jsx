@@ -417,7 +417,7 @@ function App() {
       <HashRouter>
         <div className="App">
           <header className="App-header">
-            <Navbar pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
+            <Navbar username={username} pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
             <Route path={"/"} element={<Homepage
                 openEditModal={openEditModal}

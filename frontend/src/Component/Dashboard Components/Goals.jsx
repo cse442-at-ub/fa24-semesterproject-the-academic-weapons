@@ -74,8 +74,8 @@ const GoalsList = ({ updateEditGoal, openEditModal, openModal, goals, deleteGoal
 
             <div className="goals-list-content">
                 {filteredGoals.length === 0 ? (
-                    <h3>No goals added yet.</h3>
-                ) : (
+                    <p style={{textAlign:"center", marginTop:"100px", color:"black"}}>Looks like you haven't added any goals yet. <br/>Try <span onClick={openModal} style={{color:"#7984D2", textDecoration: "underline", cursor:"pointer"}}>adding a goal</span></p>
+            ) : (
                     filteredGoals.map((goal) => (
                         <div className="goal-item" key={goal.id}>
                             {/*<span className="icon_button" onClick={() => handleEditGoal(goal)}><BiSolidPencil /></span>*/}

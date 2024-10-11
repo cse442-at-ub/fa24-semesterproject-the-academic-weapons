@@ -75,6 +75,7 @@ const Registration = () => {
                   type="text"
                   id="username"
                   name="username"
+                  maxLength={20}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
