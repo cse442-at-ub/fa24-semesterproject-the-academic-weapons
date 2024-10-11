@@ -7,7 +7,7 @@ import HighestSpending from '../Component/Dashboard Components/IncomeChart.jsx';
 import GoalsList from '../Component/Dashboard Components/Goals.jsx';
 import Navbar from "../Component/Navbar.jsx";
 
-const Dashboard = ({updateEditTransaction, openEditModal, openModal, transactions, deleteTransaction, goals = [], deleteGoal }) => { // Default to an empty array
+const Dashboard = ({updateEditTransaction, openEditModal, openTransactionModal, transactions, deleteTransaction, addGoal, deleteGoal, goals, openGoalModal}) => { // Default to an empty array
   const [goalsState, setGoalsState] = useState(goals);
 
   return (
@@ -31,7 +31,7 @@ const Dashboard = ({updateEditTransaction, openEditModal, openModal, transaction
         {/*  - Recent Transactions  */}
         <div className="box">
           <div className="recent-transactions-box">
-            <RecentTransactions updateEditTransaction={updateEditTransaction} openEditModal={openEditModal} deleteTransaction={deleteTransaction} transactions={transactions} openModal={openModal} />
+            <RecentTransactions updateEditTransaction={updateEditTransaction} openEditModal={openEditModal} deleteTransaction={deleteTransaction} transactions={transactions} openModal={openTransactionModal} />
           </div>
         </div>
 
@@ -45,7 +45,7 @@ const Dashboard = ({updateEditTransaction, openEditModal, openModal, transaction
         {/* - Goals Category */}
         <div className="box">
           <div className="goals-list-box">
-            <GoalsList goals={goalsState} deleteGoal={deleteGoal} openModal={openModal} />
+            <GoalsList goals={goals} deleteGoal={deleteGoal} addGoal={addGoal} openModal={openGoalModal}/>
           </div>
         </div>
       </div>

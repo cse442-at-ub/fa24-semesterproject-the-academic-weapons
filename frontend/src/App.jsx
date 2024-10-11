@@ -26,6 +26,7 @@ import img6 from "./Assets/Profile Pictures/Person7.svg"
 import img7 from "./Assets/Profile Pictures/Person8.svg"
 import AddGoal from "./Component/AddGoals.jsx";
 import EditTransaction from "./Component/EditTransaction.jsx";
+//import { fetchGoals, addGoal, updateGoal, deleteGoal } from './api/GoalAPI';
 
 
 function App() {
@@ -37,6 +38,8 @@ function App() {
     const [isLoaded, setIsLoaded] = useState(false)
     const [transactions, setTransactions] = useState([]);
     const [editTransaction, setEditTransaction] = useState({});
+    const [editGoal, setEditGoal] = useState({});
+
     const [maxTransID, setMaxTransID] = useState(1);
     // Add Goals section
     const [showAddGoal, setShowAddGoal] = useState(false);
@@ -57,6 +60,7 @@ function App() {
                 if (getUsername) setUsername(getUsername);
                 if (getPFP) setPFP(parseInt(getPFP) || 0);
                 getTransactions();
+                getGoals()
                 setIsLoaded(true);
             }
         }
@@ -95,6 +99,37 @@ function App() {
         }
     }
 
+    const getGoals = async () => {
+        try {
+            // Assume we have an API that fetches goals
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php?id=${userID}&token=${userToken}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            let reply = await response.json();
+
+            if (!response.ok) {
+                console.error("Error getting goals...");
+            }
+
+            if (reply.success) {
+                setGoals(reply.goals);
+                if (reply.goals.length > 0) {
+                    let goalIDs = reply.goals.map(goal => goal.id);
+                    setMaxGoalID(Math.max(...goalIDs));
+                }
+            } else {
+                alert("Invalid user credentials, please sign in again...");
+                sessionStorage.clear();
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     const pfpMap = {
         0: img0,
         1: img1,
@@ -112,6 +147,12 @@ function App() {
         setTransactions(newTransactions);
         saveTransactions(newItem)
     }
+    const addGoal = (newGoal) => {
+        const newGoals = [...goals];
+        newGoals.push(newGoal);
+        setGoals(newGoals);
+        saveGoal(newGoal);
+    };
 
     const saveEditTransaction = (updated) => {
         const editedTransactions = [...transactions];
@@ -123,10 +164,34 @@ function App() {
         setTransactions(editedTransactions);
         updateDatabaseTransactions(updated);
     }
+    const saveEditGoal = (updatedGoal) => {
+        // Create a copy of the existing goals
+        const editedGoals = [...goals];
+
+        // Find the index of the goal that needs to be updated
+        const editedIndex = editedGoals.findIndex(goal => goal.id === updatedGoal.id);
+
+        // Update the goal properties
+        if (editedIndex !== -1) {
+            editedGoals[editedIndex].name = updatedGoal.name;
+            editedGoals[editedIndex].cost = updatedGoal.cost;
+            editedGoals[editedIndex].date = updatedGoal.date;
+
+            // Update the state with the modified goals list
+            setGoals(editedGoals);
+
+            // Optionally update the backend/database
+            updateDatabaseGoals(updatedGoal);
+        }
+    };
+
 
     const updateEditTransaction = (transaction) => {
         setEditTransaction(transaction);
     }
+    const updateEditGoal = (goal) => {
+        setEditGoal(goal);
+    };
 
     const updateMaxTransID = (e) => {
         setMaxTransID(e)
@@ -155,6 +220,32 @@ function App() {
             console.error('Error:', error);
         }
     }
+    const saveGoal = async (newGoal) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userID: userID,
+                    userToken: userToken,
+                    goal: newGoal,
+                }),
+            });
+            if (!response.ok) {
+                console.error("Error saving goals...");
+            }
+            const reply = await response.json();
+            if (!reply.success) {
+                alert("Invalid user credentials, please sign in again...");
+                sessionStorage.clear();
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     const updateDatabaseTransactions = async (updateItem) => {
         try {
@@ -180,6 +271,34 @@ function App() {
             console.error('Error:', error);
         }
     }
+    const updateDatabaseGoals = async (updateGoal) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'UPDATE', // PUT is usually used to update a resource. If your server requires a different method, change accordingly.
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userID, userToken, updateGoal }),
+            });
+
+            if (!response.ok) {
+                console.error("Error updating goal...");
+            }
+
+            const reply = await response.json();
+
+            if (!reply.success) {
+                console.log(reply.message);
+                alert("Invalid user credentials, please sign in again...");
+                sessionStorage.clear();
+                window.location.reload();
+            }
+
+            setIsLoaded(false);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     const saveRemoveTransaction = async (removeID) => {
         try {
@@ -204,6 +323,30 @@ function App() {
             console.error('Error:', error);
         }
     }
+    const saveRemoveGoal = async (goalID) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userID, userToken, goalID }),
+            });
+            if (!response.ok) {
+                console.error("Error deleting goals...");
+            }
+            const reply = await response.json();
+            if (!reply.success) {
+                alert("Invalid user credentials, please sign in again...");
+                sessionStorage.clear();
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+
 
     const removeTransaction = (id) => {
         const newTransactions = [...transactions]
@@ -212,6 +355,13 @@ function App() {
         setTransactions(newTransactions)
         saveRemoveTransaction(id);
     }
+    const removeGoal = (id) => {
+        const updatedGoals = goals.filter(goal => goal.id !== id);
+        setGoals(updatedGoals);
+        saveRemoveGoal(id);
+    };
+
+
 
 
     const openTransactionModal = () => {
@@ -221,6 +371,14 @@ function App() {
     const closeTransactionModal = () => {
         setShowAddTransaction(false);
     }
+    const openGoalModal = () => {
+        setShowAddGoal(true);
+    };
+
+    const closeGoalModal = () => {
+        setShowAddGoal(false);
+    };
+
 
     const openEditModal = () => {
         setShowEditTransaction(true);
@@ -248,24 +406,12 @@ function App() {
         sessionStorage.setItem('username', e)
     }
 // GOALS MODAL SECTION
-    const openGoalModal = () => {
-        setShowAddGoal(true);
-    };
-
-    const closeGoalModal = () => {
-        setShowAddGoal(false);
-    };
-
-    const addGoal = (newGoal) => {
-        setGoals([...goals, newGoal]);
-        // Save goal logic goes here if needed
-    };
 
     const updateMaxGoalID = (newID) => {
         setMaxGoalID(newID);
     };
 
-// GOALS MODAL SECTION END
+
 
   return (
       <HashRouter>
@@ -273,7 +419,18 @@ function App() {
           <header className="App-header">
             <Navbar pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
-            <Route path={"/"} element={<Homepage openEditModal={openEditModal} updateEditTransaction={updateEditTransaction} deleteTransaction={removeTransaction} transactions={transactions} openTransactionModal={openTransactionModal}/>}/> =
+            <Route path={"/"} element={<Homepage
+                openEditModal={openEditModal}
+                updateEditTransaction={updateEditTransaction}
+                deleteTransaction={removeTransaction}
+                transactions={transactions}
+                openTransactionModal={openTransactionModal}
+
+                addGoal={addGoal}
+                deleteGoal={removeGoal}
+                goals={goals}
+                openGoalModal={openGoalModal}
+            />}/> =
               <Route path={"/settings"} element={<Settings/>}/>
               <Route path={"/forget-password"} element={<ForgotPassword/>}/>
               <Route path={"/reset-password"} element={<ResetPassword/>}/>
