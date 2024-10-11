@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
 import '../../CSS Files/Dashboard Components/BarChartComponent.css';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const BarChartComponent = ({ transactions }) => {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Default to current year
   const [availableYears, setAvailableYears] = useState([]);
   const [barData, setBarData] = useState([]);
 
   useEffect(() => {
     if (!transactions || transactions.length === 0) {
-      // If no transactions, clear available years and bar data
       setAvailableYears([]);
       setBarData([]);
       return;
     }
 
-    // Extract available years from transactions
+    // Extract unique years from transactions
     const years = Array.from(new Set(transactions.map(transaction => {
       const transactionDate = new Date(transaction.date);
       return transactionDate.getFullYear();
@@ -26,11 +25,8 @@ const BarChartComponent = ({ transactions }) => {
     // Sort years in descending order (optional)
     years.sort((a, b) => b - a);
 
-    // Set the available years and default to the most recent year
     setAvailableYears(years);
-    if (years.length > 0) {
-      setSelectedYear(years[0]); // Default to the most recent year with data
-    }
+    // Do not change `selectedYear` here; only set available years
   }, [transactions]);
 
   useEffect(() => {
@@ -39,17 +35,16 @@ const BarChartComponent = ({ transactions }) => {
       return;
     }
 
+    // Aggregate transactions by month for the selected year
     const aggregateDataByMonth = () => {
-      // Initialize data array for 12 months
       const monthlyData = Array(12).fill(0).map((_, index) => ({ name: months[index], value: 0 }));
 
-      // Filter transactions by selected year and calculate monthly totals
       transactions.forEach((transaction) => {
         const transactionDate = new Date(transaction.date);
         const transactionYear = transactionDate.getFullYear();
         if (transactionYear === selectedYear) {
-          const monthIndex = transactionDate.getMonth(); // Get the month (0 for Jan, 11 for Dec)
-          monthlyData[monthIndex].value += parseFloat(transaction.price); // Convert price to number
+          const monthIndex = transactionDate.getMonth();
+          monthlyData[monthIndex].value += parseFloat(transaction.price);
         }
       });
 
@@ -57,11 +52,21 @@ const BarChartComponent = ({ transactions }) => {
     };
 
     aggregateDataByMonth();
-  }, [selectedYear, transactions, availableYears]);
+  }, [selectedYear, transactions, availableYears]); // Only recalculate bar data when selectedYear changes or transactions are updated
 
-  // Handle year change
+  // Handle year change when the user explicitly selects a different year
   const handleYearChange = (e) => {
     setSelectedYear(Number(e.target.value));
+  };
+
+  // Formatter to add dollar signs to Y-axis
+  const formatYAxis = (tickItem) => {
+    return `$${tickItem.toLocaleString()}`;
+  };
+
+  // Formatter for the tooltip to display properly formatted value with dollar sign and commas
+  const tooltipFormatter = (value) => {
+    return `$${parseFloat(value).toLocaleString()}`;
   };
 
   return (
@@ -70,7 +75,7 @@ const BarChartComponent = ({ transactions }) => {
           <h3>Monthly Spending - {selectedYear}</h3>
 
           {availableYears.length > 0 ? (
-              <select value={selectedYear} onChange={handleYearChange}>
+              <select value={selectedYear} onChange={handleYearChange} className="year-dropdown">
                 {availableYears.map(year => (
                     <option key={year} value={year}>
                       {year}
@@ -84,19 +89,21 @@ const BarChartComponent = ({ transactions }) => {
 
         <div className="bar-chart-wrapper">
           {barData.length > 0 ? (
-              <BarChart
-                  width={600}
-                  height={400}
-                  data={barData}
-                  style={{ maxWidth: '650px', minWidth: '400px', maxHeight: '400px', minHeight: '200px' }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend width={80} />
-                <Bar dataKey="value" fill="#8884d8" />
-              </BarChart>
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart
+                    data={barData}
+                    margin={{
+                      top: 20, right: 30, left: 20, bottom: 30,
+                    }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis tickFormatter={formatYAxis} /> {/* Y-axis now correctly formatted */}
+                  <Tooltip formatter={tooltipFormatter} /> {/* Tooltip formatted with dollar sign and commas */}
+                  <Legend width={80} />
+                  <Bar dataKey="value" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
           ) : (
               <p>No transactions to display for the selected year.</p>
           )}
