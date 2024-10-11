@@ -1,105 +1,88 @@
 import React, { useState, useEffect } from 'react';
-import AddGoal from '../AddGoals.jsx'; // Import the new modal component
 import '../../CSS Files/Dashboard Components/Goals.css';
-import {MdDelete} from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import { BiSolidPencil } from "react-icons/bi";
 
-const GoalsList = ({ deleteGoal }) => {
-    const [showAddGoalModal, setShowAddGoalModal] = useState(false);
-    const [goalsState, setGoalsState] = useState([]);
-    const [maxGoalID, setMaxGoalID] = useState(0);
+const GoalsList = ({ updateEditGoal, openEditModal, openModal, goals, deleteGoal }) => {
+    // Use local state to manage goals
+    const [filteredGoals, setFilteredGoals] = useState([]);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
-    const userID = sessionStorage.getItem('User');
-    const userToken = sessionStorage.getItem('auth_token');
-
+    // UseEffect to update filtered goals whenever the goals prop or date filters change
     useEffect(() => {
-        const interval = setInterval(() => {
-            fetchGoals();
-        }, 1000); // Fetch goals every 5 seconds
+        filterGoals();
+    }, [goals, startDate, endDate]);
 
-        fetchGoals(); // Initial fetch
+    // Function to filter and sort goals based on start and end dates
+    const filterGoals = () => {
+        const filtered = goals.filter((goal) => {
+            const goalDate = new Date(goal.date);
+            const start = startDate ? new Date(startDate) : null;
+            const end = endDate ? new Date(endDate) : null;
 
-        return () => clearInterval(interval); // Clear interval on component unmount
-    }, []);
-
-    const fetchGoals = async () => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php?id=${userID}&token=${userToken}`);
-            const result = await response.json();
-
-            if (result.success) {
-                setGoalsState(result.goals);
-                setMaxGoalID(result.goals.length > 0 ? Math.max(...result.goals.map(g => g.id)) : 0);
-            } else {
-                console.error(result.message);
-            }
-        } catch (err) {
-            console.error('An error occurred while fetching goals:', err);
-        }
-    };
-
-    const addGoal = (newGoal) => {
-        setGoalsState(prevGoals => [...prevGoals, newGoal]);
-    };
-
-    const openGoalModal = () => {
-        setShowAddGoalModal(true);
-    };
-
-    const closeGoalModal = () => {
-        setShowAddGoalModal(false);
-    };
-
-    const handleDeleteGoal = async (goalId) => {
-    try {
-        const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userID: userID,
-                userToken: userToken,
-                goalID: goalId,
-            }),
+            return (
+                (!start || goalDate >= start) &&
+                (!end || goalDate <= end)
+            );
         });
-        const result = await response.json();
 
-        if (result.success) {
-            setGoalsState(prevGoals => prevGoals.filter(goal => goal.id !== goalId));
-        } else {
-            console.error('Error deleting goal:', result.message);
-        }
-    } catch (error) {
-        console.error('An error occurred while deleting the goal:', error);
-    }
-};
+        // Sort the filtered goals by date in descending order
+        const sorted = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setFilteredGoals(sorted);
+    };
+
+    // Handle goal edit
+    const handleEditGoal = (goal) => {
+        updateEditGoal(goal); // Update goal in the parent component
+        openEditModal(); // Open the modal for editing the goal
+    };
 
     return (
         <div className="goals-list">
             <div className="goals-header">
                 <h2>Goals</h2>
-                <button className="add-button" onClick={openGoalModal}>
+                <button className="add-button" onClick={openModal}>
                     Add Goal
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 5V19M5 12H19" stroke="white" strokeWidth="2" strokeLinecap="round"
+                              strokeLinejoin="round"/>
+                    </svg>
                 </button>
             </div>
-            {showAddGoalModal && (
-                <AddGoal
-                    closeModal={closeGoalModal}
-                    addGoal={addGoal}
-                    maxGoalID={maxGoalID}
-                    updateMaxGoalID={setMaxGoalID}
-                />
-            )}
+
+            <div className="goals-filter">
+                <div className="date-input-group">
+                    <label className="date-label" htmlFor="start-date">Start:</label>
+                    <input
+                        type="date"
+                        id="start-date"
+                        className="filter-date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                    />
+                    <label className="date-label" htmlFor="end-date">End:</label>
+                    <input
+                        type="date"
+                        id="end-date"
+                        className="filter-date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                    />
+                </div>
+            </div>
+
             <div className="goals-list-content">
-                {goalsState.length === 0 ? (
+                {filteredGoals.length === 0 ? (
                     <h3>No goals added yet.</h3>
                 ) : (
-                    goalsState.map((goal) => (
+                    filteredGoals.map((goal) => (
                         <div className="goal-item" key={goal.id}>
+                            {/*<span className="icon_button" onClick={() => handleEditGoal(goal)}><BiSolidPencil /></span>*/}
                             <span>{goal.name}</span>
                             <span>{"$" + goal.cost}</span>
                             <span>{goal.date}</span>
-                            <span onClick={() => handleDeleteGoal(goal.id)} className="delete-goal"><MdDelete /></span>
+                            <span onClick={() => deleteGoal(goal.id)} className="delete-goal"><MdDelete /></span>
                         </div>
                     ))
                 )}
