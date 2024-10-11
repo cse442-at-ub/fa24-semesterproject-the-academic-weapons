@@ -8,9 +8,12 @@
   height: 150px;
   border-radius: 10px;
   margin: 30px auto; /* Center horizontally */
+  font-size: clamp(15px, 2vw, 40px);
 }
 
 .title-banner h1 {
   color: #FFFFFF;
   font-size: 2rem;
+  font-weight: normal;
+  font-family: 'Assistant', serif;
 }

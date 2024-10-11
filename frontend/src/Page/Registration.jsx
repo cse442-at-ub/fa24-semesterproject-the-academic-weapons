@@ -54,7 +54,7 @@ const Registration = () => {
   return (
       <div className='RegisterContainer'>
         <div className="Register_box">
-          <div onClick={event => navigate('/')} className="Register_Title">
+          <div onClick={event => navigate('/')} className="Login_Title">
             <h1>Wealth Wise</h1>
           </div>
           <form className="Register_section" onSubmit={handleRegristration}>
@@ -75,6 +75,7 @@ const Registration = () => {
                   type="text"
                   id="username"
                   name="username"
+                  maxLength={20}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required

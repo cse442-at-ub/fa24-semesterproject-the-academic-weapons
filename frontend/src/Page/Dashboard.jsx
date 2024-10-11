@@ -7,7 +7,7 @@ import HighestSpending from '../Component/Dashboard Components/IncomeChart.jsx';
 import GoalsList from '../Component/Dashboard Components/Goals.jsx';
 import Navbar from "../Component/Navbar.jsx";
 
-const Dashboard = ({ openModal, transactions, deleteTransaction, goals = [], deleteGoal }) => { // Default to an empty array
+const Dashboard = ({updateEditTransaction, openEditModal, openTransactionModal, transactions, deleteTransaction, addGoal, deleteGoal, goals, openGoalModal}) => { // Default to an empty array
   const [goalsState, setGoalsState] = useState(goals);
 
   return (
@@ -16,22 +16,21 @@ const Dashboard = ({ openModal, transactions, deleteTransaction, goals = [], del
         {/*- Pie Chart */}
         <div className="box">
           <div className="pie-chart-box">
-            <h2 className="Category_spend_txt">Category Spending</h2>
-            <MainPieChart />
+            <MainPieChart openModal={openTransactionModal} transactions={transactions} />
           </div>
         </div>
 
         {/* - Bar Chart  */}
         <div className="box">
           <div className={'bar-chart-box'}>
-            <BarChartComponent />
+            <BarChartComponent openTransactionModal={openTransactionModal} transactions={transactions} />
           </div>
         </div>
 
         {/*  - Recent Transactions  */}
         <div className="box">
           <div className="recent-transactions-box">
-            <RecentTransactions deleteTransaction={deleteTransaction} transactions={transactions} openModal={openModal} />
+            <RecentTransactions updateEditTransaction={updateEditTransaction} openEditModal={openEditModal} deleteTransaction={deleteTransaction} transactions={transactions} openModal={openTransactionModal} />
           </div>
         </div>
 
@@ -45,7 +44,7 @@ const Dashboard = ({ openModal, transactions, deleteTransaction, goals = [], del
         {/* - Goals Category */}
         <div className="box">
           <div className="goals-list-box">
-            <GoalsList goals={goalsState} deleteGoal={deleteGoal} openModal={openModal} />
+            <GoalsList goals={goals} deleteGoal={deleteGoal} addGoal={addGoal} openModal={openGoalModal}/>
           </div>
         </div>
       </div>

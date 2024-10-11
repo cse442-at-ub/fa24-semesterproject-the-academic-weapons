@@ -36,7 +36,7 @@
   max-width: 100%;
   grid-column: 1; /* Place in the center column */
   grid-row: 1;    /* Place in the first row */
-  padding-bottom: 20px;
+  /*padding: 20px;*/
 
 }
 
