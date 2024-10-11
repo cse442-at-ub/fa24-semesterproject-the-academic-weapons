@@ -19,39 +19,39 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
 
 
     return (
-        <div className={'edit_transaction_container'}>
-            <div className={"add_trans_input_form_container"}>
-                <h1 className={"add_trans_title"}>Edit Transaction</h1>
+        <div onClick={closeModal} className={'edit_background'}>
+            <div onClick={e => e.stopPropagation()} className={'edit_trans_modal_container'}>
+                <h1 className={"edit_trans_title"}>Edit Transaction</h1>
                 <div>
-                    <div className={'add_trans_form_input_group'}>
-                        <label className={"add_trans_input_label"}>Name<span
+                    <div className={'edit_trans_form_input_group'}>
+                        <label className={"edit_trans_input_label"}>Name<span
                             className={'required_field'}>*</span></label>
-                        <input className={'add_trans_input_field'} value={name} type={"text"} required={true}
+                        <input className={'edit_trans_input_field'} value={name} type={"text"} required={true}
                                onChange={e => setName(e.target.value)}/>
                     </div>
-                    <div className={'add_trans_form_input_group'}>
-                        <label className={"add_trans_input_label"}>Price<span
+                    <div className={'edit_trans_form_input_group'}>
+                        <label className={"edit_trans_input_label"}>Price<span
                             className={'required_field'}>*</span></label>
-                        <input className={'add_trans_input_field'} value={price} type={'number'} required={true}
+                        <input className={'edit_trans_input_field'} value={price} type={'number'} required={true}
                                onChange={e => setPrice(e.target.value)}/>
                     </div>
-                    <div className={'add_trans_form_input_group'}>
-                        <label className={"add_trans_input_label"}>Category</label>
-                        <input className={'add_trans_input_field'} value={category} type={"text"}
+                    <div className={'edit_trans_form_input_group'}>
+                        <label className={"edit_trans_input_label"}>Category</label>
+                        <input className={'edit_trans_input_field'} value={category} type={"text"}
                                onChange={e => setCategory(e.target.value)}/>
                     </div>
-                    <div className={'add_trans_form_input_group'}>
-                        <label className={"add_trans_input_label"}>Date</label>
-                        <input className={'add_trans_input_field'} value={date} type={"date"}
+                    <div className={'edit_trans_form_input_group'}>
+                        <label className={"edit_trans_input_label"}>Date</label>
+                        <input className={'edit_trans_input_field'} value={date} type={"date"}
                                onChange={e => setDate(e.target.value)}/>
                     </div>
-                    <div className={'add_trans_form_input_group'}>
+                    <div className={'edit_trans_form_input_group'}>
                         <button onClick={e => handleUpdateTransaction(e)}
-                                className={"add_trans_add_btn"}>Update
+                                className={"edit_trans_edit_btn"}>Update
                         </button>
                     </div>
                 </div>
-                <div className={"add_trans_close_text"} onClick={closeModal}>Cancel</div>
+                <div className={"edit_trans_close_text"} onClick={closeModal}>Cancel</div>
             </div>
         </div>
     );
