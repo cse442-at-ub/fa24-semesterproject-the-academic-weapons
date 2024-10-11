@@ -5,13 +5,29 @@ import '../../CSS Files/Dashboard Components/IncomeChart.css'; // Ensure this CS
 
 const IncomeChart = ({ triggerFetch }) => {
   const [expenses, setExpenses] = useState(0); // Dynamic expenses value
-  const income = 100; // Static income value
+  const [income, setIncome] = useState(0); // Dynamic income value fetched from backend
   const navigate = useNavigate();
 
-  // Replace with actual user ID and token
   const userID = sessionStorage.getItem('User');
   const userToken = sessionStorage.getItem('auth_token');
 
+  // Fetch total income from the backend
+  const fetchIncome = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}`); // Update to the correct endpoint
+      const data = await response.json();
+
+      if (data.success) {
+        setIncome(parseFloat(data.totalIncome)); // Set the total income from the database
+      } else {
+        console.error("Error fetching income:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching income:", error);
+    }
+  };
+
+  // Fetch expenses from the backend
   const fetchExpenses = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php?id=${userID}&token=${userToken}`);
@@ -29,7 +45,8 @@ const IncomeChart = ({ triggerFetch }) => {
   };
 
   useEffect(() => {
-    // Fetch expenses initially when the component mounts
+    // Fetch income and expenses initially when the component mounts
+    fetchIncome();
     fetchExpenses();
   }, [userID, userToken]);
 
@@ -66,8 +83,8 @@ const IncomeChart = ({ triggerFetch }) => {
         </Pie>
         <Tooltip />
       </PieChart>
-      <p>Total Income: ${income}</p>
-      <p>Total Expenses: ${expenses}</p>
+      <p>Total Income: ${income.toFixed(2)}</p>
+      <p>Total Expenses: ${expenses.toFixed(2)}</p>
       <button className="income-button" onClick={() => navigate('/income')}>
         Go to Income
       </button>
