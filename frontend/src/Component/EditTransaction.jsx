@@ -9,6 +9,7 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
 
     const handleUpdateTransaction = (e) => {
         const updated = {...oldTransaction};
+        if (name.trim() === '' || price.trim() === '' || category.trim() === '' || date === name) return
         updated.name = name;
         updated.price = price;
         updated.category = category;
@@ -36,13 +37,15 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
                                onChange={e => setPrice(e.target.value)}/>
                     </div>
                     <div className={'edit_trans_form_input_group'}>
-                        <label className={"edit_trans_input_label"}>Category</label>
-                        <input className={'edit_trans_input_field'} value={category} type={"text"}
+                        <label className={"edit_trans_input_label"}>Category<span
+                            className={'required_field'}>*</span></label>
+                        <input className={'edit_trans_input_field'} value={category} type={"text"} required={true}
                                onChange={e => setCategory(e.target.value)}/>
                     </div>
                     <div className={'edit_trans_form_input_group'}>
-                        <label className={"edit_trans_input_label"}>Date</label>
-                        <input className={'edit_trans_input_field'} value={date} type={"date"}
+                        <label className={"edit_trans_input_label"}>Date<span
+                            className={'required_field'}>*</span></label>
+                        <input className={'edit_trans_input_field'} value={date} type={"date"} required={true}
                                onChange={e => setDate(e.target.value)}/>
                     </div>
                     <div className={'edit_trans_form_input_group'}>

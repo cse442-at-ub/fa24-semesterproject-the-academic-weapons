@@ -15,6 +15,7 @@ const AddTransaction = ({closeModal, addTransaction, removeTransaction, maxTrans
 
     const handleAddTransaction = (e) => {
         e.preventDefault();
+        if (name.trim() === '' || price.trim() === '' || category.trim() === '' || date === name) return
         const addNewTrans = newTransactions;
         const newID = maxTransID + 1;
         addNewTrans.push({"id": newID, "name": name, "price": price, "category": category, "date": date});
@@ -55,12 +56,14 @@ const AddTransaction = ({closeModal, addTransaction, removeTransaction, maxTrans
                             <input className={'add_trans_input_field'} value={price} type={'number'} required={true} onChange={e => setPrice(e.target.value)}/>
                         </div>
                         <div className={'add_trans_form_input_group'}>
-                            <label className={"add_trans_input_label"}>Category</label>
-                            <input className={'add_trans_input_field'} value={category} type={"text"} onChange={e => setCategory(e.target.value)}/>
+                            <label className={"add_trans_input_label"}>Category<span
+                                className={'required_field'}>*</span></label>
+                            <input className={'add_trans_input_field'} value={category} required={true} type={"text"} onChange={e => setCategory(e.target.value)}/>
                         </div>
                         <div className={'add_trans_form_input_group'}>
-                            <label className={"add_trans_input_label"}>Date</label>
-                            <input className={'add_trans_input_field'} value={date} type={"date"} onChange={e => setDate(e.target.value)}/>
+                            <label className={"add_trans_input_label"}>Date<span
+                                className={'required_field'}>*</span></label>
+                            <input className={'add_trans_input_field'} value={date} required={true} type={"date"} onChange={e => setDate(e.target.value)}/>
                         </div>
                         <div className={'add_trans_form_input_group'}>
                             <button type={"submit"} onClick={e => handleAddTransaction(e)} className={"add_trans_add_btn"}>Add</button>

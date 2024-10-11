@@ -70,6 +70,8 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
             </div>
 
             <div className="transactions-list">
+                {filteredTransactions.length > 0 ?
+                    <div>
                 {filteredTransactions.map((transaction) => (
                     <div className="transaction" key={transaction.id}>
                         <span className="icon_button" onClick={() => handleEditTransaction(transaction)}><BiSolidPencil /></span>
@@ -79,6 +81,7 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
                         <span className="icon_button" onClick={e => deleteTransaction(transaction.id)}><MdDelete/></span>
                     </div>
                 ))}
+                    </div>:<p style={{textAlign:"center", marginTop:"100px", color:"black"}}>Looks like you haven't added any transactions yet. <br/>Try <span onClick={openModal} style={{color:"#7984D2", textDecoration: "underline", cursor:"pointer"}}>adding a transaction</span></p>}
             </div>
         </div>
     );

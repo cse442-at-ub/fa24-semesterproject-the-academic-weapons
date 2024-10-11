@@ -16,14 +16,14 @@ const Dashboard = ({updateEditTransaction, openEditModal, openTransactionModal, 
         {/*- Pie Chart */}
         <div className="box">
           <div className="pie-chart-box">
-            <MainPieChart transactions={transactions} />
+            <MainPieChart openModal={openTransactionModal} transactions={transactions} />
           </div>
         </div>
 
         {/* - Bar Chart  */}
         <div className="box">
           <div className={'bar-chart-box'}>
-            <BarChartComponent transactions={transactions} />
+            <BarChartComponent openTransactionModal={openTransactionModal} transactions={transactions} />
           </div>
         </div>
 

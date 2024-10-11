@@ -66,7 +66,7 @@ const ChangeUsername = ({ closeModal, changeUsername }) => {
                     <div className={"label_container"}>
                         <label className={"change_label"}>New Username</label>
                     </div>
-                    <input className={"change_field"} type={"text"} value={newUsername}
+                    <input maxLength={20} className={"change_field"} type={"text"} value={newUsername}
                            onChange={e => setNewUsername(e.target.value)}/>
                     <button title={newUsername.trim() === '' ? "Please type a new username to change username":null} disabled={newUsername.trim() === ''} onClick={updateUsername} className={newUsername.trim() === '' ? 'change_button_disabled':"change_button"}>Change</button>
                 </div>
