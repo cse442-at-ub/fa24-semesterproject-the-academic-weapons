@@ -26,7 +26,7 @@ const IncomeChart = ({income, transactions }) => {
       }
     }
 
-  }, [userID, userToken, transactions, expenses]);
+  }, [userID, userToken, transactions, expenses, income]);
 
   const getTotalTransactions = (inputTransactions) => {
     let total = inputTransactions.reduce((total, transaction) => total + parseFloat(transaction.price), 0);
