@@ -3,10 +3,68 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 100%;
+  padding: 0 20px;
+}
+
+.bar-chart-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px; /* Padding for the sides */
+}
+
+.year-dropdown {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-block;
 }
 
 .bar-chart-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  padding: 10px;
+}
+
+p {
+  color: #888;
+  font-size: 14px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .bar-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .year-dropdown {
+    margin-top: 10px; /* Add space between dropdown and title */
+    width: 100%; /* Make the dropdown fill the available width */
+  }
+
+  .bar-chart-wrapper {
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .bar-chart-header h3 {
+    font-size: 1rem;
+  }
+
+  .year-dropdown {
+    font-size: 12px;
+  }
+
+  .bar-chart-wrapper {
+    padding: 0;
+  }
 }

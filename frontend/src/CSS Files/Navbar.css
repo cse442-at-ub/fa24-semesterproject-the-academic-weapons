@@ -5,12 +5,15 @@
     background-image: url("../Assets/Background.png");
     padding: 10px 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+    max-width: 100%;
   }
 
   .navbar-logo {
     display: flex;
     align-items: center;
     cursor: pointer;
+    margin-right: auto;
   }
 
   .logo-image {
@@ -27,10 +30,9 @@
 
   .navbar-links {
     display: flex;
-    gap: 30px;
   }
 
-  .navbar-links a, .navbar-links div {
+  .navbar-links a, .navbar-links div, navbar-Logout {
     cursor: pointer;
     text-decoration: none;
     color: black;
@@ -41,6 +43,8 @@
   .navbar-profile {
     display: flex;
     align-items: center;
+    gap: 20px;
+    cursor: pointer;
   }
 
   .profile-icon {
@@ -57,3 +61,47 @@
     font-weight: bold;
   }
   
+  .navbar .logout_text
+  {
+    transition: transform .2s ease-in, color .2s, ease-in;
+    color: black;
+  }
+  .navbar .logout_text:hover
+  {
+    color: rgb(129, 129, 129);
+    cursor: pointer;
+  }
+
+.navbar_name {
+  font-weight: bold;
+  color: #5661AC;
+  margin: auto;
+  cursor: pointer;
+  max-width: 120px;
+  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navbar_name_icon_group {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  transition: transform .2s ease-in-out;
+
+}
+
+.navbar_name_icon_group:hover {
+  transform: scale(1.15);
+}
+
+@media only screen and (max-width: 400px) {
+
+  .navbar_name {
+    display: none;
+  }
+
+}
+
+

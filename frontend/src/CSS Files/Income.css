@@ -1,0 +1,116 @@
+/* Main container styling for the entire page */
+.income-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px;
+    background: linear-gradient(135deg, #f0f4f8, #d9e3f0);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Centered, modern title styling */
+  .income-page h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Subtle styling for Total Income and Expenses sections */
+  .income-page h3 {
+    font-size: 1.2rem;
+    color: #555;
+    margin: 10px 0;
+  }
+  
+  /* Layout for charts */
+  .charts-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 30px;
+    width: 100%;
+  }
+  
+  /* Styling for the individual pie chart containers */
+  .pie-chart-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .pie-chart-container:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Styling for the input section */
+  .income-input-container {
+    margin-top: 30px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .income-input-container h3 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  /* Input field for entering income */
+  .income-input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .income-input:focus {
+    border-color: #4caf50;
+    outline: none;
+  }
+  
+  /* Submit button with smooth hover effects */
+  .submit-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+  }
+  
+  /* Make charts and input form responsive */
+  @media (max-width: 768px) {
+    .charts-container {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+  
+    .income-input-container {
+      width: 100%;
+      padding: 20px;
+    }
+  
+    .pie-chart-container {
+      width: 100%;
+    }
+  }
+  

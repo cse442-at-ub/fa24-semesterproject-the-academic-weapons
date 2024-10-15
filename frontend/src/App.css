@@ -1,7 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300&display=swap');
+
 .App {
-    height: 100vh;
-    width: 100vw;
+    height: auto;
+    width: auto;
     color: black;
     background-image: url("./Assets/Background.png");
     background-repeat: repeat;
+}
+
+.icon_button {
+    cursor: pointer;
 }

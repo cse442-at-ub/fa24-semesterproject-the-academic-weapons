@@ -1,0 +1,231 @@
+/* File: frontend/src/CSS Files/Regristration.css */
+
+
+.RegisterContainer *
+{
+    margin: 0 auto;
+    padding: 0;
+}
+
+.RegisterContainer {
+  overflow-x: hidden; /* Prevents overflow in both x and y directions */
+  height: fit-content; /* Full height of the viewport */
+  width: 100vw; /* Full width of the viewport */
+  margin: 0; /* Optional: Removes default margin */
+  padding-bottom: 50px; /* Optional: Removes default padding */
+    padding-top: 20px;
+  display: flex;
+  justify-content: space-evenly;    
+  align-items:center;
+  z-index: 0;
+}
+
+.RegisterContainer  .create_or_login
+{
+    display: inline-block;
+    cursor: pointer;
+    width: auto;
+}
+
+.Register_box
+{
+   /* margin-top: 20px;*/ 
+    width:  35dvw;
+    min-width: 420px;
+    height: auto;
+    flex-direction: column;
+      
+}
+
+.Register_Title
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #A3AAD9;
+    width: 32dvw;
+    min-width: 350px;
+    height: 150px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #FFFFFF;
+    font-family: 'Assistant';
+    
+}
+
+.RegisterContainer h1{
+    color: #FFFFFF;
+    font-family: 'Assistant';
+}
+
+.Register_section
+{
+    margin-top: 20px;
+    width: 100%;
+    height: auto;
+    background-color: #F2F4F7;
+    flex-direction: column;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    outline:2px solid #A3AAD9;
+    border-radius: 5px;
+    
+}
+
+
+
+.RegisterContainer .email_text,.RegisterContainer .password_text,.RegisterContainer .username_text {
+    color: #5661AC;
+    margin-left: 4px; /* Reset any default margins if needed Allowed it to go to left side*/
+}
+
+.pass_requir_txt
+{
+    margin-top: 10px;
+    width: 25dvw;
+    min-width: 250px;
+    margin-bottom: 2px;
+    font-size: 16px;
+    color: #7984D2;
+}
+
+.RegisterContainer .password_section, .RegisterContainer .confirm_password_section,.RegisterContainer  .username_section,.RegisterContainer .email_section
+{
+    margin-top: 20px;
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+    width: auto;
+    display: flex;
+    align-items: flex-start;
+}
+
+.confirm_password_section
+{
+    margin-top: 20px;
+    flex-direction: column;
+    justify-content: center;
+    height: 100px;
+    width: auto;
+    display: flex;
+    align-items: flex-start;
+}
+
+.RegisterContainer input{
+
+    max-height: 77px;
+    height: 6.5dvh;
+    min-height: 20px;
+    max-width: 500px;
+    width: 30dvw;
+    min-width: 250px;
+    background-color: #E0E0E0;
+    outline:2px solid #A3AAD9;
+    border-radius: 4px;
+    padding-left: 10px;
+    font-size: 18px;
+    border: none;
+}
+
+
+.Register_in_box
+{
+    margin-top: 20px;
+    width: 20dvw;
+    min-width: 250px;
+    max-height: 77px;
+    height: 15dvh;
+    min-height: 50px;
+    background-color: #E0E0E0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline:2px solid #A3AAD9;
+    border-radius: 10px;
+    border: none;
+    transition: background-color .2s, box-shadow .2s;
+}
+
+.Register_in_box:hover
+{
+    background-color: #D0D0D0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.RegisterContainer h2{
+    color: #5661AC;
+}
+.RegisterContainer .Log_in
+{
+    margin-top: 20px;  
+    color: #7984D2;
+    margin-bottom: 15px;
+}
+
+
+.RegisterContainer .create_or_login
+{
+    transition: color .2s ease, transform .2s ease;
+}
+
+.RegisterContainer .create_or_login:hover
+{
+    color: #5567B3;
+    transform:scale(1.2)
+}
+
+
+/* Below will be mobile changed*/
+
+@media screen and (max-width: 600px) {
+
+    .RegisterContainer .Register_box {
+        width: 90vw;
+        min-width: unset; /* Let it shrink naturally on smaller screens */
+    }
+
+    .RegisterContainer .Register_Title {
+        width: 80vw;
+        height: 100px;
+        min-width: unset; /* Let it adjust for smaller screens */
+    }
+
+    .RegisterContainer .Register_section {
+        width: 90vw;
+        margin-top: 10px;
+        outline: none;
+    }
+
+    .RegisterContainer .pass_requir_txt {
+        width: 85vw;
+        font-size: 16px; /* Make it slightly smaller for mobile */
+
+    }
+
+    .RegisterContainer input {
+        width: 65vw;
+        height: 45px;
+        font-size: 16px;
+    }
+
+    .RegisterContainer .Register_in_box {
+        width: 50vw;
+        height: 10dvh; /* Adjust height */
+    }
+
+    .RegisterContainer .Log_in {
+        font-size: 18px;
+    }
+
+    .RegisterContainer .create_or_login {
+        font-size: 16px;
+        transform: scale(1); /* Reset scale effect */
+    }
+    .RegisterContainer .password_section, .RegisterContainer .confirm_password_section,.RegisterContainer  .username_section,.RegisterContainer .email_section
+    {
+        margin-top: 10px;
+
+    }
+
+}

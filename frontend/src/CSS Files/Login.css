@@ -1,33 +1,48 @@
 /* File: frontend/src/CSS Files/Login.css */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-
-*
-{
-    margin: 0 auto;
+.LoginContainer * {
+    margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    
+}
+.LoginContainer .Login_box, .LoginContainer .Login_Title, .LoginContainer input {
+    margin: 0 auto; /* Ensure these elements are centered */
+    text-align: center; /* Align text */
 }
 
 .LoginContainer {
-  overflow: hidden; /* Prevents overflow in both x and y directions */
-  height: 100vh; /* Full height of the viewport */
-  width: 100vw; /* Full width of the viewport */
-  margin: 0; /* Optional: Removes default margin */
-  padding: 0; /* Optional: Removes default padding */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-direction: column; /* Ensure that items are stacked vertically */
+    width: 100vw; 
+    height: 100vh; 
+    /* Current issue is that login page has issue with loading all in page if height is too small 
+    This seems to be becasue before loading this page we load app and height is auto so it then takes this height
+    As of now the flex item is centered only cuz of the height taking 100 perent so it can center correctly vertically 
+    For now its fine since the smallest it can be would be iphone SE and it works for that but other then that it would break */
+    margin: 0; 
+    padding: 0; 
+    overflow-x: hidden; /* Prevent horizontal overflow */
+    box-sizing: border-box; 
+    text-align: center;
+  }
+
+.LoginContainer  .create_or_login
+{
+    display: inline-block;
+    cursor: pointer;
+    width: auto;
 }
 
 
-
-
-.Login_box
+.LoginContainer .Login_box
 {
-    margin-top: 30px;
-    display: flex;
-    justify-content: flex-start;    
-    align-items: center;
-    width:  35dvw;
+
+    width:  35vw;
     min-width: 420px;
-    height: auto;
+    min-height: 250px;
     flex-direction: column;
       
 }
@@ -38,21 +53,19 @@
     justify-content: center;
     align-items: center;
     background-color: #A3AAD9;
-    width: 30dvw;
-    min-width: 290px;
-    height: 150px;
+    width: 32vw;
+    min-width: 350px;
+    height: 180px;
     border-radius: 10px;
-    
-    
-}
-
-h1{
+    cursor: pointer;
+    font-size: clamp(15px, 2vw, 40px);
     color: #FFFFFF;
+    font-family: 'Assistant';
 }
 
-.login_section
+.LoginContainer .login_section
 {
-    margin-top: 30px;
+    margin-top: 40px;
     width: 100%;
     height: auto;
     background-color: #F2F4F7;
@@ -65,35 +78,29 @@ h1{
     
 }
 
-.email_section {
-    margin-top: 50px;
+.LoginContainer .email_section,.LoginContainer .password_section {
+    margin-top: 35px;
     flex-direction: column;
     justify-content: center;
-    height: 116px;
+    height: auto;
     width: auto;
     display: flex;
     align-items: flex-start; /* Keep this to align children to the left */
 }
 
-.email_text, .password_text {
+.LoginContainer .email_text,.LoginContainer .password_text {
     color: #5661AC;
-    margin-left: 10px; /* Reset any default margins if needed Allowed it to go to left side*/
-}
-.password_section
-{
-    margin-top: 20px;
-    flex-direction: column;
-    justify-content: center;
-    height: 116px;
-    width: auto;
-    display: flex;
-    align-items: flex-start;
+    margin-left: 4px; /* Reset any default margins if needed Allowed it to go to left side*/
 }
 
-input{
 
-    height: 77px;
-    width: 25dvw;
+.LoginContainer input{
+    text-align: left;
+    max-height: 90px;
+    height: 7.5dvh;
+    min-height: 50px;
+    max-width: 500px;
+    width: 30vw;
     min-width: 250px;
     background-color: #E0E0E0;
     outline:2px solid #A3AAD9;
@@ -104,19 +111,27 @@ input{
 }
 
 
-.forgot_password
+.LoginContainer .forgot_password
 {
     color:#5661AC;
     margin: 0;
     align-self: flex-end;
     margin-right: 5px;
     margin-top: 5px;
+    cursor: pointer;
+    transition: color .2s ease, transform .2s ease;
 }
 
-.log_in_box
+.LoginContainer .forgot_password:hover
 {
-    margin-top: 20px;
-    width: 20dvw;
+    color:#7c87c9;
+}
+
+
+.LoginContainer .log_in_box
+{
+    margin-top: 50px;
+    width: 20vw;
     min-width: 250px;
     height: 77px;
     background-color: #E0E0E0;
@@ -126,13 +141,85 @@ input{
     outline:2px solid #A3AAD9;
     border-radius: 10px;
     border: none;
+    transition: background-color .2s, box-shadow .2s;
 }
-h2{
+
+.LoginContainer .log_in_box:hover
+{
+    background-color: #D0D0D0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.LoginContainer h2{
     color: #5661AC;
 }
-.Create_account
+.LoginContainer .Create_account
 {
     margin-top: 15px;  
     color: #7984D2;
     margin-bottom: 15px;
+    
+}
+.LoginContainer .create_or_login
+{
+    transition: color .2s ease, transform .2s ease;
+}
+
+.LoginContainer .create_or_login:hover
+{
+    color: #5567B3;
+    transform:scale(1.1)
+}
+
+
+@media screen and (max-width: 600px) {
+    .LoginContainer .Login_box, .LoginContainer .Login_Title, .LoginContainer input {
+        margin: 0 auto; /* Ensure these elements are centered */
+        text-align: center; /* Align text */
+    }
+
+    .LoginContainer .Login_box {
+        width: 90vw;
+        min-width: unset; /* Let it shrink naturally on smaller screens */
+    }
+
+    .LoginContainer .Login_Title {
+        width: 80vw;
+        height: 120px;
+        min-width: unset; /* Let it adjust for smaller screens */
+    }
+
+    .LoginContainer .login_section {
+        width: 90vw;
+        margin-top: 40px;
+        outline: none;
+    }
+
+
+    .LoginContainer input {
+        width: 65vw;
+        height: 60px;
+        font-size: 16px;
+        text-align: left;
+    }
+
+    .LoginContainer .login_in_box {
+        width: 50vw;
+        height: 12dvh; /* Adjust height */
+    }
+
+    .LoginContainer .Create_account {
+        font-size: 18px;
+    }
+
+    .LoginContainer .create_or_login {
+        font-size: 16px;
+        transform: scale(1); /* Reset scale effect */
+    }
+    .LoginContainer .password_section, .LoginContainer .email_section
+    {
+        margin-top: 30px;
+
+    }
+
 }

@@ -3,13 +3,20 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  /*width: 100%;*/
+  min-height: 300px; /* Set a minimum height */
+  max-height: fit-content;
+  /*margin-inline: auto;*/
 }
 
 .transactions-header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: flex-start;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* Reduced gap */
 }
 
 .add-button {
@@ -33,19 +40,189 @@
   background-color: #6b5fb5;
 }
 
+.transactions-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.filter-title {
+  font-size: 1rem; /* Reduced size to make it smaller than the main header */
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.date-input-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 100%;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.date-label {
+  font-size: 0.9rem; /* Slightly smaller text for date labels */
+  font-weight: 500;
+}
+
+.filter-date {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 .transactions-list {
-  margin-top: 10px;
- 
+  background-color: #D9D9D9;
+  width: 100%;
+  height: 500px;
+  /*margin: 10px 10px 10px 10px;*/
+  border-radius: 5px;
   overflow-y: auto;
 }
 
-.transaction {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #f0f0f0;
+/* THIS PART WILL BE TESTING OF HOVERING OVER scollwheel thingy */
+/* .transactions-list::-webkit-scrollbar
+{
+  width: 0;
 }
 
+.transactions-list:hover::-webkit-scrollbar
+{
+  width: 8px;
+}
+
+.transactions-list::-webkit-scrollbar-track
+{
+  background:transparent;
+}
+
+.transactions-list::-webkit-scrollbar-thumb
+{
+  background: rgba(168, 31, 31, 0.3);
+  border-radius: 10px;
+}
+
+.transactions-list:hover::-webkit-scrollbar-thumb:hover
+{
+  background: rgba(196, 8, 8, 0.5);
+} */
+
+/* END OF SCROLL TESTING didnt work :( */
+
+/* This seems to be each item part  */
+.transaction {
+  background-color: #F2F4F7;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  margin-inline: auto;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+/* This seems to be the money sign part  */
 .transaction span {
   font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  padding: 10px;
+}
+.transaction_amount
+{
+  font-weight: bold;
+}
+
+.confirm_delete_modal {
+  position: relative;
+  top: 35vh;
+  background-color: white;
+  border: 2px solid #A3AAD9;
+  border-radius: 10px;
+  width: 30%;
+  min-width: 270px;
+  height: fit-content;
+  padding-bottom: 40px;
+  margin-inline: auto;
+}
+
+.confirm_delete_button_tray {
+  display: flex;
+  flex-direction: row;
+  margin-inline: auto;
+  width: fit-content;
+  gap: 20px;
+}
+
+.confirm_delete_button_tray button {
+  /*border: none;*/
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(15px, 2vw, 20px);
+}
+
+.delete_transaction_button {
+  border: 1px solid #a10000;
+  color: white;
+  background-color: #a10000;
+  transition: background-color .2s ease-in-out;
+}
+
+.delete_transaction_button:hover {
+  border: 1px solid #a10000;
+  color: #a10000;
+  background-color: white;
+}
+
+.cancel_delete_button {
+  border: 1px solid #5661AC;
+  background-color: white;
+  color: #5661AC;
+  transition: background-color .2s ease-in-out;
+}
+
+.cancel_delete_button:hover {
+  color: white;
+  background-color: #5661AC;
+}
+
+.confirm_delete_modal_text_container {
+  margin-inline: auto;
+  padding: 20px;
+}
+
+.confirm_delete_modal_text {
+  font-size: clamp(15px, 2vw, 20px);
+  color: #5661AC;
+  text-align: center;
+}
+
+@media only screen and (max-width: 1000px) {
+  .transaction {
+    text-align: center;
+    padding: 0;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 1.25rem;
+    margin-inline: auto;
+    border-radius: 20px;
+  }
+
+  .transaction span {
+    margin-inline: auto;
+    padding: 5px;
+    max-width: 90%;
+  }
 }
