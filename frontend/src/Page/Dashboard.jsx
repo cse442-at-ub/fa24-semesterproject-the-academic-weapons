@@ -44,7 +44,7 @@ const Dashboard = ({income, updateEditTransaction, openEditModal, openTransactio
         {/* - Goals Category */}
         <div className="box">
           <div className="goals-list-box">
-            <GoalsList goals={goals} deleteGoal={deleteGoal} addGoal={addGoal} openModal={openGoalModal}/>
+            <GoalsList income={income} goals={goals} deleteGoal={deleteGoal} addGoal={addGoal} openModal={openGoalModal}/>
           </div>
         </div>
       </div>
