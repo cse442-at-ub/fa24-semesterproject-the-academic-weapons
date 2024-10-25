@@ -7,51 +7,44 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
     const [goalName, setGoalName] = useState('');
     const [cost, setCost] = useState('');
     const [date, setDate] = useState(todayDate);
-    const [newGoals, setNewGoals] = useState([]); // Local state to store newly added goals
+    const [category, setCategory] = useState(''); // New state for category
+    const [newGoals, setNewGoals] = useState([]);
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
 
-    // Handle adding a new goal locally
     const handleAddGoal = (e) => {
         e.preventDefault();
-        setError(''); // Clear existing error messages
+        setError('');
 
-        // Validate required fields
-        if (!goalName || !cost) {
-            setError('Goal name and cost are required.');
+        if (!goalName || !cost || !category) {
+            setError('Goal name, cost, and category are required.');
             return;
         }
 
-        // Create a new ID for the new goal
         const newID = maxGoalID + 1;
-        // Create a new goal object
         const addedGoal = {
             id: newID,
             name: goalName,
-            cost: parseFloat(cost), // Convert cost to a number
-            date
+            cost: parseFloat(cost),
+            date,
+            category // Add category to the goal object
         };
 
-        // Update the goals state with the new goal
         setNewGoals((prevGoals) => [...prevGoals, addedGoal]);
-        // Update the max goal ID
         updateMaxGoalID(newID);
 
-        // Clear the input fields
         setGoalName('');
         setCost('');
         setDate(todayDate);
+        setCategory('');
     };
 
-
-    // Save goals to the backend and exit the modal
     const handleSaveAndExit = () => {
-        newGoals.forEach(goal => addGoal(goal)); // Call the prop function to save the goals
+        newGoals.forEach(goal => addGoal(goal));
         setMessage('Goals successfully added.');
-        closeModal(); // Close the modal after saving
+        closeModal();
     };
 
-    // Delete goal from the local state
     const deleteGoal = (goalID) => {
         setNewGoals((prevGoals) => prevGoals.filter(goal => goal.id !== goalID));
     };
@@ -69,6 +62,10 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
                         <div className={'add_goal_form_input_group'}>
                             <label className={"add_goal_input_label"}>Cost<span className={'required_field'}>*</span></label>
                             <input className={'add_goal_input_field'} value={cost} type={'number'} required={true} onChange={e => setCost(e.target.value)} />
+                        </div>
+                        <div className={'add_goal_form_input_group'}>
+                            <label className={"add_goal_input_label"}>Category<span className={'required_field'}>*</span></label>
+                            <input className={'add_goal_input_field'} value={category} type={"text"} required={true} onChange={e => setCategory(e.target.value)} />
                         </div>
                         <div className={'add_goal_form_input_group'}>
                             <label className={"add_goal_input_label"}>Date</label>
@@ -89,6 +86,7 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
                                     <div className={'add_goal_added_item_text'}>
                                         <div className={'add_goal_added_text'}>{goal.name}</div>
                                         <div className={'add_goal_added_text'}>{"$" + goal.cost}</div>
+                                        <div className={'add_goal_added_text'}>{goal.category}</div>
                                         <div className={'add_goal_added_text'}>{goal.date}</div>
                                         <div onClick={() => deleteGoal(goal.id)}><MdDelete /></div>
                                     </div>
