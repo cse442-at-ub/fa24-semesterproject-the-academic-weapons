@@ -4,6 +4,7 @@ import './CSS Files/AddTransaction.css'
 import './CSS Files/Settings.css'
 import './CSS Files/Settings Components/ChangeModals.css'
 import './CSS Files/EditTransaction.css'
+import './CSS Files/SavingsGoalBox.css'
 import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
 import Settings from "./Page/Settings";
 import Login from './Page/Login';
@@ -26,6 +27,8 @@ import img6 from "./Assets/Profile Pictures/Person7.svg"
 import img7 from "./Assets/Profile Pictures/Person8.svg"
 import AddGoal from "./Component/AddGoals.jsx";
 import EditTransaction from "./Component/EditTransaction.jsx";
+
+
 //import { fetchGoals, addGoal, updateGoal, deleteGoal } from './api/GoalAPI';
 
 
