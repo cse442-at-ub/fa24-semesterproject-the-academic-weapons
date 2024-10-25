@@ -175,11 +175,11 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
                                         <span>{"$" + goal.cost}</span>
                                         <span>{goal.date}</span>
                                         <div className={"allocate_menu_button"}>
-                                            {!allocateDropDown ?
-                                                <SlOptions className={"allocate_dropdown_btn"}
-                                                           onClick={e => openAllocateDropdown(goal.id)}/> :
+                                            {allocateDropDown && activeGoal === goal.id ?
                                                 <IoCloseOutline className={"allocate_dropdown_btn"}
-                                                                onClick={closeAllocateDropdown}/>
+                                                                onClick={closeAllocateDropdown}/> :
+                                                <SlOptions className={"allocate_dropdown_btn"}
+                                                           onClick={e => openAllocateDropdown(goal.id)}/>
                                             }
                                             <div>
                                                 {allocateDropDown && activeGoal === goal.id &&
@@ -191,7 +191,8 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
                                                                 onClick={openDeallocateModal}>Deallocate
                                                         </button>
                                                         <button onClick={() => handeDelete(goal.id)}
-                                                              className={"delete_goal_btn"}>Delete</button>
+                                                                className={"delete_goal_btn"}>Delete
+                                                        </button>
                                                     </div>
                                                 }
                                             </div>
@@ -201,25 +202,47 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
                                         <ProgressBar className={"goal_progress_bar"}>
                                             <ProgressBar className={"goal_sub_progress_bar progress_bar_a"}
                                                          title={"Allocated: " + allocated} hidden={allocated === 0}
-                                                         now={allocated} key={1}/>
-                                            <ProgressBar className={"goal_sub_progress_bar progress_bar_b"}
-                                                         title={"Available: " + available}
-                                                         hidden={available === 0 || allocated >= goal.cost}
-                                                         now={available}
-                                                         key={2}/>
+                                                         now={allocated / goal.cost * 100} key={1}/>
+                                            {/*<ProgressBar className={"goal_sub_progress_bar progress_bar_b"}*/}
+                                            {/*             title={"Available: " + available}*/}
+                                            {/*             hidden={available === 0 || allocated >= goal.cost}*/}
+                                            {/*             now={Math.min((available / goal.cost * 100), (goal.cost - allocated / goal.cost * 100))}*/}
+                                            {/*             key={2}/>*/}
                                             <ProgressBar className={"goal_sub_progress_bar progress_bar_c"}
                                                          title={"Remaining: " + (goal.cost - available - allocated)}
                                                          hidden={allocated >= goal.cost || (goal.cost - available - allocated) <= 0}
-                                                         now={goal.cost - available - allocated} key={3}/>
+                                                         // now={100 - ((allocated / goal.cost * 100) + (Math.min((available / goal.cost * 100), (goal.cost - allocated / goal.cost * 100))))}
+                                                            now={100 - ((allocated / goal.cost * 100))}
+                                                         key={2}/>
                                         </ProgressBar>
                                     </div>
                                     <div className={"progress_bar_legend"}>
-                                        <div
-                                            className={"sub_bar_a_label"}>{"Allocated: "}{(allocated / goal.cost * 100).toFixed(1) + "%"}</div>
-                                        <div
-                                            className={"sub_bar_b_label"}>{"Available: "}{available > (goal.cost - allocated) ? ((goal.cost - allocated) / goal.cost * 100).toFixed(1) + "%" : (((available) / goal.cost * 100).toFixed(1) + "%")}</div>
-                                        <div
-                                            className={"sub_bar_c_label"}>{"Remaining: "}{available <= goal.cost ? ((goal.cost - available - allocated) / goal.cost * 100).toFixed(1) + "%":"100%" }</div>
+                                        {allocated / goal.cost * 100 <= 100 ?
+                                            <div
+                                                className={"sub_bar_a_label"}>{"Allocated: "}{(allocated / goal.cost * 100).toFixed(1) + "%"}</div> :
+                                            <div
+                                                className={"sub_bar_a_label"}>{"Allocated: 100%"}</div>
+                                        }
+                                        {/*{allocated / goal.cost * 100 < 100 &&*/}
+                                        {/*    <>*/}
+                                        {/*    {Math.min((available / goal.cost * 100), (goal.cost - allocated / goal.cost * 100)) <= 100 ?*/}
+                                        {/*        <div*/}
+                                        {/*            className={"sub_bar_b_label"}>{"Available: "}{Math.min((available / goal.cost * 100), (goal.cost - allocated / goal.cost * 100)).toFixed(1) + "%"}</div> :*/}
+                                        {/*        <div*/}
+                                        {/*            className={"sub_bar_b_label"}>{"Available: 100%"}</div>*/}
+                                        {/*    }*/}
+                                        {/*    </>*/}
+                                        {/*}*/}
+                                        {allocated / goal.cost * 100 < 100 &&
+                                            <>
+                                                {100 - ((allocated / goal.cost * 100)) > 0 ?
+                                                    <div
+                                                        className={"sub_bar_c_label"}>{"Remaining: "}{100 - ((allocated / goal.cost * 100)).toFixed(1) + "%"}</div> :
+                                                    <div
+                                                        className={"sub_bar_c_label"}>{"Remaining: 0%"}</div>
+                                            }
+                                            </>
+                                        }
                                     </div>
                                 </div>
                                 {allocateModalShow &&
