@@ -12,7 +12,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp }) => {
     const [showSavingsModal, setShowSavingsModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false); // New state for edit mode
     const [currentSavings, setCurrentSavings] = useState(400); // Example current savings
-    const [savingsGoal, setSavingsGoal] = useState(1000); // Example savings goal
+    const [savingsGoal, setSavingsGoal] = useState(1000); // Example goal
 
     const logout = () => {
         sessionStorage.clear();
@@ -22,10 +22,9 @@ const Navbar = ({ username, openSettings, pfpMap, pfp }) => {
 
     const toggleSavingsModal = () => {
         setShowSavingsModal(!showSavingsModal);
-        setIsEditing(false); // Reset edit mode when modal is opened or closed
     };
 
-    const toggleEditMode = () => {
+    const toggleEditGoal = () => {
         setIsEditing(!isEditing); // Toggle edit mode
     };
 
@@ -34,7 +33,12 @@ const Navbar = ({ username, openSettings, pfpMap, pfp }) => {
         // Optionally, here you can add logic to save to the backend
     };
 
-    const progressPercentage = Math.min((currentSavings / savingsGoal) * 100, 100);
+    // Function to calculate the progress percentage and color
+    const progressPercentage = Math.min((Number(currentSavings) / Number(savingsGoal)) * 100, 100);
+    const getGreenShade = () => {
+        const greenValue = Math.min(Math.round(progressPercentage * 2.55), 255); // Max is 255 for full green
+        return `rgb(0, ${greenValue}, 0)`; // More green as progress increases
+    };
 
     if (!userID) {
         return null;
@@ -42,7 +46,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp }) => {
 
     return (
         <nav className="navbar">
-            <div onClick={e => navigate('/')} className="navbar-logo">
+            <div onClick={() => navigate('/')} className="navbar-logo">
                 <img src={logo} alt="Wealth Wise Logo" className="logo-image" />
                 <span className="logo-text">Wealth <br /> Wise</span>
             </div>
@@ -52,21 +56,22 @@ const Navbar = ({ username, openSettings, pfpMap, pfp }) => {
                     <div className="navbar_name">{username}</div>
                     <img src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon" />
                 </div>
-
-                {/* Piggy Bank Icon with Mini Progress Bar */}
                 <div className="navbar-savings-container">
                     <FaPiggyBank className="savings-icon" onClick={toggleSavingsModal} style={{ fontSize: '2rem' }} />
                     <div className="mini-progress-bar-container">
-                        <div className="mini-progress-bar" style={{ width: `${progressPercentage}%` }}></div>
+                        <div
+                            className="mini-progress-bar"
+                            style={{ width: `${progressPercentage}%`, backgroundColor: getGreenShade() }}
+                        />
                     </div>
                 </div>
-
                 <div className="logout_text" onClick={logout}>Log Out</div>
             </div>
 
             {showSavingsModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
+                        <button className="close-btn" onClick={toggleSavingsModal}>Close</button>
                         {isEditing ? (
                             <div>
                                 <h2>Edit Savings Goal</h2>
@@ -75,7 +80,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp }) => {
                                     <input
                                         type="number"
                                         value={savingsGoal}
-                                        onChange={(e) => setSavingsGoal(e.target.value)}
+                                        onChange={(e) => setSavingsGoal(Number(e.target.value))}
                                     />
                                 </div>
                                 <div>
@@ -83,13 +88,16 @@ const Navbar = ({ username, openSettings, pfpMap, pfp }) => {
                                     <input
                                         type="number"
                                         value={currentSavings}
-                                        onChange={(e) => setCurrentSavings(e.target.value)}
+                                        onChange={(e) => setCurrentSavings(Number(e.target.value))}
                                     />
                                 </div>
                                 <button onClick={handleSave}>Save</button>
                             </div>
                         ) : (
                             <div>
+                                <button className="edit-goal-btn" onClick={toggleEditGoal}>
+                                    <FaEdit /> Edit Goal
+                                </button>
                                 <h2>Savings Goal</h2>
                                 <div className="progress-labels">
                                     <span>${currentSavings}</span>
@@ -100,19 +108,15 @@ const Navbar = ({ username, openSettings, pfpMap, pfp }) => {
                                         className="progress-bar"
                                         style={{
                                             width: `${progressPercentage}%`,
-                                            backgroundColor: 'green',
+                                            backgroundColor: getGreenShade(),
                                         }}
                                     />
                                 </div>
                                 <p className="savings-text">
                                     {`${progressPercentage.toFixed(2)}% of $${savingsGoal} saved`}
                                 </p>
-                                <button className="edit-goal-btn" onClick={toggleEditMode}>
-                                    <FaEdit /> Edit Goal
-                                </button>
                             </div>
                         )}
-                        <button className="close-btn" onClick={toggleSavingsModal}>Close</button>
                     </div>
                 </div>
             )}
