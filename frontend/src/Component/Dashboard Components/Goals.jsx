@@ -22,8 +22,8 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
     const [targetAmount, setTargetAmount] = useState(0)
     const [filtered, setFiltered] = useState(false)
     const [activeGoal, setActiveGoal] = useState(-1)
+    const [categoryFilter, setCategoryFilter] = useState('');
 
-    // UseEffect to update filtered goals whenever the goals prop or date filters change
     useEffect(() => {
 
         // if (!filtered) {
@@ -34,9 +34,8 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
         // }
 
         setAvailable(income)
-    }, [goals, startDate, endDate, income, allocated]);
+    }, [goals, startDate, endDate, income, allocated, categoryFilter]);
 
-    // Function to filter and sort goals based on start and end dates
     const filterGoals = () => {
         const filtered = goals.filter((goal) => {
             const goalDate = new Date(goal.date);
@@ -45,19 +44,22 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
 
             return (
                 (!start || goalDate >= start) &&
-                (!end || goalDate <= end)
+                (!end || goalDate <= end) &&
+                (!categoryFilter || goal.category.toLowerCase().startsWith(categoryFilter.toLowerCase()))
             );
         });
 
-        // Sort the filtered goals by date in descending order
         const sorted = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
         setFilteredGoals(sorted);
     };
 
-    // Handle goal edit
+    const handleCategoryFilterChange = (e) => {
+        setCategoryFilter(e.target.value); // Update the category filter based on input
+    };
+
     const handleEditGoal = (goal) => {
-        updateEditGoal(goal); // Update goal in the parent component
-        openEditModal(); // Open the modal for editing the goal
+        updateEditGoal(goal);
+        openEditModal();
     };
 
     const allocateMoney = () => {
@@ -128,7 +130,6 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
                         </svg>
                     </button>
                 </div>
-
                 <div className="goals-filter">
                     <div className="date-input-group">
                         <label className="date-label" htmlFor="start-date">Start:</label>
@@ -154,8 +155,19 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
                             }}
                         />
                     </div>
+                   <div className="category-input-group">
+                    <label className="category-label" htmlFor="category-filter">Category:</label>
+                    <input
+                        type="text"
+                        id="category-filter"
+                        className="filter-category"
+                        value={categoryFilter}
+                        onChange={handleCategoryFilterChange}
+                        autoComplete="off"
+                        placeholder="Type to filter categories"
+                    />
+                  </div>
                 </div>
-
                 <div className="goals-list-content">
                     {filteredGoals.length === 0 ? (
                         <p style={{textAlign: "center", marginTop: "100px", color: "black"}}>Looks like you haven't
@@ -173,6 +185,7 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
                                     <div className={"goal-item"}>
                                         <span>{goal.name}</span>
                                         <span>{"$" + goal.cost}</span>
+                                         <span>{goal.category}</span>
                                         <span>{goal.date}</span>
                                         <div className={"allocate_menu_button"}>
                                             {allocateDropDown && activeGoal === goal.id ?
@@ -203,11 +216,6 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
                                             <ProgressBar className={"goal_sub_progress_bar progress_bar_a"}
                                                          title={"Allocated: " + allocated} hidden={allocated === 0}
                                                          now={allocated / goal.cost * 100} key={1}/>
-                                            {/*<ProgressBar className={"goal_sub_progress_bar progress_bar_b"}*/}
-                                            {/*             title={"Available: " + available}*/}
-                                            {/*             hidden={available === 0 || allocated >= goal.cost}*/}
-                                            {/*             now={Math.min((available / goal.cost * 100), (goal.cost - allocated / goal.cost * 100))}*/}
-                                            {/*             key={2}/>*/}
                                             <ProgressBar className={"goal_sub_progress_bar progress_bar_c"}
                                                          title={"Remaining: " + (goal.cost - available - allocated)}
                                                          hidden={allocated >= goal.cost || (goal.cost - available - allocated) <= 0}
@@ -223,16 +231,6 @@ const GoalsList = ({income, updateEditGoal, openEditModal, openModal, goals, del
                                             <div
                                                 className={"sub_bar_a_label"}>{"Allocated: 100%"}</div>
                                         }
-                                        {/*{allocated / goal.cost * 100 < 100 &&*/}
-                                        {/*    <>*/}
-                                        {/*    {Math.min((available / goal.cost * 100), (goal.cost - allocated / goal.cost * 100)) <= 100 ?*/}
-                                        {/*        <div*/}
-                                        {/*            className={"sub_bar_b_label"}>{"Available: "}{Math.min((available / goal.cost * 100), (goal.cost - allocated / goal.cost * 100)).toFixed(1) + "%"}</div> :*/}
-                                        {/*        <div*/}
-                                        {/*            className={"sub_bar_b_label"}>{"Available: 100%"}</div>*/}
-                                        {/*    }*/}
-                                        {/*    </>*/}
-                                        {/*}*/}
                                         {allocated / goal.cost * 100 < 100 &&
                                             <>
                                                 {100 - ((allocated / goal.cost * 100)) > 0 ?
