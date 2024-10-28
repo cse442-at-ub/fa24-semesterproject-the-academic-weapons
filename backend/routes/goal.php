@@ -4,7 +4,7 @@ include '../config/db.php';
 
 // Handle CORS
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, DELETE");
+header("Access-Control-Allow-Methods: POST, GET, DELETE, UPDATE, PUT");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -14,6 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     handlePostRequest($conn);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     handleDeleteRequest($conn);
+} elseif ($_SERVER['REQUEST_METHOD'] === 'UPDATE') {
+    handleUpdateRequest($conn);
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    handlePutRequest($conn);
 }
 
 function handleGetRequest($conn) {
@@ -78,6 +82,65 @@ function handlePostRequest($conn) {
     $conn->close();
 
     echo json_encode(['success' => true, 'message' => 'Goal successfully inserted']);
+}
+
+function handleUpdateRequest($conn) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        echo json_encode(['success' => false, 'message' => 'Invalid JSON: ' . json_last_error_msg()]);
+        exit;
+    }
+
+    $userID = $data['userID'] ?? null;
+    $token = $data['userToken'] ?? null;
+    $goalID = $data['goalID'] ?? null;
+    $allocation = $data['allocation'] ?? 0;
+
+    if (empty($userID) || empty($goalID) || empty($token) || $allocation < 0) {
+        echo json_encode(['success' => false, 'message' => 'User ID, Token, and Goal ID are required']);
+        exit;
+    }
+
+    if (!authenticateUser($conn, $userID, $token)) {
+        echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $userID]);
+        exit;
+    }
+
+    $stmt = $conn->prepare("UPDATE goals SET allocated = ? WHERE id = ?");
+    $stmt->bind_param("di", $allocation, $goalID);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
+
+    echo json_encode(['success' => true, 'message' => 'Goal successfully allocated']);
+}
+
+function handlePutRequest($conn) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        echo json_encode(['success' => false, 'message' => 'Invalid JSON: ' . json_last_error_msg()]);
+    }
+
+    $userID = $data['userID'] ?? null;
+    $token = $data['userToken'] ?? null;
+    $goalID = $data['goalID'] ?? null;
+    $completion = $data['completion'] ?? 0;
+    $date_completion = $data['date'] ?? null;
+
+    if (empty($userID) || empty($token) || empty($goalID) || ($completion < 0)) {
+        echo json_encode(['success' => false, 'message' => 'User ID, Token, and Goal ID are required']);
+    }
+
+    if (!authenticateUser($conn, $userID, $token)) {
+        echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $userID]);
+    }
+
+    $stmt = $conn->prepare("UPDATE goals SET complete = ?, completed_date = ? WHERE id = ?");
+    $stmt->bind_param("isi", $completion, $date_completion, $goalID);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
+    echo json_encode(['success' => true, 'message' => 'Goal successfully updated']);
 }
 
 function handleDeleteRequest($conn) {

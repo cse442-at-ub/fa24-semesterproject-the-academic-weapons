@@ -27,7 +27,8 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
             name: goalName,
             cost: parseFloat(cost),
             date,
-            category // Add category to the goal object
+            category, // Add category to the goal object
+            allocated: 0
         };
 
         setNewGoals((prevGoals) => [...prevGoals, addedGoal]);

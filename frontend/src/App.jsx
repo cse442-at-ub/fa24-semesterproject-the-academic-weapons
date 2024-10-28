@@ -364,6 +364,56 @@ function App() {
     };
 
 
+    const saveGoalAllocation = async (goalID, allocation) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'UPDATE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userID, userToken, goalID, allocation }),
+            });
+            if (!response.ok) {
+                console.error("Error updating allocation for goal...");
+            }
+            const reply = await response.json();
+            if (!reply.success) {
+                alert("Invalid user credentials, please sign in again...");
+                sessionStorage.clear();
+                window.location.reload();
+            }
+            getGoals()
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+
+    const setGoalCompletion = async (goalID, completion, date) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userID, userToken, goalID, completion, date }),
+            });
+            if (!response.ok) {
+                console.error("Error updating allocation for goal...");
+            }
+            const reply = await response.json();
+            if (!reply.success) {
+                alert("Invalid user credentials, please sign in again...");
+                sessionStorage.clear();
+                window.location.reload();
+            }
+            getGoals()
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+
 
     const removeTransaction = (id) => {
         const newTransactions = [...transactions]
@@ -377,9 +427,6 @@ function App() {
         setGoals(updatedGoals);
         saveRemoveGoal(id);
     };
-
-
-
 
     const openTransactionModal = () => {
         setShowAddTransaction(true);
@@ -437,6 +484,8 @@ function App() {
             <Navbar username={username} pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
             <Route path={"/"} element={<Homepage
+                saveGoalAllocation={saveGoalAllocation}
+                setGoalCompletion={setGoalCompletion}
                 openEditModal={openEditModal}
                 updateEditTransaction={updateEditTransaction}
                 deleteTransaction={removeTransaction}
