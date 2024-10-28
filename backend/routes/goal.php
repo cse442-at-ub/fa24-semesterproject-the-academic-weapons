@@ -4,7 +4,7 @@ include '../config/db.php';
 
 // Handle CORS
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, DELETE, UPDATE, PUT");
+header("Access-Control-Allow-Methods: POST, GET, DELETE, UPDATE, PUT, PATCH");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -18,6 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     handleUpdateRequest($conn);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     handlePutRequest($conn);
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
+    handlePatchRequest($conn);
 }
 
 function handleGetRequest($conn) {
@@ -71,12 +73,13 @@ function handlePostRequest($conn) {
         exit;
     }
 
-    $stmt = $conn->prepare("INSERT INTO goals (user_id, name, cost, date) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO goals (user_id, name, cost, date, category) VALUES (?, ?, ?, ?, ?)");
     $name = $goal['name'];
     $cost = $goal['cost'];
     $date = $goal['date'];
+    $category = $goal['category'];
 
-    $stmt->bind_param("isds", $userID, $name, $cost, $date);
+    $stmt->bind_param("isdss", $userID, $name, $cost, $date, $category);
     $stmt->execute();
     $stmt->close();
     $conn->close();
@@ -113,6 +116,42 @@ function handleUpdateRequest($conn) {
     $conn->close();
 
     echo json_encode(['success' => true, 'message' => 'Goal successfully allocated']);
+}
+
+function handlePatchRequest($conn) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        echo json_encode(['success' => false, 'message' => 'Invalid JSON: ' . json_last_error_msg()]);
+        exit;
+    }
+
+    $goal = $data['updateItem'] ?? null;
+    $userID = $data['userID'] ?? null;
+    $token = $data['userToken'] ?? null;
+    $goalID = $goal['id'] ?? null;
+    $name = $goal['name'] ?? null;
+    $cost = $goal['cost'] ?? null;
+    $date = $goal['date'] ?? null;
+    $category = $goal['category'] ?? null;
+    $allocated = $goal['allocated'] ?? 0;
+
+    if (empty($userID) || empty($goalID) || empty($token) || empty($goal)) {
+        echo json_encode(['success' => false, 'message' => 'User ID, Token, Goal, and Goal ID are required']);
+        exit;
+    }
+
+    if (!authenticateUser($conn, $userID, $token)) {
+        echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $userID]);
+        exit;
+    }
+
+    $stmt = $conn->prepare("UPDATE goals SET name = ?, cost = ?, category = ?, date = ?, allocated = ? WHERE id = ?");
+    $stmt->bind_param("sdssdi", $name, $cost, $category, $date, $allocated, $goalID);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
+
+    echo json_encode(['success' => true, 'message' => 'Goal successfully updated']);
 }
 
 function handlePutRequest($conn) {

@@ -17,7 +17,7 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
         setError('');
 
         if (!goalName || !cost || !category) {
-            setError('Goal name, cost, and category are required.');
+            setError('Name, Amount, Category, and Date are required.');
             return;
         }
 
@@ -27,7 +27,7 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
             name: goalName,
             cost: parseFloat(cost),
             date,
-            category, // Add category to the goal object
+            category: category,
             allocated: 0
         };
 
@@ -55,13 +55,14 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
             <div className={"add_goal_modal_container_inside"}>
                 <div className={"add_goal_input_form_container"}>
                     <h1 className={"add_goal_title"}>Add Goal</h1>
+                    {error && <p className="error-message">{error}</p>}
                     <form>
                         <div className={'add_goal_form_input_group'}>
                             <label className={"add_goal_input_label"}>Name<span className={'required_field'}>*</span></label>
                             <input className={'add_goal_input_field'} value={goalName} type={"text"} required={true} onChange={e => setGoalName(e.target.value)} />
                         </div>
                         <div className={'add_goal_form_input_group'}>
-                            <label className={"add_goal_input_label"}>Cost<span className={'required_field'}>*</span></label>
+                            <label className={"add_goal_input_label"}>Amount<span className={'required_field'}>*</span></label>
                             <input className={'add_goal_input_field'} value={cost} type={'number'} required={true} onChange={e => setCost(e.target.value)} />
                         </div>
                         <div className={'add_goal_form_input_group'}>
@@ -69,7 +70,7 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
                             <input className={'add_goal_input_field'} value={category} type={"text"} required={true} onChange={e => setCategory(e.target.value)} />
                         </div>
                         <div className={'add_goal_form_input_group'}>
-                            <label className={"add_goal_input_label"}>Date</label>
+                            <label className={"add_goal_input_label"}>Date<span className={'required_field'}>*</span></label>
                             <input className={'add_goal_input_field'} value={date} type={"date"} onChange={e => setDate(e.target.value)} />
                         </div>
                         <div className={'add_goal_form_input_group'}>
@@ -94,10 +95,9 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
                                 </div>
                             ))
                         ) : (
-                            <p>No goals added yet.</p>
+                            <p className={"no_content_text"}>No goals added yet.</p>
                         )}
                     </div>
-                    {error && <p className="error-message">{error}</p>}
                     {message && <p className="success-message">{message}</p>}
                     <div className={'add_goal_added_save_exit_container'}>
                         <button onClick={handleSaveAndExit} className={"add_goal_add_btn"}>Save and Exit</button>

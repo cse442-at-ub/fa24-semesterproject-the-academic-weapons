@@ -6,22 +6,23 @@ import { BiSolidPencil } from "react-icons/bi";
 import { MdOutlineMenu } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
 import { SlOptions } from "react-icons/sl";
-import { IoFilter } from "react-icons/io5";
+import { MdFilterList } from "react-icons/md";
+import { MdFilterListOff } from "react-icons/md";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 import { IoIosAdd } from "react-icons/io";
 import {Legend} from "recharts";
 
-const GoalsList = ({setGoalCompletion, saveGoalAllocation, income, updateEditGoal, openEditModal, openModal, goals, deleteGoal }) => {
+const GoalsList = ({openEditGoal, setGoalCompletion, saveGoalAllocation, income, updateEditGoal, openModal, goals, deleteGoal }) => {
     // Use local state to manage goals
     const todayDate = new Date().toISOString().substr(0, 10);
     const [filteredGoals, setFilteredGoals] = useState([]);
     const [completedGoals, setCompletedGoals] = useState([])
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [potentialAlloc, setPotentialAlloc] = useState(null)
     const [allocateDropDown, setAllocateDropDown] = useState(false)
     const [allocateModalShow, setAllocateModalShow] = useState(false)
     const [deallocateModalShow, setDeallocateModalShow] = useState(false)
-    const [activeGoal, setActiveGoal] = useState(-1)
+    const [activeGoal, setActiveGoal] = useState({})
     const [categoryFilter, setCategoryFilter] = useState('');
     const [goalsPage, setGoalsPage] = useState(0)
     const [filterModal, setFilterModal] = useState(false)
@@ -72,46 +73,45 @@ const GoalsList = ({setGoalCompletion, saveGoalAllocation, income, updateEditGoa
 
     const handleEditGoal = (goal) => {
         updateEditGoal(goal);
-        openEditModal();
+        openEditGoal();
     };
 
-    const allocateMoney = (goalID, currentAllocation, goalCost) => {
+    const allocateMoney = (goalID, currentAllocation, goalCost, potentialAlloc) => {
         let newAllocate = parseFloat(currentAllocation)
-        newAllocate += potentialAlloc
-        if (newAllocate > goalCost) newAllocate = goalCost
-        setPotentialAlloc(null)
+        newAllocate += parseFloat(potentialAlloc)
+        if (newAllocate > parseFloat(goalCost)) {
+            newAllocate = parseFloat(goalCost)
+        } else if (newAllocate < 0) {
+            newAllocate = 0
+        }
         setAllocateDropDown(false)
         setAllocateModalShow(false)
         saveGoalAllocation(goalID, newAllocate)
     }
 
-    const deallocateMoney = (goalID, currentAllocation) => {
+    const deallocateMoney = (goalID, currentAllocation, potentialAlloc) => {
         let newAllocate = parseFloat(currentAllocation)
-        newAllocate -= potentialAlloc
+        newAllocate -= parseFloat(potentialAlloc)
         if (newAllocate < 0) newAllocate = 0
-        setPotentialAlloc(null)
         setAllocateDropDown(false)
         setDeallocateModalShow(false)
         saveGoalAllocation(goalID, newAllocate)
     }
 
-    const openAllocateModal = () => {
+    const openAllocateModal = (goal) => {
+        setActiveGoal(goal)
         setAllocateModalShow(true)
     }
 
-    const openDeallocateModal = () => {
+    const openDeallocateModal = (goal) => {
+        setActiveGoal(goal)
         setDeallocateModalShow(true)
     }
 
     const closeAllocModals = () => {
         setAllocateModalShow(false)
         setDeallocateModalShow(false)
-        setPotentialAlloc(null)
         setAllocateDropDown(false)
-    }
-
-    const editPotentialAlloc = (e) => {
-        setPotentialAlloc(parseFloat(e.target.value))
     }
 
     const openAllocateDropdown = (goal) => {
@@ -141,6 +141,65 @@ const GoalsList = ({setGoalCompletion, saveGoalAllocation, income, updateEditGoa
         setFilterModal(false)
     }
 
+    const AllocateModal = ({ goal }) => {
+        const [potentialAlloc, setPotentialAlloc] = useState(null)
+
+        const editPotentialAlloc = (e) => {
+            setPotentialAlloc(e.target.value)
+        }
+
+        return (
+            <div onClick={closeAllocModals} className={"allocate_modal_container"}>
+                <div onClick={e => e.stopPropagation()} className={"allocate_modal"}>
+                    <h1>Allocate Towards Goal</h1>
+                    <div className={"allocate_form"}>
+                        <div>{"Goal: " + goal.cost}</div>
+                        <div>{"Allocated: " + goal.allocated}</div>
+                        <input value={potentialAlloc || ''}
+                               placeholder={"Amount"}
+                               type={"number"} onChange={e => editPotentialAlloc(e)}/>
+                        <button
+                            onClick={e => allocateMoney(goal.id, goal.allocated, goal.cost, potentialAlloc)}>Done
+                        </button>
+                        <div onClick={closeAllocModals}
+                             className={"allocate_form_close"}>Cancel
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const DeallocateModal = ( { goal } ) => {
+        const [potentialAlloc, setPotentialAlloc] = useState(null)
+
+        const editPotentialAlloc = (e) => {
+            setPotentialAlloc(e.target.value)
+        }
+
+        return (
+            <div onClick={closeAllocModals} className={"allocate_modal_container"}>
+                <div onClick={e => e.stopPropagation()} className={"allocate_modal"}>
+                    <h1>Deallocate From Goal</h1>
+                    <div className={"allocate_form"}>
+                        <div>{"Goal: " + goal.cost}</div>
+                        <div>{"Allocated: " + goal.allocated}</div>
+                        <input value={potentialAlloc || ''}
+                               placeholder={"Amount"}
+                               type={"number"}
+                               onChange={e => editPotentialAlloc(e)}/>
+                        <button
+                            onClick={e => deallocateMoney(goal.id, goal.allocated, potentialAlloc)}>Done
+                        </button>
+                        <div onClick={closeAllocModals}
+                             className={"allocate_form_close"}>Cancel
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    };
+
     return (
         <>
             <div className="goals-list">
@@ -150,50 +209,64 @@ const GoalsList = ({setGoalCompletion, saveGoalAllocation, income, updateEditGoa
                         <IoIosAdd className={"add_goal_button"} onClick={openModal}/>
                         <div className={"goals_filter_buttons_modal_container"}>
                             {!filterModal ?
-                                <IoFilter onClick={openFilterModal} className={"goals_filter_button"}/> :
+                                <>
+                                    {startDate !== '' || endDate !== '' || categoryFilter !== '' ?
+                                        <MdFilterListOff onClick={openFilterModal} className={"goals_filter_button"}/> :
+                                        <MdFilterList onClick={openFilterModal} className={"goals_filter_button"}/>
+                                    }
+                                </> :
                                 <IoCloseOutline className={"goals_filter_button"} onClick={closeFilterModal}/>
                             }
-                            <div className={"goals_filter_modal_container"}>
-                                {filterModal &&
-                                    <div className="goals-filter">
-                                        <div className="date-input-group">
-                                            <label className="date-label" htmlFor="start-date">Start:</label>
-                                            <input
-                                                type="date"
-                                                id="start-date"
-                                                className="filter-date"
-                                                value={startDate}
-                                                onChange={(e) => {
-                                                    setStartDate(e.target.value)
-                                                }}
-                                            />
-                                            <label className="date-label" htmlFor="end-date">End:</label>
-                                            <input
-                                                type="date"
-                                                id="end-date"
-                                                className="filter-date"
-                                                value={endDate}
-                                                onChange={(e) => {
-                                                    setEndDate(e.target.value)
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="category-input-group">
-                                            <input
-                                                type="text"
-                                                id="category-filter"
-                                                className="category_filter"
-                                                value={categoryFilter}
-                                                onChange={handleCategoryFilterChange}
-                                                autoComplete="off"
-                                                placeholder="Filter by Category"
-                                            />
-                                        </div>
-                                    </div>
-                                }
-                            </div>
                         </div>
                     </div>
+                </div>
+                <div className={"goals_filter_modal_container"}>
+                    {filterModal &&
+                        <div className="goals-filter">
+                            <div className="date-input-group">
+                                <label className="date-label" htmlFor="start-date">Start Date</label>
+                                <input
+                                    type="date"
+                                    id="start-date"
+                                    className="filter-date"
+                                    value={startDate}
+                                    onChange={(e) => {
+                                        setStartDate(e.target.value)
+                                    }}
+                                />
+                            </div>
+                            <div className="date-input-group">
+                                <label className="date-label" htmlFor="end-date">End Date</label>
+                                <input
+                                    type="date"
+                                    id="end-date"
+                                    className="filter-date"
+                                    value={endDate}
+                                    onChange={(e) => {
+                                        setEndDate(e.target.value)
+                                    }}
+                                />
+                            </div>
+                            <div className="category-filter-group">
+                                <label className="date-label" htmlFor="end-date">Category</label>
+                                <div className={"category_clear_group"}>
+                                    <input
+                                        type="text"
+                                        id="category-filter"
+                                        className="goals-filter_input"
+                                        value={categoryFilter}
+                                        onChange={handleCategoryFilterChange}
+                                        autoComplete="off"
+                                        placeholder="ex. Car"
+                                    />
+                                    {categoryFilter !== '' &&
+                                        <IoIosCloseCircleOutline className={"goals_filter_button"}
+                                                                 onClick={e => setCategoryFilter('')}/>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div className={"goals_tabs_container"}>
                     <div onClick={e => setGoalsPage(0)}
@@ -214,30 +287,29 @@ const GoalsList = ({setGoalCompletion, saveGoalAllocation, income, updateEditGoa
                                     cursor: "pointer"
                                 }}>adding a goal</span></p>
                         ) : (
-                            filteredGoals.map((goal) => (
-                                <div key={goal.id}>
+                            filteredGoals.map((goal, index) => (
+                                <div key={index}>
                                     <div className={"goal-items"}>
                                         {/*<span className="icon_button" onClick={() => handleEditGoal(goal)}><BiSolidPencil /></span>*/}
                                         <div className={"goal-item"}>
-                                            <span>{goal.name}</span>
-                                            <span>{"$" + goal.cost}</span>
-                                            <span>{goal.category}</span>
-                                            <span>{goal.date}</span>
                                             <div className={"allocate_menu_button"}>
-                                                {allocateDropDown && activeGoal === goal.id ?
+                                                {allocateDropDown && activeGoal.id === goal.id ?
                                                     <IoCloseOutline className={"allocate_dropdown_btn"}
                                                                     onClick={closeAllocateDropdown}/> :
                                                     <SlOptions className={"allocate_dropdown_btn"}
-                                                               onClick={e => openAllocateDropdown(goal.id)}/>
+                                                               onClick={e => openAllocateDropdown(goal)}/>
                                                 }
                                                 <div className={"allocate_dropdown_container"}>
-                                                    {allocateDropDown && activeGoal === goal.id &&
+                                                    {allocateDropDown && activeGoal.id === goal.id &&
                                                         <div className={"allocate_dropdown"}>
                                                             <button className={"allocate_btn"}
-                                                                    onClick={openAllocateModal}>Allocate
+                                                                    onClick={e => openAllocateModal(goal)}>Allocate
                                                             </button>
                                                             <button className={"deallocate_btn"}
-                                                                    onClick={openDeallocateModal}>Deallocate
+                                                                    onClick={e => openDeallocateModal(goal)}>Deallocate
+                                                            </button>
+                                                            <button className={"edit_goal_button"} onClick={e => handleEditGoal(goal)}>
+                                                                Edit
                                                             </button>
                                                             <button onClick={() => handeDelete(goal.id)}
                                                                     className={"delete_goal_btn"}>Delete
@@ -246,14 +318,19 @@ const GoalsList = ({setGoalCompletion, saveGoalAllocation, income, updateEditGoa
                                                     }
                                                 </div>
                                             </div>
+                                            <span>{goal.name}</span>
+                                            <span>{"$" + goal.cost}</span>
+                                            <span onClick={e => setCategoryFilter(goal.category)}
+                                                  className={"goal_category"}>{goal.category}</span>
+                                            <span>{goal.date}</span>
                                         </div>
                                         <div className={"goal-item"}>
                                             <ProgressBar className={"goal_progress_bar"}>
-                                                <ProgressBar onClick={openDeallocateModal}
+                                                <ProgressBar onClick={e => openDeallocateModal(goal)}
                                                              className={"goal_sub_progress_bar progress_bar_a"}
                                                              title={"Click to deallocate"} hidden={goal.allocated === 0}
                                                              now={goal.allocated} key={1}/>
-                                                <ProgressBar onClick={openAllocateModal}
+                                                <ProgressBar onClick={e => openAllocateModal(goal)}
                                                              className={"goal_sub_progress_bar progress_bar_c"}
                                                              title={"Click to allocate"}
                                                              now={((goal.cost - goal.allocated))}
@@ -270,51 +347,17 @@ const GoalsList = ({setGoalCompletion, saveGoalAllocation, income, updateEditGoa
                                                 <div
                                                     className={"sub_bar_c_label"}>{"Remaining: $"}{parseFloat(goal.cost) - parseFloat(goal.allocated)}</div> :
                                                 <button className={"complete_goal_button"}
-                                                        onClick={e => handleGoalCompletion(goal.id, 1, todayDate)}>Move to
+                                                        onClick={e => handleGoalCompletion(goal.id, 1, todayDate)}>Move
+                                                    to
                                                     Completed</button>
                                             }
                                         </div>
                                     </div>
                                     {allocateModalShow &&
-                                        <div onClick={closeAllocModals} className={"allocate_modal_container"}>
-                                            <div onClick={e => e.stopPropagation()} className={"allocate_modal"}>
-                                                <h1>Allocate Towards Goal</h1>
-                                                <div className={"allocate_form"}>
-                                                    <div>{"Goal: " + goal.cost}</div>
-                                                    <div>{"Allocated: " + goal.allocated}</div>
-                                                    <input max={income} value={potentialAlloc || ''}
-                                                           placeholder={"Amount"}
-                                                           type={"number"} onChange={editPotentialAlloc}/>
-                                                    <button
-                                                        onClick={e => allocateMoney(goal.id, goal.allocated, goal.cost)}>Done
-                                                    </button>
-                                                    <div onClick={closeAllocModals}
-                                                         className={"allocate_form_close"}>Cancel
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <AllocateModal goal={activeGoal} />
                                     }
                                     {deallocateModalShow &&
-                                        <div onClick={closeAllocModals} className={"allocate_modal_container"}>
-                                            <div onClick={e => e.stopPropagation()} className={"allocate_modal"}>
-                                                <h1>Deallocate From Goal</h1>
-                                                <div className={"allocate_form"}>
-                                                    <div>{"Goal: " + goal.cost}</div>
-                                                    <div>{"Allocated: " + goal.allocated}</div>
-                                                    <input max={goal.allocated} value={potentialAlloc || ''}
-                                                           placeholder={"Amount"}
-                                                           type={"number"}
-                                                           onChange={editPotentialAlloc}/>
-                                                    <button
-                                                        onClick={e => deallocateMoney(goal.id, goal.allocated)}>Done
-                                                    </button>
-                                                    <div onClick={closeAllocModals}
-                                                         className={"allocate_form_close"}>Cancel
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <DeallocateModal goal={activeGoal} />
                                     }
                                 </div>
                             ))
@@ -328,21 +371,16 @@ const GoalsList = ({setGoalCompletion, saveGoalAllocation, income, updateEditGoa
                             completedGoals.map((goal) => (
                                 <div key={goal.id}>
                                     <div className={"goal-items"}>
-                                        {/*<span className="icon_button" onClick={() => handleEditGoal(goal)}><BiSolidPencil /></span>*/}
                                         <div className={"goal-item"}>
-                                            <span>{goal.name}</span>
-                                            <span>{"$" + goal.cost}</span>
-                                            <span>{goal.category}</span>
-                                            <span>{goal.date}</span>
                                             <div className={"allocate_menu_button"}>
-                                                {allocateDropDown && activeGoal === goal.id ?
+                                                {allocateDropDown && activeGoal.id === goal.id ?
                                                     <IoCloseOutline className={"allocate_dropdown_btn"}
                                                                     onClick={closeAllocateDropdown}/> :
                                                     <SlOptions className={"allocate_dropdown_btn"}
-                                                               onClick={e => openAllocateDropdown(goal.id)}/>
+                                                               onClick={e => openAllocateDropdown(goal)}/>
                                                 }
                                                 <div>
-                                                    {allocateDropDown && activeGoal === goal.id &&
+                                                    {allocateDropDown && activeGoal.id === goal.id &&
                                                         <div className={"allocate_dropdown"}>
                                                             <button onClick={() => handeDelete(goal.id)}
                                                                     className={"delete_goal_btn"}>Delete
@@ -351,53 +389,19 @@ const GoalsList = ({setGoalCompletion, saveGoalAllocation, income, updateEditGoa
                                                     }
                                                 </div>
                                             </div>
+                                            <span>{goal.name}</span>
+                                            <span>{"$" + goal.cost}</span>
+                                            <span className={"goal_category"} onClick={e => setCategoryFilter(goal.category)}>{goal.category}</span>
+                                            <span>{goal.date}</span>
                                         </div>
                                         <div className={"progress_bar_legend"}>
-                                                <div className={"progress_bar_legend_text"}>{"Date Completed: "}{goal.completed_date}</div>
-                                            <button className={"complete_goal_button"} onClick={e => handleGoalCompletion(goal.id, 0, null)}>Move to Active</button>
+                                            <div
+                                                className={"progress_bar_legend_text"}>{"Date Completed: "}{goal.completed_date}</div>
+                                            <button className={"complete_goal_button"}
+                                                    onClick={e => handleGoalCompletion(goal.id, 0, null)}>Move to Active
+                                            </button>
                                         </div>
                                     </div>
-                                    {allocateModalShow &&
-                                        <div onClick={closeAllocModals} className={"allocate_modal_container"}>
-                                            <div onClick={e => e.stopPropagation()} className={"allocate_modal"}>
-                                                <h1>Allocate Towards Goal</h1>
-                                                <div className={"allocate_form"}>
-                                                    <div>{"Goal: " + goal.cost}</div>
-                                                    <div>{"Allocated: " + goal.allocated}</div>
-                                                    <input max={income} value={potentialAlloc || ''}
-                                                           placeholder={"Amount"}
-                                                           type={"number"} onChange={editPotentialAlloc}/>
-                                                    <button
-                                                        onClick={e => allocateMoney(goal.id, goal.allocated, goal.cost)}>Done
-                                                    </button>
-                                                    <div onClick={closeAllocModals}
-                                                         className={"allocate_form_close"}>Cancel
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                    {deallocateModalShow &&
-                                        <div onClick={closeAllocModals} className={"allocate_modal_container"}>
-                                            <div onClick={e => e.stopPropagation()} className={"allocate_modal"}>
-                                                <h1>Deallocate From Goal</h1>
-                                                <div className={"allocate_form"}>
-                                                    <div>{"Goal: " + goal.cost}</div>
-                                                    <div>{"Allocated: " + goal.allocated}</div>
-                                                    <input max={goal.allocated} value={potentialAlloc || ''}
-                                                           placeholder={"Amount"}
-                                                           type={"number"}
-                                                           onChange={editPotentialAlloc}/>
-                                                    <button
-                                                        onClick={e => deallocateMoney(goal.id, goal.allocated)}>Done
-                                                    </button>
-                                                    <div onClick={closeAllocModals}
-                                                         className={"allocate_form_close"}>Cancel
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
                                 </div>
                             ))
                         )}

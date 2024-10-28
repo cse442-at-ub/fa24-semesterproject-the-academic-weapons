@@ -52,8 +52,8 @@
     flex-direction: column;
     margin-inline: auto;
     margin-top: 20px;
-    border-radius-b: 20px;
-    padding-bottom: 20px
+    border-radius: 20px;
+    padding-bottom: 20px;
   }
 
   .goal-item {
@@ -72,6 +72,12 @@
     text-overflow: ellipsis;
     max-width: 100%;
     padding: 10px;
+  }
+
+  .goal_category {
+    color: #5661AC;
+    text-decoration: underline;
+    cursor: pointer;
   }
   
   .goal_amount {
@@ -110,6 +116,8 @@
   }
 
   .sub_bar_a_label {
+    width: fit-content;
+    text-align: center;
     margin-inline: auto;
     color: #8884d8;
   }
@@ -120,6 +128,8 @@
   }
 
   .sub_bar_c_label {
+    width: fit-content;
+    text-align: center;
     margin-inline: auto;
     color: black;
   }
@@ -165,6 +175,16 @@
   .allocate_btn:hover {
     background-color: #6b5fb5;
     color: white;
+  }
+
+  .edit_goal_button {
+    background-color: white;
+    color: black;
+    border: 1px solid #d5d5d5;
+  }
+
+  .edit_goal_button:hover {
+    background-color: #c8c8c8;
   }
 
 .delete_goal_btn {
@@ -293,7 +313,8 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  font-size: 20px;
+  font-size: 15px;
+  cursor: pointer;
 }
 
 .goals_tabs_container_button_active, .goals_tabs_container_button_inactive {
@@ -336,20 +357,38 @@
 }
 
 .goals-filter {
+  margin-top: -20px;
   position: absolute;
   background-color: #F2F4F7;
-  padding: 10px;
+  padding: 20px;
   box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
   border: 1px solid rgb(105, 114, 172);
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 250px;
+  width: fit-content;
+  max-width: 200px;
+  z-index: 1000;
 }
 
-.goals-filter input {
-  max-width: 90%;
+.goals-filter_input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 70%;
+}
+
+.category-filter-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.category_clear_group {
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
 }
 
 .goals_filter_buttons_modal_container {
@@ -358,16 +397,22 @@
   flex-wrap: wrap;
 }
 
+.goals_filter_modal_container {
+  width: 100vw;
+  justify-content: space-between;
+  clear: both;
+}
+
 .allocate_menu_button {
   position: relative;
 }
 
 .allocate_dropdown_container {
   position: absolute;
-  z-index: 1000;
 }
   
   @media only screen and (max-width: 1000px) {
+
     .goal-item {
       text-align: center;
       padding: 0;

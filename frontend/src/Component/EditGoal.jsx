@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from "react";
 
 
-const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) => {
-    const [name, setName] = useState(oldTransaction.name);
-    const [price, setPrice] = useState(oldTransaction.price);
-    const [category, setCategory] = useState(oldTransaction.category);
-    const [date, setDate] = useState(oldTransaction.date);
+const EditGoal = ( {saveEditGoal,  oldGoal, closeModal } ) => {
+    const [name, setName] = useState(oldGoal.name);
+    const [price, setPrice] = useState(parseFloat(oldGoal.cost));
+    const [category, setCategory] = useState(oldGoal.category);
+    const [date, setDate] = useState(oldGoal.date);
+    const oldAllocated = oldGoal.allocated
 
-    const handleUpdateTransaction = (e) => {
-        const updated = {...oldTransaction};
+    const handleUpdateGoal = (e) => {
+        const updated = {...oldGoal};
         if (name.trim() === '' || price.trim() === '' || category.trim() === '' || date === null) return
         updated.name = name;
-        updated.price = price;
+        if (price < oldAllocated) {
+            updated.allocated = price
+        } else {
+            updated.allocated = oldAllocated
+        }
+        updated.cost = price;
         updated.category = category;
         updated.date = date;
-        saveEditTransaction(updated);
+        saveEditGoal(updated);
         closeModal();
     }
 
@@ -31,7 +37,7 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
                                onChange={e => setName(e.target.value)}/>
                     </div>
                     <div className={'edit_trans_form_input_group'}>
-                        <label className={"edit_trans_input_label"}>Price<span
+                        <label className={"edit_trans_input_label"}>Amount<span
                             className={'required_field'}>*</span></label>
                         <input className={'edit_trans_input_field'} value={price} type={'number'} required={true}
                                onChange={e => setPrice(e.target.value)}/>
@@ -49,7 +55,7 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
                                onChange={e => setDate(e.target.value)}/>
                     </div>
                     <div className={'edit_trans_form_input_group'}>
-                        <button onClick={e => handleUpdateTransaction(e)}
+                        <button onClick={e => handleUpdateGoal(e)}
                                 className={"edit_trans_edit_btn"}>Update
                         </button>
                     </div>
@@ -60,4 +66,4 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
     );
 };
 
-export default EditTransaction;
+export default EditGoal;
