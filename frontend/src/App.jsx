@@ -27,6 +27,7 @@ import img6 from "./Assets/Profile Pictures/Person7.svg"
 import img7 from "./Assets/Profile Pictures/Person8.svg"
 import AddGoal from "./Component/AddGoals.jsx";
 import EditTransaction from "./Component/EditTransaction.jsx";
+import EditGoal from "./Component/EditGoal.jsx";
 //import { fetchGoals, addGoal, updateGoal, deleteGoal } from './api/GoalAPI';
 
 
@@ -44,6 +45,7 @@ function App() {
     const [maxTransID, setMaxTransID] = useState(1);
     // Add Goals section
     const [showAddGoal, setShowAddGoal] = useState(false);
+    const [showEditGoal, setShowEditGoal] = useState(false)
     const [goals, setGoals] = useState([]);
     const [maxGoalID, setMaxGoalID] = useState(1);
     // Add Goals section
@@ -193,12 +195,14 @@ function App() {
             editedGoals[editedIndex].name = updatedGoal.name;
             editedGoals[editedIndex].cost = updatedGoal.cost;
             editedGoals[editedIndex].date = updatedGoal.date;
+            editedGoals[editedIndex].category = updatedGoal.category;
+            editedGoals[editedIndex].allocated = updatedGoal.allocated;
 
             // Update the state with the modified goals list
             setGoals(editedGoals);
 
             // Optionally update the backend/database
-            updateDatabaseGoals(updatedGoal);
+            saveEditGoalDatabase(updatedGoal);
         }
     };
 
@@ -206,9 +210,6 @@ function App() {
     const updateEditTransaction = (transaction) => {
         setEditTransaction(transaction);
     }
-    const updateEditGoal = (goal) => {
-        setEditGoal(goal);
-    };
 
     const updateMaxTransID = (e) => {
         setMaxTransID(e)
@@ -259,10 +260,36 @@ function App() {
                 sessionStorage.clear();
                 window.location.reload();
             }
+            getGoals()
         } catch (error) {
             console.error('Error:', error);
         }
     };
+
+    const saveEditGoalDatabase = async (updateItem) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({userID, userToken, updateItem}),
+            });
+            if (!response.ok) {
+                console.error("Error updating transactions...")
+            }
+            const reply = await response.json()
+            if (!reply.success) {
+                console.log(reply.message)
+                alert("Invalid user credentials, please sign in again...")
+                sessionStorage.clear()
+                window.location.reload()
+            }
+            setIsLoaded(false);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     const updateDatabaseTransactions = async (updateItem) => {
         try {
@@ -364,6 +391,54 @@ function App() {
     };
 
 
+    const saveGoalAllocation = async (goalID, allocation) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'UPDATE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userID, userToken, goalID, allocation }),
+            });
+            if (!response.ok) {
+                console.error("Error updating allocation for goal...");
+            }
+            const reply = await response.json();
+            if (!reply.success) {
+                alert("Invalid user credentials, please sign in again...");
+                sessionStorage.clear();
+                window.location.reload();
+            }
+            getGoals()
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+
+    const setGoalCompletion = async (goalID, completion, date) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userID, userToken, goalID, completion, date }),
+            });
+            if (!response.ok) {
+                console.error("Error updating allocation for goal...");
+            }
+            const reply = await response.json();
+            if (!reply.success) {
+                alert("Invalid user credentials, please sign in again...");
+                sessionStorage.clear();
+                window.location.reload();
+            }
+            getGoals()
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     const removeTransaction = (id) => {
         const newTransactions = [...transactions]
@@ -372,14 +447,12 @@ function App() {
         setTransactions(newTransactions)
         saveRemoveTransaction(id);
     }
+
     const removeGoal = (id) => {
         const updatedGoals = goals.filter(goal => goal.id !== id);
         setGoals(updatedGoals);
         saveRemoveGoal(id);
     };
-
-
-
 
     const openTransactionModal = () => {
         setShowAddTransaction(true);
@@ -396,6 +469,17 @@ function App() {
         setShowAddGoal(false);
     };
 
+    const openEditGoal = () => {
+        setShowEditGoal(true)
+    }
+
+    const closeEditGoal = () => {
+        setShowEditGoal(false)
+    }
+
+    const updateEditGoal = (oldGoal) => {
+        setEditGoal(oldGoal)
+    }
 
     const openEditModal = () => {
         setShowEditTransaction(true);
@@ -437,7 +521,11 @@ function App() {
             <Navbar username={username} pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
             <Routes>
             <Route path={"/"} element={<Homepage
+                saveGoalAllocation={saveGoalAllocation}
+                setGoalCompletion={setGoalCompletion}
                 openEditModal={openEditModal}
+                openEditGoal={openEditGoal}
+                updateEditGoal={updateEditGoal}
                 updateEditTransaction={updateEditTransaction}
                 deleteTransaction={removeTransaction}
                 transactions={transactions}
@@ -454,10 +542,11 @@ function App() {
               <Route path="/registration" element={<Registration />} />
               <Route path="/income" element={<Income />} />
             </Routes>
-              {showEditTransaction ? <EditTransaction saveEditTransaction={saveEditTransaction} oldTransaction={editTransaction} closeModal={closeEditModal}/>:null}
-              {showAddTransaction ? <AddTransaction maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>:null}
+              {showEditTransaction && <EditTransaction saveEditTransaction={saveEditTransaction} oldTransaction={editTransaction} closeModal={closeEditModal}/>}
+              {showAddTransaction && <AddTransaction maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>}
+              {showEditGoal && <EditGoal saveEditGoal={saveEditGoal} oldGoal={editGoal} closeModal={closeEditGoal}/>}
               {showAddGoal && <AddGoal maxGoalID={maxGoalID} updateMaxGoalID={updateMaxGoalID} addGoal={addGoal} closeModal={closeGoalModal} deleteGoal ={removeGoal} />}
-              {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}
+              {showSettings &&  <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>}
 
           </header>
         </div>

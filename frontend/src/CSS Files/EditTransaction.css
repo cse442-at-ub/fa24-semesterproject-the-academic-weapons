@@ -24,6 +24,7 @@
 }
 
 .edit_trans_title {
+    padding-top: 20px;
     font-size: clamp(25px, 2vw, 35px);
     text-align: center;
     color: #5661AC;

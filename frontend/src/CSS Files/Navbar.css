@@ -9,6 +9,15 @@
     max-width: 100%;
   }
 
+.navbar_container {
+  margin-inline: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
   .navbar-logo {
     display: flex;
     align-items: center;

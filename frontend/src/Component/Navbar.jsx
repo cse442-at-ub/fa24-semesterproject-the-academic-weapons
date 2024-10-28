@@ -20,6 +20,7 @@ const Navbar = ({username, openModal, openSettings, pfpMap, pfp }) => {
 
     return (
         <nav className="navbar">
+            <div className={"navbar_container"}>
             <div onClick={e => navigate('/')} className="navbar-logo">
                 <img src={logo} alt="Wealth Wise Logo" className="logo-image"/>
                 <span className="logo-text">
@@ -41,6 +42,7 @@ const Navbar = ({username, openModal, openSettings, pfpMap, pfp }) => {
                     <img src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon"/>
                 </div>
                 <div onClick={logout} className="logout_text">Log Out</div>
+            </div>
             </div>
         </nav>
     );
