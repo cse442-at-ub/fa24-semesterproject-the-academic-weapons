@@ -6,6 +6,7 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
     const [price, setPrice] = useState(oldTransaction.price);
     const [category, setCategory] = useState(oldTransaction.category);
     const [date, setDate] = useState(oldTransaction.date);
+    const[recurring, setRecurring] = useState(oldTransaction.recurring);
 
     const handleUpdateTransaction = (e) => {
         const updated = {...oldTransaction};
@@ -14,6 +15,7 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
         updated.price = price;
         updated.category = category;
         updated.date = date;
+        updated.recurring= recurring;
         saveEditTransaction(updated);
         closeModal();
     }
@@ -47,6 +49,15 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
                             className={'required_field'}>*</span></label>
                         <input className={'edit_trans_input_field'} value={date} type={"date"} required={true}
                                onChange={e => setDate(e.target.value)}/>
+                    </div>
+                    <div className={'edit_trans_form_input_group'}>
+                        <label className={"edit_trans_input_label"}>Recurring Transaction?</label>
+                        <input
+                            type="checkbox"
+                            checked={recurring}
+                            onChange={(e) => setRecurring(e.target.checked)}
+                            className={'edit_trans_checkbox'}
+                        />
                     </div>
                     <div className={'edit_trans_form_input_group'}>
                         <button onClick={e => handleUpdateTransaction(e)}
