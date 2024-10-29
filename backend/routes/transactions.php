@@ -38,11 +38,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             // Calculate the next recurrence date (one month after today)
             $nextRecurrenceDate = (new DateTime($todayStr))->modify('+1 month')->format('Y-m-d');
 
-            // Insert a new transaction for this month with the updated next_recurrence_date
-            $insertStmt = $conn->prepare("INSERT INTO transactions (user_id, name, price, category, date, recurring, next_recurrence_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $insertStmt->bind_param("isdssis", $transaction['user_id'], $transaction['name'], $transaction['price'], $transaction['category'], $todayStr, $transaction['recurring'], $nextRecurrenceDate);
-            $insertStmt->execute();
-            $insertStmt->close();
+            // Check if a transaction for this user with the same name and date already exists for the current month
+            $existing_check_stmt = $conn->prepare("SELECT * FROM transactions WHERE user_id = ? AND name = ? AND date = ?");
+            $existing_check_stmt->bind_param("iss", $id, $transaction['name'], $todayStr);
+            $existing_check_stmt->execute();
+            $existing_result = $existing_check_stmt->get_result();
+
+            if ($existing_result->num_rows === 0) {
+                // No duplicate found, so insert the new transaction for this month
+                $insertStmt = $conn->prepare("INSERT INTO transactions (user_id, name, price, category, date, recurring, next_recurrence_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $insertStmt->bind_param("isdssis", $transaction['user_id'], $transaction['name'], $transaction['price'], $transaction['category'], $todayStr, $transaction['recurring'], $nextRecurrenceDate);
+                $insertStmt->execute();
+                $insertStmt->close();
+            }
+
+            $existing_check_stmt->close();
         }
 
         $recurrence_stmt->close();
@@ -70,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(array("error" => "No ID or Token parameter provided"));
     }
 }
-
 
 
 
