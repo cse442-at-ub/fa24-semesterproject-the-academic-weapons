@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $id = intval($_GET['id']);  // Sanitize input by converting to integer
         $token = $_GET['token'];
 
+        // Authenticate user
         $auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
         $auth_stmt->bind_param("is", $id, $token);
         $auth_stmt->execute();
@@ -23,46 +24,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             exit;
         }
 
-        // Fetch all transactions for the user
+        // Process recurring transactions
+        $today = new DateTime();
+        $todayStr = $today->format('Y-m-d');
+
+        // Get all recurring transactions for the user that are due for recurrence
+        $recurrence_stmt = $conn->prepare("SELECT * FROM transactions WHERE user_id = ? AND recurring = 1 AND next_recurrence_date <= ?");
+        $recurrence_stmt->bind_param("is", $id, $todayStr);
+        $recurrence_stmt->execute();
+        $recurring_transactions = $recurrence_stmt->get_result();
+
+        while ($transaction = $recurring_transactions->fetch_assoc()) {
+            // Calculate the next recurrence date (one month after today)
+            $nextRecurrenceDate = (new DateTime($todayStr))->modify('+1 month')->format('Y-m-d');
+
+            // Insert a new transaction for this month with the updated next_recurrence_date
+            $insertStmt = $conn->prepare("INSERT INTO transactions (user_id, name, price, category, date, recurring, next_recurrence_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $insertStmt->bind_param("isdssis", $transaction['user_id'], $transaction['name'], $transaction['price'], $transaction['category'], $todayStr, $transaction['recurring'], $nextRecurrenceDate);
+            $insertStmt->execute();
+            $insertStmt->close();
+        }
+
+        $recurrence_stmt->close();
+
+        // Fetch all transactions for the user (including any newly added recurring ones)
         $stmt = $conn->prepare("SELECT * FROM transactions WHERE user_id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         $transactions = array();
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $transactions[] = $row;
-            }
+        while ($row = $result->fetch_assoc()) {
+            $transactions[] = $row;
         }
 
-        // Calculate monthly expenses
-        $monthlyExpenses = array();
-        foreach ($transactions as $transaction) {
-            $date = new DateTime($transaction['date']);
-            $monthYear = $date->format('Y-m'); // Format as Year-Month
-            $price = (float)$transaction['price'];
-
-            if (!isset($monthlyExpenses[$monthYear])) {
-                $monthlyExpenses[$monthYear] = 0;
-            }
-            $monthlyExpenses[$monthYear] += $price;
-
-        }
-
-        // Return transactions and monthly expenses
+        // Return transactions
         echo json_encode([
             'success' => true,
             'transactions' => $transactions,
-            'monthlyExpenses' => $monthlyExpenses,
         ]);
-        // Close the statement
+
         $stmt->close();
-        $conn->close(); // Close the connection
+        $conn->close();
     } else {
         echo json_encode(array("error" => "No ID or Token parameter provided"));
     }
 }
+
+
 
 
 
@@ -74,16 +83,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Retrieve id and transaction data
+    // Retrieve transaction data
     $userID = $data['userID'] ?? null;
     $token = $data['userToken'] ?? null;
     $transaction = $data['saveItem'] ?? null;
 
     if (empty($userID) || empty($transaction) || empty($token)) {
-        echo json_encode(['success' => false, 'message' => 'User ID and Token and Save Item are required']);
+        echo json_encode(['success' => false, 'message' => 'User ID, Token, and transaction data are required']);
         exit;
     }
 
+    // Authenticate user
     $auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
     $auth_stmt->bind_param("is", $userID, $token);
     $auth_stmt->execute();
@@ -93,31 +103,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $userID]);
         exit;
     }
+    $auth_stmt->close();
 
-    // Prepare an SQL statement to insert the transactions
-    $stmt = $conn->prepare("INSERT INTO transactions (user_id, name, price, category, date,recurring) VALUES (?, ?, ?, ?, ?,?)");
-
-    // Loop through each transaction and insert it into the database
+    // Prepare transaction data
     $name = $transaction['name'];
     $price = $transaction['price'];
     $category = $transaction['category'];
     $date = $transaction['date'];
-    $recurring=$transaction['recurring'];
+    $recurring = $transaction['recurring'] ? 1 : 0;  // Assume recurring is boolean
 
+    // Calculate next_recurrence_date for recurring transactions
+    $next_recurrence_date = null;
+    if ($recurring) {
+        $next_recurrence_date = (new DateTime($date))->modify('+1 month')->format('Y-m-d');
+    }
 
-    // Bind parameters (i for integer, d for decimal, s for strings)
-    $stmt->bind_param("isdssi", $userID, $name, $price, $category, $date, $recurring);
+    // Insert the transaction into the database
+    $stmt = $conn->prepare("INSERT INTO transactions (user_id, name, price, category, date, recurring, next_recurrence_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isdssis", $userID, $name, $price, $category, $date, $recurring, $next_recurrence_date);
 
-    // Execute the prepared statement
-    $stmt->execute();
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, "message" => "Transaction successfully inserted"]);
+    } else {
+        echo json_encode(['success' => false, "message" => "Error inserting transaction: " . $stmt->error]);
+    }
 
-    // Close the statement
     $stmt->close();
-    $conn->close(); // Close the connection
-
-    // Return success message
-    echo json_encode(['success' => true, "message" => "Transactions successfully inserted"]);
+    $conn->close();
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'UPDATE') {
     // Get JSON input
