@@ -179,6 +179,60 @@
 .edit-goal-btn:hover {
     background-color: #6b5fb5;
 }
+
+.piggybank_buttons_container {
+    display: flex; 
+    justify-content: space-between; 
+    padding: 10px; 
+}
+
+.edit-allocate-goal-btn {
+    background-color: #8884d8;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    display: flex;
+    align-self: flex-end;
+}
+
+.edit-allocate-goal-btn:hover {
+    background-color: #6b5fb5;
+}
+
+
+.back-btn {
+    background-color: #8884d8;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.back-btn:hover {
+    background-color: #6b5fb5;
+}
+
+.save_btn_nav{
+    background-color: #8884d8;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    align-items: center;
+}
+.save_btn_nav:hover {
+    background-color: #6b5fb5;
+}
+
 @media only screen and (max-width: 400px) {
 
     .navbar_name {

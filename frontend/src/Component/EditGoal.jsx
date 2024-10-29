@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-
-
 const EditGoal = ( {saveEditGoal,  oldGoal, closeModal } ) => {
     const [name, setName] = useState(oldGoal.name);
     const [price, setPrice] = useState(parseFloat(oldGoal.cost));
     const [category, setCategory] = useState(oldGoal.category);
     const [date, setDate] = useState(oldGoal.date);
     const oldAllocated = oldGoal.allocated
-
     const handleUpdateGoal = (e) => {
         const updated = {...oldGoal};
         if (name.trim() === '' || price.trim() === '' || category.trim() === '' || date === null) return
@@ -23,8 +20,6 @@ const EditGoal = ( {saveEditGoal,  oldGoal, closeModal } ) => {
         saveEditGoal(updated);
         closeModal();
     }
-
-
     return (
         <div onClick={closeModal} className={'edit_background'}>
             <div onClick={e => e.stopPropagation()} className={'edit_trans_modal_container'}>
@@ -65,5 +60,4 @@ const EditGoal = ( {saveEditGoal,  oldGoal, closeModal } ) => {
         </div>
     );
 };
-
 export default EditGoal;
