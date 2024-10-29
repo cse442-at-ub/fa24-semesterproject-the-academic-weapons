@@ -67,7 +67,6 @@ const Navbar = ({ username, openSettings, pfpMap, pfp }) => {
                 </div>
                 <div className="logout_text" onClick={logout}>Log Out</div>
             </div>
-
             {showSavingsModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">

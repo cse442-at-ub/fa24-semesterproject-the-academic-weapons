@@ -11,3 +11,11 @@
 .icon_button {
     cursor: pointer;
 }
+
+.no_content_text {
+    color: black;
+    margin-top: 100px;
+    text-align: center;
+    margin-inline: auto;
+    max-width: 80%;
+}

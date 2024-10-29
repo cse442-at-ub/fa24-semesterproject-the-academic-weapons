@@ -74,7 +74,8 @@ const AddTransaction = ({closeModal, addTransaction, removeTransaction, maxTrans
                 <div className={'add_trans_added_box_container'}>
                     <h1 className={'add_trans_title'}>Added</h1>
                     <div className={'add_trans_added_box'}>
-                        {newTransactions.map((transaction, index) => (
+                        {newTransactions.length > 0 ? (
+                            (newTransactions.map(transaction => (
                             <div key={transaction.id} className={'add_trans_added_transaction_item'}>
                                 <div className={'add_trans_added_item_text'}>
                                     <div className={'add_trans_added_text'}>{transaction.name}</div>
@@ -84,7 +85,10 @@ const AddTransaction = ({closeModal, addTransaction, removeTransaction, maxTrans
                                     <div onClick={e => deleteTransaction(transaction.id)}><MdDelete /></div>
                                 </div>
                             </div>
-                        ))}
+                                ))
+                            )): (
+                            <p className={"no_content_text"}>No goals added yet.</p>
+                            )}
                     </div>
                     <div className={'add_trans_added_save_exit_container'}>
                         <button onClick={handleSaveAndExit} className={"add_trans_add_btn"}>Save and Exit</button>

@@ -105,7 +105,7 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
                 </BarChart>
               </ResponsiveContainer>
           ) : (
-              <p style={{textAlign:"center"}}>No transactions to display for the selected year.<br/>Try <span onClick={openTransactionModal} style={{
+              <p className={"no_content_text"}>No transactions to display for the selected year.<br/>Try <span onClick={openTransactionModal} style={{
                 color: "#7984D2",
                 textDecoration: "underline",
                 cursor: "pointer"
