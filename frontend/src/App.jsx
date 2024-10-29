@@ -4,7 +4,7 @@ import './CSS Files/AddTransaction.css'
 import './CSS Files/Settings.css'
 import './CSS Files/Settings Components/ChangeModals.css'
 import './CSS Files/EditTransaction.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './CSS Files/SavingsGoalBox.css'
 import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
 import Settings from "./Page/Settings";
 import Login from './Page/Login';
