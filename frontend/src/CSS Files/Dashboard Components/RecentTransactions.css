@@ -59,6 +59,13 @@
   margin-bottom: 10px;
 }
 
+.filter-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
 .date-label {
   font-size: 0.9rem; /* Slightly smaller text for date labels */
   font-weight: 500;
@@ -70,6 +77,21 @@
   border-radius: 5px;
 }
 
+.recurring-label {
+  font-size: 0.9rem; /* Adjusted font size for consistency */
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+.recurring-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  accent-color: #8884d8; /* Match the theme color */
+  transform: scale(1.2); /* Increase the size */
+}
+
 .transactions-list {
   background-color: #D9D9D9;
   width: 100%;
@@ -79,36 +101,31 @@
   overflow-y: auto;
 }
 
-/* THIS PART WILL BE TESTING OF HOVERING OVER scollwheel thingy */
-/* .transactions-list::-webkit-scrollbar
-{
+/* Scrollbar Styling (Optional) */
+/* .transactions-list::-webkit-scrollbar {
   width: 0;
 }
 
-.transactions-list:hover::-webkit-scrollbar
-{
+.transactions-list:hover::-webkit-scrollbar {
   width: 8px;
 }
 
-.transactions-list::-webkit-scrollbar-track
-{
-  background:transparent;
+.transactions-list::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.transactions-list::-webkit-scrollbar-thumb
-{
+.transactions-list::-webkit-scrollbar-thumb {
   background: rgba(168, 31, 31, 0.3);
   border-radius: 10px;
 }
 
-.transactions-list:hover::-webkit-scrollbar-thumb:hover
-{
+.transactions-list:hover::-webkit-scrollbar-thumb:hover {
   background: rgba(196, 8, 8, 0.5);
 } */
 
 /* END OF SCROLL TESTING didnt work :( */
 
-/* This seems to be each item part  */
+/* Transaction Item Styles */
 .transaction {
   background-color: #F2F4F7;
   width: 90%;
@@ -121,7 +138,6 @@
   border-radius: 20px;
 }
 
-/* This seems to be the money sign part  */
 .transaction span {
   font-size: 1rem;
   white-space: nowrap;
@@ -220,5 +236,22 @@
     margin-inline: auto;
     padding: 5px;
     max-width: 90%;
+  }
+
+  .date-input-group {
+    gap: 10px;
+  }
+
+  .filter-item {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .recurring-filter {
+    justify-content: center;
+  }
+
+  .recurring-checkbox {
+    transform: scale(1.5);
   }
 }
