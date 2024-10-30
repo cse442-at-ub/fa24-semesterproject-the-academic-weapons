@@ -176,6 +176,8 @@
     align-items: center;
 }
 
+
+
 .edit-goal-btn:hover {
     background-color: #6b5fb5;
 }
@@ -184,6 +186,22 @@
     display: flex; 
     justify-content: space-between; 
     padding: 10px; 
+}
+
+
+.manage-goal-btn
+{
+    background-color: #8884d8;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.manage-goal-btn:hover {
+    background-color: #6b5fb5;
 }
 
 .edit-allocate-goal-btn {

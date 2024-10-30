@@ -63,21 +63,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         }
         $stmt->close();
     }
-    
+
     // Update current_goal_allocation in the users table
-    if ($allocation !== null) {
-        $stmt = $conn->prepare("UPDATE users SET current_goal_allocation = current_goal_allocation + ? WHERE id = ?");
-        if (!$stmt) {
-            echo json_encode(['success' => false, 'message' => 'Database prepare error: ' . $conn->error]);
-            exit;
+    if ($allocation !== null || $monthlySavingGoal !== null) {
+        // Check current allocation and monthly saving goal
+        $stmt = $conn->prepare("SELECT current_goal_allocation, monthly_saving_goal FROM users WHERE id = ?");
+        $stmt->bind_param("i", $userID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $goal = $result->fetch_assoc();
+
+        if ($goal) {
+            $currentAllocation = $goal['current_goal_allocation'];
+
+            // Handle allocation adjustment
+            if ($allocation !== null) {
+                $newAllocation = $currentAllocation + $allocation;
+
+                // Ensure allocation does not exceed the monthly saving goal
+                if ($monthlySavingGoal !== null && $newAllocation > $monthlySavingGoal) {
+                    // Set new allocation to the monthly saving goal
+                    $newAllocation = $monthlySavingGoal;
+                }
+
+                // Ensure allocation does not go below 0
+                if ($newAllocation < 0) {
+                    $newAllocation = 0; // Reset to 0 if it would become negative
+                }
+
+                // Update current_goal_allocation if it changes
+                if ($newAllocation !== $currentAllocation) {
+                    $stmt = $conn->prepare("UPDATE users SET current_goal_allocation = ? WHERE id = ?");
+                    if (!$stmt) {
+                        echo json_encode(['success' => false, 'message' => 'Database prepare error: ' . $conn->error]);
+                        exit;
+                    }
+                    $stmt->bind_param("di", $newAllocation, $userID);
+                    
+                    if (!$stmt->execute()) {
+                        echo json_encode(['success' => false, 'message' => 'Database error: ' . $stmt->error]);
+                        exit;
+                    }
+                    $stmt->close();
+                }
+            }
+
+            // Check if the new allocation exceeds the updated monthly savings goal
+            if ($monthlySavingGoal !== null && $currentAllocation > $monthlySavingGoal) {
+                // Cap the allocation to the new monthly saving goal
+                $currentAllocation = $monthlySavingGoal;
+
+                // Update current_goal_allocation in the database
+                $stmt = $conn->prepare("UPDATE users SET current_goal_allocation = ? WHERE id = ?");
+                if (!$stmt) {
+                    echo json_encode(['success' => false, 'message' => 'Database prepare error: ' . $conn->error]);
+                    exit;
+                }
+                $stmt->bind_param("di", $currentAllocation, $userID);
+                
+                if (!$stmt->execute()) {
+                    echo json_encode(['success' => false, 'message' => 'Database error: ' . $stmt->error]);
+                    exit;
+                }
+                $stmt->close();
+            }
         }
-        $stmt->bind_param("di", $allocation, $userID);
-        
-        if (!$stmt->execute()) {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $stmt->error]);
-            exit;
-        }
-        $stmt->close();
     }
 
     $conn->close(); // Close the connection
@@ -85,3 +135,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     // Success message
     echo json_encode(['success' => true, "message" => "Goals Piggybank successfully updated"]);
 }
+?>

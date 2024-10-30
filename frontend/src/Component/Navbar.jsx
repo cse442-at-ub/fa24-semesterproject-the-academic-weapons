@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { FaPiggyBank, FaEdit } from 'react-icons/fa';
+import { FaPiggyBank } from 'react-icons/fa';
 import logo from '../logo.svg';
-import person1 from '../Assets/Profile Pictures/Person1.svg';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, monthly_saving_goal, onUpdateMonthlyGoal, onUpdateAllocation })  => {
+const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, monthly_saving_goal, onUpdateMonthlyGoal, onUpdateAllocation }) => {
     const navigate = useNavigate();
-    const location = useLocation();
     const userID = sessionStorage.getItem("User");
 
     const [showSavingsModal, setShowSavingsModal] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const [isAllocating, setIsAllocating] = useState(false);
+    const [showCombinedModal, setShowCombinedModal] = useState(false);
     const [currentSavings, setCurrentSavings] = useState(allocated_saving_amount);
     const [savingsGoal, setSavingsGoal] = useState(monthly_saving_goal);
     const [manageAmount, setManageAmount] = useState(0); // For allocation input
@@ -25,42 +22,37 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
     const toggleSavingsModal = () => {
         setShowSavingsModal(!showSavingsModal);
         if (showSavingsModal) {
-            setIsEditing(false); 
-            setIsAllocating(false); 
+            setShowCombinedModal(false); // Close combined modal if opening savings modal
         }
     };
 
-    const goBackFromEdit = () => {
-        setIsEditing(false);
+    const openCombinedModal = () => {
+        setShowCombinedModal(true); // Open combined modal
+        setShowSavingsModal(false); // Close savings modal
     };
 
-    const goBackFromAllocate = () => {
-        setIsAllocating(false);
-    };
-
-    const toggleEditGoal = () => {
-        setIsEditing(!isEditing);
-        if (isAllocating) {
-            setIsAllocating(false);
-        }
-    };
-
-    const toggleAllocateGoal = () => {
-        setIsAllocating(!isAllocating);
-        if (isEditing) {
-            setIsEditing(false);
-        }
+    const goBackFromCombined = () => {
+        setShowCombinedModal(false); // Close combined modal
+        setShowSavingsModal(true); // Open the original modal
     };
 
     const handleSaveMonthlyGoal = () => {
         onUpdateMonthlyGoal(savingsGoal);
-        setIsEditing(false); // Exit edit mode after saving
     };
 
     const handleSaveAllocation = () => {
-        onUpdateAllocation(manageAmount);
+        let newAllocation = Number(manageAmount);
+        // Cap allocation to savings goal
+        if (currentSavings + newAllocation > savingsGoal) {
+            newAllocation = savingsGoal - currentSavings; // Adjust allocation to not exceed goal
+        }
+
+        // Update the database with the new allocation
+        onUpdateAllocation(newAllocation);
+        
+        // Update local state
+        setCurrentSavings(currentSavings + newAllocation);
         setManageAmount(0); // Reset the input field
-        setIsAllocating(false); // Exit allocating mode
     };
 
     // Effect to update local state when props change
@@ -70,10 +62,6 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
     }, [allocated_saving_amount, monthly_saving_goal]);
 
     const progressPercentage = Math.min((Number(currentSavings) / Number(savingsGoal)) * 100, 100);
-    const getGreenShade = () => {
-        const greenValue = Math.min(Math.round(progressPercentage * 2.55), 255);
-        return `rgb(0, ${greenValue}, 0)`;
-    };
 
     if (!userID) {
         return null;
@@ -94,10 +82,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                 <div className="navbar-savings-container">
                     <FaPiggyBank className="savings-icon" onClick={toggleSavingsModal} style={{ fontSize: '2rem' }} />
                     <div className="mini-progress-bar-container">
-                        <div
-                            className="mini-progress-bar"
-                            style={{ width: `${progressPercentage}%`, backgroundColor: getGreenShade() }}
-                        />
+                        <div className="mini-progress-bar" style={{ width: `${progressPercentage}%`, backgroundColor: 'green' }} />
                     </div>
                 </div>
                 <div className="logout_text" onClick={logout}>Log Out</div>
@@ -107,74 +92,52 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <button className="close-btn" onClick={toggleSavingsModal}>Close</button>
-                        {isEditing ? (
-                            <div>
-                                <h2>Edit Savings Goal</h2>
-                                <div>
-                                    <label>Savings Goal:</label>
-                                    <input
-                                        type="number"
-                                        value={savingsGoal}
-                                        onChange={(e) => {
-                                            const value = Number(e.target.value);
-                                            setSavingsGoal(value);
-                                            console.log("Updated savings goal:", value); // Log the updated value
-                                        }}
-                                    />
-                                </div>
-                                <button onClick={handleSaveMonthlyGoal} className='save_btn_nav'>Save</button>
-                                <button onClick={goBackFromEdit} className="back-btn">Back</button>
+                        <h2>Savings Goal</h2>
+                        <div className="progress-labels">
+                            <span>${currentSavings.toFixed(2)}</span>
+                            <span>${savingsGoal.toFixed(2)}</span>
+                        </div>
+                        <div className="progress-container">
+                            <div className="progress-bar" style={{ width: `${progressPercentage}%`, backgroundColor: 'green' }} />
+                        </div>
+                        <p className="savings-text">{`${progressPercentage.toFixed(2)}% of $${savingsGoal.toFixed(2)} saved`}</p>
+                        <button onClick={openCombinedModal} className="manage-goal-btn">Manage Goal</button>
+                    </div>
+                </div>
+            )}
+
+            {showCombinedModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <button className="close-btn" onClick={goBackFromCombined}>Back</button>
+                        <h2>Manage Savings Goal</h2>
+                        <div className="modal-body">
+                            <div className="edit-section">
+                                <h3>Edit Savings Goal Amount</h3>
+                                <label>Savings Goal:</label>
+                                <input
+                                    type="number"
+                                    value={savingsGoal}
+                                    onChange={(e) => {
+                                        const value = Number(e.target.value);
+                                        setSavingsGoal(value);
+                                    }}
+                                />
+                                <button onClick={handleSaveMonthlyGoal} className='save_btn_nav'>Save Goal Amount</button>
                             </div>
-                            ) : isAllocating ? (
-                                <div>
-                                    <h2>Manage Goal</h2>
-                                    <p>Input positive number to allocate to goal</p>
-                                    <p>Input negative number to remove from goal</p>
-                                    <div>
-                                        <label>Manage Amount: </label>
-                                        <input
-                                            type="number"
-                                            value={manageAmount} // Keep the input controlled
-                                            onChange={(e) => {
-                                                const value = e.target.value; // Get raw string value to allow clearing
-                                                setManageAmount(value); // Set as string directly
-                                            }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <button className='save_btn_nav' onClick={handleSaveAllocation}>Save Changes</button>
-                                        <button onClick={goBackFromAllocate} className="back-btn">Back</button>
-                                    </div>
-                                </div>
-                            ) : (
-                            <div>
-                                <div className='piggybank_buttons_container'>
-                                    <button className="edit-goal-btn" onClick={toggleEditGoal}>
-                                        <FaEdit /> Edit Goal
-                                    </button>
-                                    <button className="edit-allocate-goal-btn" onClick={toggleAllocateGoal}>
-                                        <FaEdit /> Manage Goal
-                                    </button>
-                                </div>
-                                <h2>Savings Goal</h2>
-                                <div className="progress-labels">
-                                    <span>${currentSavings.toFixed(2)}</span>
-                                    <span>${savingsGoal.toFixed(2)}</span>
-                                </div>
-                                <div className="progress-container">
-                                    <div
-                                        className="progress-bar"
-                                        style={{
-                                            width: `${progressPercentage}%`,
-                                            backgroundColor: getGreenShade(),
-                                        }}
-                                    />
-                                </div>
-                                <p className="savings-text">
-                                    {`${progressPercentage.toFixed(2)}% of $${savingsGoal.toFixed(2)} saved`}
-                                </p>
+                            <div className="allocate-section">
+                                <h3>Allocate / Deallocate from Goal </h3>
+                                <p>Input positive number to allocate to goal</p>
+                                <p>Input negative number to remove from goal</p>
+                                <label>Manage Amount:</label>
+                                <input
+                                    type="number"
+                                    value={manageAmount}
+                                    onChange={(e) => setManageAmount(e.target.value)} // Allowing to be cleared easily
+                                />
+                                <button className='save_btn_nav' onClick={handleSaveAllocation}>Save Changes to Goal</button>
                             </div>
-                        )}
+                        </div>
                     </div>
                 </div>
             )}
