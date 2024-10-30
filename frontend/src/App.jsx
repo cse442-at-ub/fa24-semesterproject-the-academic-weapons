@@ -181,6 +181,7 @@ function App() {
         editedTransactions[editedIndex].price = updated.price;
         editedTransactions[editedIndex].category = updated.category;
         editedTransactions[editedIndex].date = updated.date;
+        editedTransactions[editedIndex].recurring = updated.recurring;
         setTransactions(editedTransactions);
         updateDatabaseTransactions(updated);
     }
@@ -216,18 +217,18 @@ function App() {
         setMaxTransID(e)
     }
 
-    const saveTransactions = async (saveItem) => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({userID, userToken, saveItem}),
-            });
-            if (!response.ok) {
-                console.error("Error saving transactions...")
-            }
+        const saveTransactions = async (saveItem) => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({userID, userToken, saveItem}),
+                });
+                if (!response.ok) {
+                    console.error("Error saving transactions...")
+                }
             const reply = await response.json()
             if (!reply.success) {
                 alert("Invalid user credentials, please sign in again...")
@@ -319,7 +320,7 @@ function App() {
     const updateDatabaseGoals = async (updateGoal) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
-                method: 'UPDATE', // PUT is usually used to update a resource. If your server requires a different method, change accordingly.
+                method: 'UPDATE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
