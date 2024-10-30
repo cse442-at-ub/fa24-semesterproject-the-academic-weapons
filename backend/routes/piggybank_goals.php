@@ -3,24 +3,13 @@ include '../config/db.php'; // Ensure this sets up $conn
 
 // Handle CORS
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, DELETE, UPDATE");
+header('Access-Control-Allow-Methods: POST, GET, PUT, OPTIONS');
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if (isset($_GET['user_id']) && isset($_GET['token'])) {
+    if (isset($_GET['user_id'])) {
         $user_id = intval($_GET['user_id']);  // Sanitize input by converting to integer
-        $token = $_GET['token'];
-
-        $auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
-        $auth_stmt->bind_param("is", $user_id, $token);
-        $auth_stmt->execute();
-        $auth_result = $auth_stmt->get_result();
-
-        if ($auth_result->num_rows === 0) {
-            echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $user_id]);
-            exit;
-        }
 
         // Fetch savings goals / allocated_goal_amount for the authenticated user
         $stmt = $conn->prepare("SELECT monthly_saving_goal, current_goal_allocation FROM users WHERE id = ?");
@@ -37,10 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt->close();
         $conn->close();
     } else {
-        echo json_encode(array("error" => "No user ID or Token parameter provided"));
+        echo json_encode(array("error" => "No user ID parameter provided"));
     }
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     // JSON input
@@ -52,43 +40,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 
     // Retrieve id and goal data
     $userID = $data['userID'] ?? null;
-    $token = $data['userToken'] ?? null;
     $monthlySavingGoal = $data['monthlySavingGoal'] ?? null;
     $allocation = $data['allocation'] ?? null; // This can be positive (add) or negative (subtract)
 
-    if (empty($userID) || (empty($monthlySavingGoal) && empty($allocation)) || empty($token)) {
-        echo json_encode(['success' => false, 'message' => 'User ID, Token, and at least one of the fields (monthlySavingGoal or allocation) are required']);
+    if (empty($userID) || (empty($monthlySavingGoal) && empty($allocation))) {
+        echo json_encode(['success' => false, 'message' => 'User ID and at least one of the fields (monthlySavingGoal or allocation) are required']);
         exit;
     }
 
-    $auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
-    $auth_stmt->bind_param("is", $userID, $token);
-    $auth_stmt->execute();
-    $auth_result = $auth_stmt->get_result();
-
-    if ($auth_result->num_rows === 0) {
-        echo json_encode(['success' => false, 'message' => 'Failed to authenticate User: ' . $userID]);
-        exit;
-    }
-
-    // update the saving goal
+    // Update the saving goal in the users table
     if ($monthlySavingGoal !== null) {
-        $stmt = $conn->prepare("UPDATE goals SET monthly_saving_goal = ? WHERE user_id = ?");
+        $stmt = $conn->prepare("UPDATE users SET monthly_saving_goal = ? WHERE id = ?");
+        if (!$stmt) {
+            echo json_encode(['success' => false, 'message' => 'Database prepare error: ' . $conn->error]);
+            exit;
+        }
         $stmt->bind_param("di", $monthlySavingGoal, $userID);
-        $stmt->execute();
+        
+        if (!$stmt->execute()) {
+            echo json_encode(['success' => false, 'message' => 'Database error: ' . $stmt->error]);
+            exit;
+        }
         $stmt->close();
     }
-
-    //  update current_goal_allocation
+    
+    // Update current_goal_allocation in the users table
     if ($allocation !== null) {
-        $stmt = $conn->prepare("UPDATE goals SET current_goal_allocation = current_goal_allocation + ? WHERE user_id = ?");
+        $stmt = $conn->prepare("UPDATE users SET current_goal_allocation = current_goal_allocation + ? WHERE id = ?");
+        if (!$stmt) {
+            echo json_encode(['success' => false, 'message' => 'Database prepare error: ' . $conn->error]);
+            exit;
+        }
         $stmt->bind_param("di", $allocation, $userID);
-        $stmt->execute();
+        
+        if (!$stmt->execute()) {
+            echo json_encode(['success' => false, 'message' => 'Database error: ' . $stmt->error]);
+            exit;
+        }
         $stmt->close();
     }
 
     $conn->close(); // Close the connection
 
-    //  success message
+    // Success message
     echo json_encode(['success' => true, "message" => "Goals Piggybank successfully updated"]);
 }

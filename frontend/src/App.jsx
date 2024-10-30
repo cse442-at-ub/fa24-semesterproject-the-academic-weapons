@@ -54,6 +54,7 @@ function App() {
     // Add Piggybank Section
     const [goal_allocation_amount, setgoal_allocation_amount] = useState(0);
     const [monthly_savings_goal, setmonthly_saving_goal] = useState(0);
+  
 
     useEffect(() => {
 
@@ -210,7 +211,7 @@ function App() {
     };
 
 
-// Piggybank Section
+// Piggybank Section fetching Everthing else for updating and adding and posting is in navbar.jsx
     const fetchSavingsGoal = async () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php?user_id=${userID}`);
@@ -226,58 +227,67 @@ function App() {
             console.error("Error fetching savings goal:", error);
         }
     };
-    
+
     useEffect(() => {
         fetchSavingsGoal();
     }, []);
 
-    const updateSavingsGoal = async (newGoal) => {
+    const updateGoalAllocation = async (amount) => {
+        const newAllocation = goal_allocation_amount + amount;
+    
+    
         try {
-            response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php`, {
-                method: 'POST',
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${sessionStorage.getItem("token")}`, 
                 },
-                body: JSON.stringify({ userId: userID, savingsGoal: newGoal }), 
+                body: JSON.stringify({
+                    userID: userID,
+                    allocation: amount,
+                }),
             });
     
-            if (!response.ok) {
-                throw new Error('Failed to update savings goal');
-            }
-    
             const data = await response.json();
-            console.log('Savings goal updated successfully:', data);
+            if (data.success) {
+                // Fetch the updated goals after successfully updating
+                fetchSavingsGoal(); 
+            } else {
+                console.error("Error updating savings goal:", data.message);
+            }
         } catch (error) {
-            console.error('Error updating savings goal:', error);
+            console.error("Error updating savings goal:", error);
         }
     };
-
-    const handleSaveAllocation = async () => {
-        response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userID,
-                userToken,
-                monthlySavingGoal: monthlySavingGoal || null,
-                allocation: allocation ? parseFloat(allocation) : null,
-            }),
-        });
-        const result = await response.json();
-        // Handle result
-    };
     
-    const increaseGoalAllocationAmount = (amount) => {
-        setGoalAllocationAmount(prevAmount => prevAmount + amount);
-    };
+    const updateMonthlySavingsGoal = async (newGoal) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userID: userID,
+                    monthlySavingGoal: newGoal,
+                }),
+            });
     
-    const decreaseGoalAllocationAmount = (amount) => {
-        setGoalAllocationAmount(prevAmount => Math.max(prevAmount - amount, 0)); // Prevent going below 0
+            const textResponse = await response.text(); // Get the raw response as text
+            console.log("Raw response:", textResponse); // Log the raw response
+    
+            const data = JSON.parse(textResponse); // Try to parse the text response as JSON
+            if (data.success) {
+                // Fetch the updated goals after successfully updating
+                fetchSavingsGoal();
+            } else {
+                console.error("Error updating monthly savings goal:", data.message);
+            }
+        } catch (error) {
+            console.error("Error updating monthly savings goal:", error);
+        }
     };
-
+// END OF PIGGY BANK
     const updateEditTransaction = (transaction) => {
         setEditTransaction(transaction);
     }
@@ -589,10 +599,10 @@ function App() {
       <HashRouter>
         <div className="App">
           <header className="App-header">
-            <Navbar username={username} pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} 
-            openSettings={openSettings} allocated_saving_amount={goal_allocation_amount} setSavingsGoal={monthly_savings_goal} increaseSavingsGoal={increaseMonthlySavingsGoal} 
-            decreaseSavingsGoal={decreaseMonthlySavingsGoal} increaseAllocationAmount={increaseGoalAllocationAmount} 
-            decreaseAllocationAmount={decreaseGoalAllocationAmount}/>
+          <Navbar username={username} pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} 
+        openSettings={openSettings} allocated_saving_amount={goal_allocation_amount} 
+        monthly_saving_goal={monthly_savings_goal} onUpdateMonthlyGoal={updateMonthlySavingsGoal}
+        onUpdateAllocation={updateGoalAllocation}/>
             <Routes>
             <Route path={"/"} element={<Homepage
                 saveGoalAllocation={saveGoalAllocation}
