@@ -1,22 +1,18 @@
 .recent-transactions {
   background-color: white;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  /*width: 100%;*/
-  min-height: 300px; /* Set a minimum height */
+  border-radius: 15px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  min-height: 300px;
   max-height: fit-content;
-  /*margin-inline: auto;*/
 }
 
 .transactions-header {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px; /* Reduced gap */
+  margin-bottom: 15px;
 }
 
 .add-button {
@@ -24,234 +20,192 @@
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 8px 16px;
   cursor: pointer;
+  font-size: 0.9rem;
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-
-.add-button svg {
-  width: 18px;
-  height: 18px;
+  transition: background-color 0.3s ease;
 }
 
 .add-button:hover {
   background-color: #6b5fb5;
 }
 
+.add-button svg {
+  width: 18px;
+  height: 18px;
+  margin-left: 5px;
+}
+
 .transactions-filter {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.filter-title {
-  font-size: 1rem; /* Reduced size to make it smaller than the main header */
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.date-input-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
 .filter-item {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 5px;
 }
 
-.date-label {
-  font-size: 0.9rem; /* Slightly smaller text for date labels */
-  font-weight: 500;
+.date-label,
+.recurring-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a4a4a;
 }
 
-.filter-date {
-  padding: 5px;
+.filter-date,
+.recurring-checkbox {
+  padding: 6px 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  outline: none;
+  transition: border-color 0.2s ease;
 }
 
-.recurring-label {
-  font-size: 0.9rem; /* Adjusted font size for consistency */
-  font-weight: 500;
-  margin-right: 5px;
-}
-
-.recurring-checkbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  border-radius: 4px;
-  accent-color: #8884d8; /* Match the theme color */
-  transform: scale(1.2); /* Increase the size */
+.filter-date:focus,
+.recurring-checkbox:focus {
+  border-color: #8884d8;
 }
 
 .transactions-list {
-  background-color: #D9D9D9;
-  width: 100%;
-  height: 500px;
-  /*margin: 10px 10px 10px 10px;*/
-  border-radius: 5px;
-  overflow-y: auto;
-}
-
-/* Scrollbar Styling (Optional) */
-/* .transactions-list::-webkit-scrollbar {
-  width: 0;
-}
-
-.transactions-list:hover::-webkit-scrollbar {
-  width: 8px;
-}
-
-.transactions-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.transactions-list::-webkit-scrollbar-thumb {
-  background: rgba(168, 31, 31, 0.3);
+  background-color: #d9d9d9;
   border-radius: 10px;
+  padding: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-.transactions-list:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(196, 8, 8, 0.5);
-} */
-
-/* END OF SCROLL TESTING didnt work :( */
-
-/* Transaction Item Styles */
 .transaction {
-  background-color: #F2F4F7;
-  width: 90%;
+  background-color: #f2f4f7;
   display: flex;
   justify-content: space-between;
-  font-size: 1.25rem;
-  margin-inline: auto;
-  margin-top: 20px;
-  padding: 10px;
-  border-radius: 20px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  margin: 8px 0;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.transaction:hover {
+  transform: translateY(-2px);
 }
 
 .transaction span {
-  font-size: 1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
 }
-.transaction_amount
-{
+
+.transaction_amount {
   font-weight: bold;
+  color: #8884d8;
+}
+
+.icon_button {
+  cursor: pointer;
+  color: #888;
+  transition: color 0.3s ease;
+}
+
+.icon_button:hover {
+  color: #444;
 }
 
 .confirm_delete_modal {
-  position: relative;
-  top: 35vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: white;
   border: 2px solid #A3AAD9;
   border-radius: 10px;
-  width: 30%;
-  min-width: 270px;
-  height: fit-content;
-  padding-bottom: 40px;
-  margin-inline: auto;
+  width: 300px;
+  padding: 20px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.confirm_delete_modal_text {
+  font-size: 1rem;
+  color: #5661AC;
+  margin-bottom: 20px;
 }
 
 .confirm_delete_button_tray {
   display: flex;
-  flex-direction: row;
-  margin-inline: auto;
-  width: fit-content;
-  gap: 20px;
+  gap: 10px;
+  justify-content: center;
 }
 
-.confirm_delete_button_tray button {
-  /*border: none;*/
+.delete_transaction_button,
+.cancel_delete_button {
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: clamp(15px, 2vw, 20px);
+  transition: background-color 0.3s ease;
 }
 
 .delete_transaction_button {
-  border: 1px solid #a10000;
-  color: white;
   background-color: #a10000;
-  transition: background-color .2s ease-in-out;
+  color: white;
+  border: 1px solid #a10000;
 }
 
 .delete_transaction_button:hover {
-  border: 1px solid #a10000;
-  color: #a10000;
-  background-color: white;
+  background-color: #c53030;
 }
 
 .cancel_delete_button {
+  background-color: #5661AC;
+  color: white;
   border: 1px solid #5661AC;
-  background-color: white;
-  color: #5661AC;
-  transition: background-color .2s ease-in-out;
 }
 
 .cancel_delete_button:hover {
-  color: white;
-  background-color: #5661AC;
+  background-color: #7984D2;
 }
 
-.confirm_delete_modal_text_container {
-  margin-inline: auto;
-  padding: 20px;
-}
-
-.confirm_delete_modal_text {
-  font-size: clamp(15px, 2vw, 20px);
-  color: #5661AC;
+.no-transactions {
   text-align: center;
+  color: #666;
+  margin-top: 50px;
 }
 
-@media only screen and (max-width: 1000px) {
+.no-transactions .add-link {
+  color: #8884d8;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.no-transactions .add-link:hover {
+  color: #6b5fb5;
+}
+
+@media only screen and (max-width: 768px) {
   .transaction {
-    text-align: center;
-    padding: 0;
-    width: 90%;
-    display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    font-size: 1.25rem;
-    margin-inline: auto;
-    border-radius: 20px;
+    align-items: flex-start;
   }
 
-  .transaction span {
-    margin-inline: auto;
-    padding: 5px;
-    max-width: 90%;
+  .transactions-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .date-input-group {
-    gap: 10px;
-  }
-
-  .filter-item {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .recurring-filter {
-    justify-content: center;
-  }
-
-  .recurring-checkbox {
-    transform: scale(1.5);
+  .transactions-filter {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
