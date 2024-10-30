@@ -4,7 +4,7 @@ import logo from '../logo.svg';
 import person1 from '../Assets/Profile Pictures/Person1.svg';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-const Navbar = ({ username, openSettings, pfpMap, pfp }) => {
+const Navbar = ({ username, openSettings, pfpMap, pfp, currentSavings, setSavingsGoal, increaseSavingsGoal, decreaseSavingsGoal, increaseAllocationAmount, decreaseAllocationAmount }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const userID = sessionStorage.getItem("User");
