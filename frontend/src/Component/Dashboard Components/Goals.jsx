@@ -201,6 +201,13 @@ const GoalsList = ({openEditGoal, setGoalCompletion, saveGoalAllocation, income,
         )
     };
 
+    const clearFilters = () => {
+        setStartDate('')
+        setEndDate('')
+        setCategoryFilter('')
+        setFilterModal(false)
+    }
+
     return (
         <>
             <div className="goals-list">
@@ -266,6 +273,7 @@ const GoalsList = ({openEditGoal, setGoalCompletion, saveGoalAllocation, income,
                                     }
                                 </div>
                             </div>
+                            <button onClick={clearFilters} className={"clear_btn"}>Clear Filters</button>
                         </div>
                     }
                 </div>

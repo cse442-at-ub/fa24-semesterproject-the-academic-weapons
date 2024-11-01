@@ -85,6 +85,14 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
         setOptionsDropDown(false)
     }
 
+    const clearFilters = () => {
+        setStartDate('')
+        setEndDate('')
+        setCategoryFilter('')
+        setRecurring(false)
+        setFilterModal(false)
+    }
+
     return (
         <>
             <div className="recent-transactions">
@@ -95,7 +103,7 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
                         <div className={"goals_filter_buttons_modal_container"}>
                             {!filterModal ?
                                 <>
-                                    {startDate !== '' || endDate !== '' || categoryFilter !== '' ?
+                                    {startDate !== '' || endDate !== '' || categoryFilter !== '' || recurring ?
                                         <MdFilterListOff onClick={openFilterModal} className={"goals_filter_button"}/> :
                                         <MdFilterList onClick={openFilterModal} className={"goals_filter_button"}/>
                                     }
@@ -132,6 +140,18 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
                                     }}
                                 />
                             </div>
+                            <div className="filter-item recurring-filter">
+                                <label className="recurring-label" htmlFor="recurring-checkbox">
+                                    Recurring
+                                </label>
+                                <input
+                                    type="checkbox"
+                                    id="recurring-checkbox"
+                                    checked={recurring}
+                                    onChange={(e) => setRecurring(e.target.checked)}
+                                    className="recurring-checkbox"
+                                />
+                            </div>
                             <div className="category-filter-group">
                                 <label className="date-label" htmlFor="end-date">Category</label>
                                 <div className={"category_clear_group"}>
@@ -150,18 +170,19 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
                                     }
                                 </div>
                             </div>
+                            <button onClick={clearFilters} className={"clear_btn"}>Clear Filters</button>
                         </div>
                     }
                 </div>
 
                 <div className={"goals-list-content"}>
                     {filteredTransactions.length > 0 ? (
-                            filteredTransactions.map((transaction) => (
-                                <div className={"transaction_items"} key={transaction.id}>
-                                    <div className={"goal-item"}>
-                                        <div className={"options_button"}>
-                                            {optionsDropDown && activeTrans.id === transaction.id ?
-                                                <IoCloseOutline className={"allocate_dropdown_btn"}
+                        filteredTransactions.map((transaction) => (
+                            <div className={"transaction_items"} key={transaction.id}>
+                                <div className={"goal-item"}>
+                                    <div className={"options_button"}>
+                                        {optionsDropDown && activeTrans.id === transaction.id ?
+                                            <IoCloseOutline className={"allocate_dropdown_btn"}
                                                                 onClick={closeOptions}/> :
                                                 <SlOptions className={"allocate_dropdown_btn"}
                                                            onClick={e => openOptions(transaction)}/>
