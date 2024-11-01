@@ -50,8 +50,8 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
                         <input className={'edit_trans_input_field'} value={date} type={"date"} required={true}
                                onChange={e => setDate(e.target.value)}/>
                     </div>
-                    <div className={'edit_trans_form_input_group'}>
-                        <label className={"edit_trans_input_label"}>Recurring Transaction?</label>
+                    <div className={'edit_trans_form_input_group_recurring'}>
+                        <label className={"edit_trans_input_label"}>Recurring?</label>
                         <input
                             type="checkbox"
                             checked={recurring}

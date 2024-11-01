@@ -5,6 +5,7 @@
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   min-height: 300px;
   max-height: fit-content;
+  max-width: 100%;
 }
 
 .transactions-header {
@@ -73,36 +74,53 @@
   border-color: #8884d8;
 }
 
-.transactions-list {
+.transactions_list {
   background-color: #d9d9d9;
   border-radius: 10px;
   padding: 15px;
-  max-height: 400px;
+  height: 400px;
   overflow-y: auto;
   box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .transaction {
-  background-color: #f2f4f7;
+  background-color: #F2F4F7;
+  width: 90%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px;
-  border-radius: 10px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-  margin: 8px 0;
-  font-size: 1rem;
-  transition: transform 0.2s ease;
+  flex-direction: column;
+  margin-inline: auto;
+  margin-top: 20px;
+  border-radius: 20px;
+  padding-bottom: 20px;
+}
+
+.transaction_items {
+  background-color: #F2F4F7;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  margin-inline: auto;
+  margin-top: 20px;
+  border-radius: 20px;
 }
 
 .transaction:hover {
-  transform: translateY(-2px);
+  /*transform: translateY(-2px);*/
 }
 
-.transaction span {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #333;
+.transaction_item span {
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  padding: 10px;
+  margin-inline: auto;
+}
+
+.options_button {
+  /*margin-inline: auto;*/
+  position: relative;
 }
 
 .transaction_amount {
@@ -191,6 +209,12 @@
 
 .no-transactions .add-link:hover {
   color: #6b5fb5;
+}
+
+.transactions_filter_modal_container {
+  width: 70vw;
+  clear: both;
+  margin-inline: auto;
 }
 
 @media only screen and (max-width: 768px) {

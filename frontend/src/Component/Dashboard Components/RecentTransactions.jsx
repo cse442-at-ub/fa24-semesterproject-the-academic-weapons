@@ -1,8 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import '../../CSS Files/Dashboard Components/RecentTransactions.css';
-import { MdDelete } from "react-icons/md";
+import {MdDelete, MdFilterList, MdFilterListOff} from "react-icons/md";
 import { BiSolidPencil } from "react-icons/bi";
+import {IoIosAdd, IoIosCloseCircleOutline} from "react-icons/io";
+import {IoCloseOutline} from "react-icons/io5";
+import {SlOptions} from "react-icons/sl";
 
 const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, transactions, deleteTransaction }) => {
     // Add state for start date and end date
@@ -12,6 +15,10 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [deleteID, setDeleteID] = useState(-1);
     const [recurring, setRecurring] = useState(false);
+    const [optionsDropDown, setOptionsDropDown] = useState(false)
+    const [activeTrans, setActiveTrans] = useState({})
+    const [categoryFilter, setCategoryFilter] = useState('');
+    const [filterModal, setFilterModal] = useState(false)
 
     // Function to filter and sort transactions based on start and end dates
     const filterTransactions = () => {
@@ -24,6 +31,7 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
             return (
                 (!start || transactionDate >= start) &&
                 (!end || transactionDate <= end) &&
+                (!categoryFilter || transaction.category.toLowerCase().startsWith(categoryFilter.toLowerCase())) &&
                 (!recurring || transaction.recurring)
             );
         });
@@ -36,15 +44,17 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
     // UseEffect to automatically filter and sort when transactions, startDate, endDate, or recurring change
     useEffect(() => {
         filterTransactions();
-    }, [transactions, startDate, endDate, recurring]);
+    }, [transactions, startDate, endDate, recurring, categoryFilter]);
 
     const handleEditTransaction = (transaction) => {
         updateEditTransaction(transaction);
+        closeOptions()
         openEditModal();
     };
 
     const handleDelete = (id) => {
         setDeleteID(id);
+        closeOptions()
         setShowConfirmDelete(true);
     };
 
@@ -53,72 +63,138 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
         setShowConfirmDelete(false);
     };
 
+    const handleCategoryFilterChange = (e) => {
+        setCategoryFilter(e.target.value); // Update the category filter based on input
+    };
+
+    const openFilterModal = () => {
+        setFilterModal(true)
+    }
+
+    const closeFilterModal = () => {
+        setFilterModal(false)
+    }
+
+    const openOptions = (goal) => {
+        setActiveTrans(goal)
+        setOptionsDropDown(true)
+    }
+
+    const closeOptions = () => {
+        setActiveTrans(-1)
+        setOptionsDropDown(false)
+    }
+
     return (
         <>
             <div className="recent-transactions">
-                <div className="transactions-header">
-                    <h3>Recent Transactions</h3>
-                    <button className="add-button" onClick={openModal}>
-                        Add Item
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 5V19M5 12H19" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </button>
-                </div>
-                <div className="transactions-filter">
-                    <div className="date-input-group">
-                        <div className="filter-item">
-                            <label className="date-label" htmlFor="start-date">Start:</label>
-                            <input
-                                type="date"
-                                id="start-date"
-                                className="filter-date"
-                                value={startDate}
-                                onChange={(e) => setStartDate(e.target.value)}
-                            />
-                        </div>
-                        <div className="filter-item">
-                            <label className="date-label" htmlFor="end-date">End:</label>
-                            <input
-                                type="date"
-                                id="end-date"
-                                className="filter-date"
-                                value={endDate}
-                                onChange={(e) => setEndDate(e.target.value)}
-                            />
-                        </div>
-                        <div className="filter-item recurring-filter">
-                            <label className="recurring-label" htmlFor="recurring-checkbox">
-                                Recurring
-                            </label>
-                            <input
-                                type="checkbox"
-                                id="recurring-checkbox"
-                                checked={recurring}
-                                onChange={(e) => setRecurring(e.target.checked)}
-                                className="recurring-checkbox"
-                            />
+                <div className="goals-header">
+                    <h2>Transactions</h2>
+                    <div className={"goals_header_buttons"}>
+                        <IoIosAdd className={"add_goal_button"} onClick={openModal}/>
+                        <div className={"goals_filter_buttons_modal_container"}>
+                            {!filterModal ?
+                                <>
+                                    {startDate !== '' || endDate !== '' || categoryFilter !== '' ?
+                                        <MdFilterListOff onClick={openFilterModal} className={"goals_filter_button"}/> :
+                                        <MdFilterList onClick={openFilterModal} className={"goals_filter_button"}/>
+                                    }
+                                </> :
+                                <IoCloseOutline className={"goals_filter_button"} onClick={closeFilterModal}/>
+                            }
                         </div>
                     </div>
                 </div>
-
-                <div className="transactions-list">
-                    {filteredTransactions.length > 0 ?
-                        <div>
-                            {filteredTransactions.map((transaction) => (
-                                <div className="transaction" key={transaction.id}>
-                                    <span className="icon_button" onClick={() => handleEditTransaction(transaction)}><BiSolidPencil /></span>
-                                    <span>{transaction.name}</span>
-                                    <span>{"$" + transaction.price}</span>
-                                    <span>{transaction.date}</span>
-                                    <span>{transaction.recurring ? "Recurring" : ""}</span>
-                                    <span className="icon_button" onClick={() => handleDelete(transaction.id)}><MdDelete /></span>
+                <div className={"transactions_filter_modal_container"}>
+                    {filterModal &&
+                        <div className="goals-filter">
+                            <div className="date-input-group">
+                                <label className="date-label" htmlFor="start-date">Start Date</label>
+                                <input
+                                    type="date"
+                                    id="start-date"
+                                    className="filter-date"
+                                    value={startDate}
+                                    onChange={(e) => {
+                                        setStartDate(e.target.value)
+                                    }}
+                                />
+                            </div>
+                            <div className="date-input-group">
+                                <label className="date-label" htmlFor="end-date">End Date</label>
+                                <input
+                                    type="date"
+                                    id="end-date"
+                                    className="filter-date"
+                                    value={endDate}
+                                    onChange={(e) => {
+                                        setEndDate(e.target.value)
+                                    }}
+                                />
+                            </div>
+                            <div className="category-filter-group">
+                                <label className="date-label" htmlFor="end-date">Category</label>
+                                <div className={"category_clear_group"}>
+                                    <input
+                                        type="text"
+                                        id="category-filter"
+                                        className="goals-filter_input"
+                                        value={categoryFilter}
+                                        onChange={handleCategoryFilterChange}
+                                        autoComplete="off"
+                                        placeholder="ex. Car"
+                                    />
+                                    {categoryFilter !== '' &&
+                                        <IoIosCloseCircleOutline className={"goals_filter_button"}
+                                                                 onClick={e => setCategoryFilter('')}/>
+                                    }
                                 </div>
-                            ))}
+                            </div>
                         </div>
-                        : <p style={{ textAlign: "center", marginTop: "100px", color: "black" }}>
-                            Looks like you haven't added any transactions yet. <br />
-                            Try <span onClick={openModal} style={{ color: "#7984D2", textDecoration: "underline", cursor: "pointer" }}>adding a transaction</span>
+                    }
+                </div>
+
+                <div className={"goals-list-content"}>
+                    {filteredTransactions.length > 0 ? (
+                            filteredTransactions.map((transaction) => (
+                                <div className={"transaction_items"} key={transaction.id}>
+                                    <div className={"goal-item"}>
+                                        <div className={"options_button"}>
+                                            {optionsDropDown && activeTrans.id === transaction.id ?
+                                                <IoCloseOutline className={"allocate_dropdown_btn"}
+                                                                onClick={closeOptions}/> :
+                                                <SlOptions className={"allocate_dropdown_btn"}
+                                                           onClick={e => openOptions(transaction)}/>
+                                            }
+                                            <div className={"allocate_dropdown_container"}>
+                                                {optionsDropDown && activeTrans.id === transaction.id &&
+                                                    <div className={"allocate_dropdown"}>
+                                                        <button className={"edit_goal_button"}
+                                                                onClick={e => handleEditTransaction(transaction)}>
+                                                            Edit
+                                                        </button>
+                                                        <button onClick={() => handleDelete(transaction.id)}
+                                                                className={"delete_goal_btn"}>Delete
+                                                        </button>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                        <span className={"item_name"}>{transaction.name}</span>
+                                        <span>{"$" + transaction.price}</span>
+                                        <span onClick={e => setCategoryFilter(transaction.category)}
+                                              className={"goal_category"}>{transaction.category}</span>
+                                        <span>{transaction.date}</span>
+                                        {transaction.recurring === 1 &&
+                                            <span>{"Recurring"}</span>
+                                        }
+                                    </div>
+                                </div>
+                            ))
+                    ) : <p style={{textAlign: "center", marginTop: "100px", color: "black"}}>
+                            Looks like you haven't added any transactions yet. <br/>
+                            Try <span onClick={openModal}
+                                      style={{color: "#7984D2", textDecoration: "underline", cursor: "pointer"}}>adding a transaction</span>
                         </p>
                     }
                 </div>
@@ -127,11 +203,15 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
                 <div onClick={() => setShowConfirmDelete(false)} className={"edit_background"}>
                     <div onClick={e => e.stopPropagation()} className={"confirm_delete_modal"}>
                         <div className={"confirm_delete_modal_text_container"}>
-                            <div className={"confirm_delete_modal_text"}>{"Are you sure you want to delete this transaction?"}</div>
+                            <div
+                                className={"confirm_delete_modal_text"}>{"Are you sure you want to delete this transaction?"}</div>
                         </div>
                         <div className={"confirm_delete_button_tray"}>
-                            <button className={"delete_transaction_button"} onClick={handleConfirmDelete}>Delete</button>
-                            <button className={"cancel_delete_button"} onClick={() => setShowConfirmDelete(false)}>Cancel</button>
+                            <button className={"delete_transaction_button"} onClick={handleConfirmDelete}>Delete
+                            </button>
+                            <button className={"cancel_delete_button"}
+                                    onClick={() => setShowConfirmDelete(false)}>Cancel
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -72,8 +72,7 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
   return (
       <div className="bar-chart-component">
         <div className="bar-chart-header">
-          <h3>Monthly Spending - {selectedYear}</h3>
-
+          <h2 className={"Category_spend_txt"}>Monthly Spending</h2>
           {availableYears.length > 0 ? (
               <select value={selectedYear} onChange={handleYearChange} className="year-dropdown">
                 {availableYears.map(year => (

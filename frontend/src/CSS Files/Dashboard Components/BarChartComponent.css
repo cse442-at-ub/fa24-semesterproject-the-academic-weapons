@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   max-width: 100%;
-  padding: 0 20px;
+  padding: 20px;
 }
 
 .bar-chart-header {
@@ -12,7 +12,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px; /* Padding for the sides */
 }
 
 .year-dropdown {
@@ -57,7 +56,7 @@ p {
 
 @media (max-width: 480px) {
   .bar-chart-header h3 {
-    font-size: 1rem;
+    /*font-size: 1rem;*/
   }
 
   .year-dropdown {
