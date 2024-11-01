@@ -79,6 +79,10 @@
     text-decoration: underline;
     cursor: pointer;
   }
+
+  .item_name {
+    font-weight: bold;
+  }
   
   .goal_amount {
     font-weight: bold;
@@ -89,6 +93,7 @@
     margin-inline: auto;
     height: 30px;
     font-weight: bold;
+    background-color: #d8d8d8;
   }
 
   .progress_bar_legend {
@@ -155,6 +160,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    z-index: 1000;
   }
 
   .allocate_dropdown button {
@@ -167,13 +173,13 @@
   }
 
   .allocate_btn {
-    background-color: #8884d8;
-    color: white;
+    background-color: #84d88b;
+    color: #000000;
     border: none;
   }
 
   .allocate_btn:hover {
-    background-color: #6b5fb5;
+    background-color: #488a50;
     color: white;
   }
 
@@ -187,24 +193,24 @@
     background-color: #c8c8c8;
   }
 
-.delete_goal_btn {
+.deallocate_btn {
   background-color: #434343;
   color: white;
   border: none;
 }
 
-.delete_goal_btn:hover {
+.deallocate_btn:hover {
   background-color: #000000;
   color: white;
 }
 
-.deallocate_btn  {
+.delete_goal_btn  {
     background-color: #ea878b;
     color: white;
     border: none;
   }
 
-.deallocate_btn:hover {
+.delete_goal_btn:hover {
   background-color: #c85c61;
   color: white;
 }
@@ -267,11 +273,10 @@
   background-color: #7984D2;
   border: 1px solid rgb(0,0,0,0);
   color: white;
-  border-radius: 30px;
+  border-radius: 5px;
   font-size: 20px;
   width: 100%;
-  max-width: 100px;
-  padding: 8px;
+  padding: 6px;
   margin-inline: auto;
   cursor: pointer;
   transition: background-color .3s ease;
@@ -404,6 +409,8 @@
 }
 
 .allocate_menu_button {
+  /*width: fit-content;*/
+  /*margin-inline: auto;*/
   position: relative;
 }
 

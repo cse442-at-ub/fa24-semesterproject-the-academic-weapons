@@ -17,5 +17,7 @@
  .dashboard-content .Category_spend_txt
   {
     text-align: center;
+     width: fit-content;
+     margin-inline: auto;
      padding: 5px;
   }
