@@ -48,6 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         exit;
     }
 
+    // Check if the monthly saving goal is negative
+    if ($monthlySavingGoal < 0) {
+        echo json_encode(['success' => false, 'message' => 'Monthly savings goal cannot be negative.']);
+        exit;
+    }
+
     // Update the saving goal in the users table
     if ($monthlySavingGoal !== null) {
         $stmt = $conn->prepare("UPDATE users SET monthly_saving_goal = ? WHERE id = ?");

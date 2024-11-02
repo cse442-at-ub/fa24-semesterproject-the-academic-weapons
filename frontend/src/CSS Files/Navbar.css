@@ -95,18 +95,128 @@
     gap: 10px;
 }
 
+.H1_Piggy_Bank_Title
+{
+    color: #5661AC;
+    font-size: 25px;
+    margin-bottom: 2px;
+}
+.H2_Piggy_Bank_Title
+{
+    color: #5661AC;
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+.piggy_bank_label
+{
+    color: #5661AC;
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.input_field_piggy
+{
+    background-color: #ecebeb;
+    padding-inline: 10px;
+    font-size: clamp(15px, 2vw, 20px);
+    height: 40px;
+    outline: 1px solid rgba(0, 0, 0, 0);
+    border: 1px solid rgb(105, 114, 172);
+    border-radius: 5px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    margin: 10px;
+}
+
+.edit_piggy_stuff_deallocate
+{
+    background-color: #434343;
+    color: white;
+    width: 75%;           
+    margin: 0 auto;       
+    display: block;       
+    padding: 10px;        
+    font-size: 16px;      
+    border: none;         
+    border-radius: 5px;   
+    cursor: pointer;      
+}
+
+.edit_piggy_stuff_deallocate:hover
+{
+    background-color: #000000;
+    color: white;
+}
+
+
+.close_button_piggy_cotnainer
+{
+    display: flex; /* Enable Flexbox for the header */
+    justify-content: flex-end; /* Align items to the right */
+    width: 100%; /* Take full width */
+    margin-bottom: 10px; 
+}
+
+.close-button_piggy_bank_overlay
+{
+    color: #7984D2;
+    align-self: flex-end;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color .3s ease;
+    border: none;
+    background-color: transparent;
+}
+
+.close-button_piggy_bank_overlay:hover
+{
+    color: #596296;;
+}
+
+.edit_piggy_stuff_allocate
+{
+    background-color: #84d88b;
+    width: 75%;           
+    margin: 0 auto;       
+    display: block;       
+    padding: 10px;        
+    font-size: 16px;      
+    border: none;         
+    border-radius: 5px;   
+    cursor: pointer;      
+}
+.edit_piggy_stuff_allocate:hover
+{
+    background-color: #488a50;
+    color: white;
+}
+
+.back_text_piggy_overlay {
+    margin-top: 15px;
+    color: #7984D2;
+    text-align: center;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color .3s ease;
+}
+
+.back_text_piggy_overlay:hover {
+    color: #596296;
+}
+
+
+
 .mini-progress-bar-container {
     width: 50px;
-    height: 8px; /* Increased height for better visibility */
-    background-color: #ccc; /* Light background to contrast with the bar */
+    height: 8px;
+    background-color: #ccc; 
     border-radius: 5px;
-    border: 1px solid #888; /* Subtle border for better definition */
+    border: 1px solid #888; 
     overflow: hidden;
 }
 
 .mini-progress-bar {
     height: 100%;
-    background-color: green; /* Progress bar color */
     transition: width 0.3s ease-in-out;
 }
 
@@ -123,18 +233,32 @@
     z-index: 1000;
 }
 
-.modal-content {
-    background-color: white;
+.modal-content_piggy {
+    background-color: #F2F4F7;
     padding: 30px;
     border-radius: 15px;
     width: 400px;
     max-width: 90vw;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+    border: 1px solid rgb(105, 114, 172);
     text-align: center;
     position: relative;
 }
 
-.progress-container {
+.edit_piggy_bank_modal_container
+{
+    background-color: #F2F4F7;
+    padding: 30px;
+    border-radius: 15px;
+    width: 400px;
+    max-width: 90vw;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+    border: 1px solid rgb(105, 114, 172);
+    text-align: center;
+    position: relative;
+}
+
+.progress-container_piggy {
     height: 25px;
     width: 100%;
     background-color: #e0e0e0;
@@ -142,11 +266,25 @@
     overflow: hidden;
     margin-bottom: 10px;
 }
+.values_container_piggy
+{
+    display: flex;
+    height: auto;
+    justify-content: space-between;
+    width: 100%;
+    overflow: hidden;
+}
 
-.progress-bar {
-    height: 100%;
-    border-radius: 12px;
-    background-color: green;
+.edit_piggy_stuff_change_goal
+{
+    width: 75%;           
+    margin: 0 auto;       
+    display: block;       
+    padding: 10px;        
+    font-size: 16px;      
+    border: none;         
+    border-radius: 5px;   
+    cursor: pointer;    
 }
 
 .close-btn {
@@ -162,6 +300,15 @@
 .savings-text {
     font-size: 14px;
     color: black;
+    text-align:center;
+    align-self: center;
+}
+.allocated-text
+{
+    font-size: 14px;
+    color: black;
+    text-align:right;
+    align-self: flex-end;
 }
 
 .edit-goal-btn {
@@ -184,7 +331,8 @@
 
 .piggybank_buttons_container {
     display: flex; 
-    justify-content: space-between; 
+    justify-content:center; 
+    flex-wrap: wrap;
     padding: 10px; 
 }
 
@@ -216,11 +364,6 @@
     align-self: flex-end;
 }
 
-.edit-allocate-goal-btn:hover {
-    background-color: #6b5fb5;
-}
-
-
 .back-btn {
     background-color: #8884d8;
     color: white;
@@ -237,18 +380,42 @@
     background-color: #6b5fb5;
 }
 
-.save_btn_nav{
-    background-color: #8884d8;
-    color: white;
+.piggybank_buttons_container button
+{
     border: none;
+    transition: background-color .3s ease-in-out, color .3s ease-in-out;
     padding: 8px 15px;
     border-radius: 5px;
-    margin-top: 20px;
-    cursor: pointer;
-    align-items: center;
+    margin-top: 10px;
 }
+
+.save_btn_nav {
+    background-color: white;
+    color: black;
+}
+
 .save_btn_nav:hover {
-    background-color: #6b5fb5;
+    background-color: #c8c8c8;
+}
+
+.allocate_save_btn_nav{
+    background-color: #84d88b;
+    color: #000000;
+    border: none; 
+}
+.allocate_save_btn_nav:hover {
+    background-color: #488a50;
+    color: white;
+}
+
+.deallocate_save_btn_nav{
+    background-color: #434343;
+    color: white;
+    border: none;
+}
+.deallocate_save_btn_nav:hover {
+    background-color: #000000;
+    color: white;
 }
 
 @media only screen and (max-width: 400px) {

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import '../../CSS Files/Dashboard Components/RecentTransactions.css';
 import {MdDelete, MdFilterList, MdFilterListOff} from "react-icons/md";
@@ -242,4 +241,3 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
 };
 
 export default RecentTransactions;
-
