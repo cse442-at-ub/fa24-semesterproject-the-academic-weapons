@@ -61,7 +61,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
         }
         onUpdateMonthlyGoal(parsedGoal);
         setSavingsGoal(parsedGoal);
-        setCurrentModal(null);
+        setCurrentModal('savings');
     };
 
     const handleSaveAllocation = (allocationAmount) => {
@@ -75,7 +75,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
         onUpdateAllocation(newAllocation);
         setCurrentSavings(currentSavings + newAllocation);
         setTempManageAmount(0);
-        setCurrentModal(null);
+        setCurrentModal('savings');
     };
 
     const handleAllocateChange = (e) => {
@@ -109,14 +109,22 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
     };
 
     const closeAllModals = () => {
-        setCurrentModal(null);
+        if (currentModal === 'savings') {
+            setCurrentModal(null);
+        } else {
+            setCurrentModal('savings');
+        }
     };
 
     const validSavingsGoal = Number(savingsGoal) || 0;
     const displaySavingsGoal = isNaN(validSavingsGoal) ? 0 : validSavingsGoal;
     const handleGoalChange = (e) => {
         const value = e.target.value;
-        setTempSavingsGoal(Number(value));
+        if (value === '' || isNaN(Number(value))) {
+        setTempSavingsGoal(''); // Clear input if empty or invalid
+    } else {
+        setTempSavingsGoal(value); // Allow valid input
+    }
     };
     // const closeAllModals = () => {
     //     setShowMainModal(false);
@@ -141,23 +149,26 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
             </button>
 
             {isMobileMenuOpen && (
-                <div className="mobile-nav-dropdown">
-                    <div className="mobile-nav-item" onClick={() => {
-                        openSettings();
-                        setIsMobileMenuOpen(false);
-                    }}>
-                        <div className="navbar_name">{username}</div>
-                        <img src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon"/>
-                    </div>
-                    <div className="mobile-nav-item" onClick={() => openModal('savings')}>
-                        <FaPiggyBank className="savings-icon"/>
-                        <span>Savings Overview</span>
-                    </div>
-                    <div className="mobile-nav-item logout_text" onClick={logout}>
-                        Log Out
-                    </div>
-                </div>
-            )}
+    <div className="mobile-nav-dropdown">
+        <div className="mobile-nav-item" onClick={() => {
+            openSettings();
+            setIsMobileMenuOpen(false);
+        }}>
+            <div className="navbar_name_container">
+                <img src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon"/>
+                <div className="navbar_name">{username}</div>
+            </div>
+        </div>
+        <div className="mobile-nav-item" onClick={() => openModal('savings')}>
+            <FaPiggyBank className="savings-icon" />
+            <span>Savings Overview</span>
+        </div>
+        <div className="mobile-nav-item logout_text" onClick={logout}>
+            Log Out
+        </div>
+    </div>
+)}
+
 
             <div className="navbar-profile">
                 <div className="navbar_name_icon_group" onClick={openSettings}>
@@ -206,66 +217,78 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                     </div>
                 </div>
             )}
-             {/* Allocate Modal */}
-            {currentModal === 'allocate' && (
-                <div className="modal-overlay" onClick={closeAllModals}>
-                    <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
-                        <CloseButton onClick={closeAllModals} />
-                        <h1 className="edit_trans_title">Allocate Towards Goal</h1>
-                        <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>
-                        <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
-                        <input
-                            className="input_field_piggy"
-                            type="number"
-                            value={tempManageAmount || ''}
-                            onChange={handleAllocateChange}
-                        />
-                        <button onClick={() => handleSaveAllocation(tempManageAmount)} className="edit_piggy_stuff_allocate">Allocate</button>
-                    </div>
-                </div>
-            )}
+{/* Allocate Modal */}
+{currentModal === 'allocate' && (
+    <div className="modal-overlay" onClick={closeAllModals}>
+        <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
+            <CloseButton onClick={closeAllModals} />
+            <h1 className="edit_trans_title">Allocate Towards Goal</h1>
+            <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>
+            <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
+            <input
+                className="input_field_piggy"
+                type="number"
+                value={tempManageAmount || ''}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || !isNaN(Number(value))) {
+                        setTempManageAmount(value);
+                    }
+                }}
+            />
+            <button onClick={() => handleSaveAllocation(Number(tempManageAmount))} className="edit_piggy_stuff_allocate">Allocate</button>
+        </div>
+    </div>
+)}
 
-            {/* Deallocate Modal */}
-            {currentModal === 'deallocate' && (
-                <div className="modal-overlay" onClick={closeAllModals}>
-                    <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
-                        <CloseButton onClick={closeAllModals} />
-                        <h1 className="edit_trans_title">Deallocate From Goal</h1>
-                        <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>
-                        <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
-                        <input
-                            className="input_field_piggy"
-                            type="number"
-                            value={tempManageAmount || ''}
-                            onChange={handleAllocateChange}
-                        />
-                        <button onClick={() => handleSaveAllocation(-Math.abs(tempManageAmount))} className="edit_piggy_stuff_deallocate">Deallocate</button>
-                    </div>
-                </div>
-            )}
+{/* Deallocate Modal */}
+{currentModal === 'deallocate' && (
+    <div className="modal-overlay" onClick={closeAllModals}>
+        <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
+            <CloseButton onClick={closeAllModals} />
+            <h1 className="edit_trans_title">Deallocate From Goal</h1>
+            <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>
+            <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
+            <input
+                className="input_field_piggy"
+                type="number"
+                value={tempManageAmount || ''}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || !isNaN(Number(value))) {
+                        setTempManageAmount(value);
+                    }
+                }}
+            />
+            <button onClick={() => handleSaveAllocation(-Math.abs(Number(tempManageAmount)))} className="edit_piggy_stuff_deallocate">Deallocate</button>
+        </div>
+    </div>
+)}
 
-            {/* Change Goal Modal */}
-            {currentModal === 'changeGoal' && (
-                <div className="modal-overlay" onClick={closeAllModals}>
-                    <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
-                        <CloseButton onClick={closeAllModals} />
-                        <h1 className="edit_trans_title">Change Goal Amount</h1>
-                        <p className="modal-info">Current Goal: ${savingsGoal.toFixed(2)}</p>
-                        <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
-                        <input
-                            className="input_field_piggy"
-                            type="number"
-                            value={tempSavingsGoal}
-                            onChange={handleGoalChange}
-                        />
-                        <button onClick={handleSaveMonthlyGoal} className="edit_piggy_stuff_change_goal">Save</button>
-                    </div>
-                </div>
-            )}
+{/* Change Goal Modal */}
+{currentModal === 'changeGoal' && (
+    <div className="modal-overlay" onClick={closeAllModals}>
+        <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
+            <CloseButton onClick={closeAllModals}/>
+            <h1 className="edit_trans_title">Change Goal Amount</h1>
+            <p className="modal-info">Current Goal: ${savingsGoal.toFixed(2)}</p>
+            <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
+            <input
+                className="input_field_piggy"
+                type="number"
+                value={tempSavingsGoal}
+                onChange={handleGoalChange}
+                onFocus={() => setTempSavingsGoal('')} // Clears the field on focus
+            />
+            <button onClick={handleSaveMonthlyGoal} className="edit_piggy_stuff_change_goal">Save</button>
+        </div>
+    </div>
+)}
 
-        {/*    {showSavingsModal && (*/}
-        {/*        <div className="modal-overlay" onClick={closeAllModals}>*/}
-        {/*            <div className="modal-content_piggy" onClick={(e) => e.stopPropagation()}>*/}
+
+            {/*    {showSavingsModal && (*/}
+            {/*        <div className="modal-overlay" onClick={closeAllModals}>*/}
+            {/*            <div className="modal-content_piggy" onClick={(e) => e.stopPropagation()}>*/}
         {/*                <div className='close_button_piggy_cotnainer'>*/}
         {/*                    <CloseButton onClick={closeAllModals} />*/}
         {/*                </div>*/}
