@@ -41,7 +41,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    cursor: pointer;
+    
 }
 
 .profile-icon {
@@ -75,6 +75,7 @@
 }
 
 .logout_text {
+    margin-right: 20px;
     transition: transform .2s ease-in, color .2s, ease-in;
     color: black;
 }
@@ -93,6 +94,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    cursor: pointer;
 }
 
 .H1_Piggy_Bank_Title
@@ -139,7 +141,8 @@
     font-size: 16px;      
     border: none;         
     border-radius: 5px;   
-    cursor: pointer;      
+    cursor: pointer;    
+    transition: background-color .3s ease-in-out, color .3s ease-in-out;  
 }
 
 .edit_piggy_stuff_deallocate:hover
@@ -183,7 +186,8 @@
     font-size: 16px;      
     border: none;         
     border-radius: 5px;   
-    cursor: pointer;      
+    cursor: pointer;
+    transition: background-color .3s ease-in-out, color .3s ease-in-out; 
 }
 .edit_piggy_stuff_allocate:hover
 {
@@ -268,12 +272,15 @@
 }
 .values_container_piggy
 {
+    font-size: 14px;
     display: flex;
     height: auto;
     justify-content: space-between;
     width: 100%;
     overflow: hidden;
 }
+
+
 
 .edit_piggy_stuff_change_goal
 {
@@ -284,7 +291,16 @@
     font-size: 16px;      
     border: none;         
     border-radius: 5px;   
-    cursor: pointer;    
+    cursor: pointer;
+    transition: background-color .3s ease-in-out, color .3s ease-in-out;
+    background-color: white;
+    color: black;     
+    
+}
+
+.edit_piggy_stuff_change_goal:hover
+{
+background-color: #c8c8c8;
 }
 
 .close-btn {
@@ -297,16 +313,25 @@
     cursor: pointer;
 }
 
-.savings-text {
+.savings-Data_Centered_piggy {
     font-size: 14px;
-    color: black;
+    color: #888;
     text-align:center;
     align-self: center;
 }
-.allocated-text
+
+.savings-text_percentage_main
 {
     font-size: 14px;
-    color: black;
+    color:#000000;
+    text-align:right;
+    align-self: flex-start;
+}
+
+.allocated-text-piggy-top
+{
+    font-size: 14px;
+    color:#000000;
     text-align:right;
     align-self: flex-end;
 }

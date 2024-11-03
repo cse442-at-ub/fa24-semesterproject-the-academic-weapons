@@ -196,8 +196,8 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                     <div className="modal-content_piggy" onClick={(e) => e.stopPropagation()}>
                         <CloseButton onClick={closeAllModals} />
                         <div className='values_container_piggy'>
-                            <p className="savings-text">${currentSavings.toFixed(2)} Allocated</p>
-                            <p className="allocated-text">${savingsGoal.toFixed(2)} Saved</p>
+                            <p className="savings-text_percentage_main">${currentSavings.toFixed(2)} Allocated</p>
+                            <p className="allocated-text-piggy-top">${savingsGoal.toFixed(2)} Saved</p>
                         </div>
                         <div className="progress-container_piggy">
                             <div
@@ -208,7 +208,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                                 }}
                             />
                         </div>
-                        <p className="savings-text">{`${progressPercentage.toFixed(2)}% of $${savingsGoal.toFixed(2)} saved`}</p>
+                        <p className="savings-Data_Centered_piggy">{`${progressPercentage.toFixed(2)}% of $${savingsGoal.toFixed(2)} saved`}</p>
                         <div className='piggybank_buttons_container'>
                             <button onClick={() => openModal('allocate')} className="allocate_save_btn_nav">Allocate to Goal</button>
                             <button onClick={() => openModal('deallocate')} className="deallocate_save_btn_nav">Deallocate from Goal</button>

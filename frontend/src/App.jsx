@@ -213,7 +213,7 @@ function App() {
     };
 
 
-// Piggybank Section fetching Everthing else for updating and adding and posting is in navbar.jsx
+// Piggybank Section fetching 
     const fetchSavingsGoal = async () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php?user_id=${userID}`);
@@ -230,9 +230,6 @@ function App() {
         }
     };
 
-    useEffect(() => {
-        fetchSavingsGoal();
-    }, []);
 
     const updateGoalAllocation = async (amount) => {
         const newAllocation = goal_allocation_amount + amount;
@@ -290,6 +287,7 @@ function App() {
         }
     };
 // END OF PIGGY BANK
+
     const updateEditTransaction = (transaction) => {
         setEditTransaction(transaction);
     }
@@ -373,7 +371,7 @@ function App() {
             console.error('Error:', error);
         }
     }
-
+// END OF PIGGYBANK
     const updateDatabaseTransactions = async (updateItem) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
@@ -398,34 +396,6 @@ function App() {
             console.error('Error:', error);
         }
     }
-    const updateDatabaseGoals = async (updateGoal) => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
-                method: 'UPDATE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userID, userToken, updateGoal }),
-            });
-
-            if (!response.ok) {
-                console.error("Error updating goal...");
-            }
-
-            const reply = await response.json();
-
-            if (!reply.success) {
-                console.log(reply.message);
-                alert("Invalid user credentials, please sign in again...");
-                sessionStorage.clear();
-                window.location.reload();
-            }
-
-            setIsLoaded(false);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
 
     const saveRemoveTransaction = async (removeID) => {
         try {
@@ -621,7 +591,7 @@ function App() {
                 deleteGoal={removeGoal}
                 goals={goals}
                 openGoalModal={openGoalModal}
-            />}/> =
+            />}/> 
               <Route path={"/settings"} element={<Settings/>}/>
               <Route path={"/forget-password"} element={<ForgotPassword/>}/>
               <Route path={"/reset-password"} element={<ResetPassword/>}/>
