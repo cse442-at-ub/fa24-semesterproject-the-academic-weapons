@@ -88,33 +88,16 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
         setSavingsGoal(monthly_saving_goal);
         setTempSavingsGoal(monthly_saving_goal);
 
-        
-
         const handleEscape = (event) => {
             if (event.key === 'Escape') {
                 closeAllModals();
             }
         };
 
-        const handleEnter = (event) => {
-            if (event.key === 'Enter') {
-                if (tempManageAmount || tempSavingsGoal) { // Checks if there's input in any field
-                    if (showAllocateModal) {
-                        handleSaveAllocation(tempManageAmount);
-                    } else if (showDeallocateModal) {
-                        handleSaveAllocation(-Math.abs(tempManageAmount));
-                    } else if (showGoalModal) {
-                        handleSaveMonthlyGoal();
-                    }
-                }
-            }
-        };
-
         document.addEventListener('keydown', handleEscape);
-        document.addEventListener('keydown', handleEnter);
 
-        return () => document.removeEventListener('keydown', handleEscape);  document.removeEventListener('keydown', handleEnter);
-    }, [allocated_saving_amount, monthly_saving_goal, tempManageAmount, tempSavingsGoal, showAllocateModal, showDeallocateModal, showGoalModal]);
+        return () => document.removeEventListener('keydown', handleEscape);
+    }, [allocated_saving_amount, monthly_saving_goal]);
 
     const progressPercentage = savingsGoal > 0 ? Math.min((Number(currentSavings) / Number(savingsGoal)) * 100, 100) : 0;
     const greenLevel = Math.floor(Math.pow(progressPercentage / 100, 0.75) * 128);
@@ -130,14 +113,18 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
     };
 
     const validSavingsGoal = Number(savingsGoal) || 0;
-
-    const closeAllModals = () => {
-        setShowMainModal(false);
-        setShowSavingsModal(false);
-        setShowAllocateModal(false);
-        setShowDeallocateModal(false);
-        setShowGoalModal(false);
+    const displaySavingsGoal = isNaN(validSavingsGoal) ? 0 : validSavingsGoal;
+    const handleGoalChange = (e) => {
+        const value = e.target.value;
+        setTempSavingsGoal(Number(value));
     };
+    // const closeAllModals = () => {
+    //     setShowMainModal(false);
+    //     setShowSavingsModal(false);
+    //     setShowAllocateModal(false);
+    //     setShowDeallocateModal(false);
+    //     setShowGoalModal(false);
+    // };
 
     if (!userID) {
         return null;
@@ -198,7 +185,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                     <div className="modal-content_piggy" onClick={(e) => e.stopPropagation()}>
                         <CloseButton onClick={closeAllModals} />
                         <div className='values_container_piggy'>
-                            <p className="savings-text_percentage_main">${currentSavings.toFixed(2)} Allocated </p>
+                            <p className="savings-text_percentage_main">${currentSavings.toFixed(2)} Allocated</p>
                             <p className="allocated-text-piggy-top">${savingsGoal.toFixed(2)} Saved</p>
                         </div>
                         <div className="progress-container_piggy">
@@ -211,7 +198,6 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                             />
                         </div>
                         <p className="savings-Data_Centered_piggy">{`${progressPercentage.toFixed(2)}% of $${savingsGoal.toFixed(2)} saved`}</p>
-                        
                         <div className='piggybank_buttons_container'>
                             <button onClick={() => openModal('allocate')} className="allocate_save_btn_nav">Allocate to Goal</button>
                             <button onClick={() => openModal('deallocate')} className="deallocate_save_btn_nav">Deallocate from Goal</button>
@@ -235,7 +221,6 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                             onChange={handleAllocateChange}
                         />
                         <button onClick={() => handleSaveAllocation(tempManageAmount)} className="edit_piggy_stuff_allocate">Allocate</button>
-                        <div className="back_text_piggy_overlay" onClick={openMainModal}>Cancel</div>
                     </div>
                 </div>
             )}
@@ -245,29 +230,19 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                 <div className="modal-overlay" onClick={closeAllModals}>
                     <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
                         <CloseButton onClick={closeAllModals} />
+                        <h1 className="edit_trans_title">Deallocate From Goal</h1>
+                        <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>
+                        <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
+                        <input
+                            className="input_field_piggy"
+                            type="number"
+                            value={tempManageAmount || ''}
+                            onChange={handleAllocateChange}
+                        />
+                        <button onClick={() => handleSaveAllocation(-Math.abs(tempManageAmount))} className="edit_piggy_stuff_deallocate">Deallocate</button>
                     </div>
-                    <h1 className="edit_trans_title">Deallocate From Goal</h1>
-                    <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>
-                    <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
-                    <input
-                        className="input_field_piggy"
-                        type="number"
-                        value={tempManageAmount || ''} // Allow empty input
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            const numberValue = Number(value);
-                            if (value === '') {
-                                setTempManageAmount(''); // Set state to empty string if input is cleared
-                            } else if (!isNaN(numberValue)) {
-                                setTempManageAmount(numberValue);
-                            }
-                        }}
-                    />
-                    <button onClick={() => handleSaveAllocation(-Math.abs(tempManageAmount))} className="edit_piggy_stuff_deallocate">Deallocate</button>
-                    <div className="back_text_piggy_overlay" onClick={openMainModal}>Cancel</div>
                 </div>
-            </div>
-        )}
+            )}
 
             {/* Change Goal Modal */}
             {currentModal === 'changeGoal' && (
@@ -284,7 +259,6 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                             onChange={handleGoalChange}
                         />
                         <button onClick={handleSaveMonthlyGoal} className="edit_piggy_stuff_change_goal">Save</button>
-                        <div className="back_text_piggy_overlay" onClick={openMainModal}>Cancel</div>
                     </div>
                 </div>
             )}
