@@ -72,23 +72,39 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
         setSavingsGoal(monthly_saving_goal);
         setTempSavingsGoal(monthly_saving_goal);
 
+        
+
         const handleEscape = (event) => {
             if (event.key === 'Escape') {
                 closeAllModals();
             }
         };
 
-        document.addEventListener('keydown', handleEscape);
+        const handleEnter = (event) => {
+            if (event.key === 'Enter') {
+                if (tempManageAmount || tempSavingsGoal) { // Checks if there's input in any field
+                    if (showAllocateModal) {
+                        handleSaveAllocation(tempManageAmount);
+                    } else if (showDeallocateModal) {
+                        handleSaveAllocation(-Math.abs(tempManageAmount));
+                    } else if (showGoalModal) {
+                        handleSaveMonthlyGoal();
+                    }
+                }
+            }
+        };
 
-        return () => document.removeEventListener('keydown', handleEscape);
-    }, [allocated_saving_amount, monthly_saving_goal]);
+        document.addEventListener('keydown', handleEscape);
+        document.addEventListener('keydown', handleEnter);
+
+        return () => document.removeEventListener('keydown', handleEscape);  document.removeEventListener('keydown', handleEnter);
+    }, [allocated_saving_amount, monthly_saving_goal, tempManageAmount, tempSavingsGoal, showAllocateModal, showDeallocateModal, showGoalModal]);
 
     const progressPercentage = savingsGoal > 0 ? Math.min((Number(currentSavings) / Number(savingsGoal)) * 100, 100) : 0;
     const greenLevel = Math.floor(Math.pow(progressPercentage / 100, 0.75) * 128);
     const progressColor = `rgb(0, ${greenLevel}, 0)`;
     
     const validSavingsGoal = Number(savingsGoal) || 0;
-    const displaySavingsGoal = isNaN(validSavingsGoal) ? 0 : validSavingsGoal;
 
     const closeAllModals = () => {
         setShowMainModal(false);
@@ -136,8 +152,8 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                             <CloseButton onClick={closeAllModals} />
                         </div>
                         <div className='values_container_piggy'>
-                            <p className="savings-text">${currentSavings.toFixed(2)} Allocated </p>
-                            <p className="allocated-text">${savingsGoal.toFixed(2)} Saved</p>
+                            <p className="savings-text_percentage_main">${currentSavings.toFixed(2)} Allocated </p>
+                            <p className="allocated-text-piggy-top">${savingsGoal.toFixed(2)} Saved</p>
                         </div>
                         <div className="progress-container_piggy">
                             <div
@@ -148,7 +164,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                                 }}
                             />
                         </div>
-                        <p className="savings-text">{`${progressPercentage.toFixed(2)}% of $${savingsGoal.toFixed(2)} saved`}</p>
+                        <p className="savings-Data_Centered_piggy">{`${progressPercentage.toFixed(2)}% of $${savingsGoal.toFixed(2)} saved`}</p>
                         
                         <div className='piggybank_buttons_container'>
                             <button onClick={() => { setShowAllocateModal(true); setShowSavingsModal(false); }} className="allocate_save_btn_nav">Allocate to Goal</button>
@@ -185,7 +201,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                             }}
                         />
                         <button onClick={() => handleSaveAllocation(tempManageAmount)} className="edit_piggy_stuff_allocate">Allocate</button>
-                        <div className="back_text_piggy_overlay" onClick={openMainModal}>Back</div>
+                        <div className="back_text_piggy_overlay" onClick={openMainModal}>Cancel</div>
                     </div>
                 </div>
             )}
@@ -214,7 +230,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                         }}
                     />
                     <button onClick={() => handleSaveAllocation(-Math.abs(tempManageAmount))} className="edit_piggy_stuff_deallocate">Deallocate</button>
-                    <div className="back_text_piggy_overlay" onClick={openMainModal}>Back</div>
+                    <div className="back_text_piggy_overlay" onClick={openMainModal}>Cancel</div>
                 </div>
             </div>
         )}
@@ -235,7 +251,7 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
                             onChange={(e) => setTempSavingsGoal(Number(e.target.value))}
                         />
                         <button onClick={handleSaveMonthlyGoal} className="edit_piggy_stuff_change_goal">Save</button>
-                        <div className="back_text_piggy_overlay" onClick={openMainModal}>Back</div>
+                        <div className="back_text_piggy_overlay" onClick={openMainModal}>Cancel</div>
                     </div>
                 </div>
             )}
