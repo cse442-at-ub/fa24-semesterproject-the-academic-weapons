@@ -5,8 +5,8 @@ import './CSS Files/Settings.css'
 import './CSS Files/Settings Components/ChangeModals.css'
 import './CSS Files/EditTransaction.css'
 import './CSS Files/SavingsGoalBox.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
 import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Settings from "./Page/Settings";
 import Login from './Page/Login';
 import Dashboard from './Page/Dashboard';
@@ -52,7 +52,10 @@ function App() {
     // Add Goals section
     const userID = sessionStorage.getItem('User');
     const userToken = sessionStorage.getItem('auth_token');
-
+    // Add Piggybank Section
+    const [goal_allocation_amount, setgoal_allocation_amount] = useState(0);
+    const [monthly_savings_goal, setmonthly_saving_goal] = useState(0);
+  
 
     useEffect(() => {
 
@@ -66,6 +69,7 @@ function App() {
                 getTransactions();
                 getGoals()
                 fetchIncome()
+                fetchSavingsGoal();
                 setIsLoaded(true);
             }
         }
@@ -181,6 +185,7 @@ function App() {
         editedTransactions[editedIndex].price = updated.price;
         editedTransactions[editedIndex].category = updated.category;
         editedTransactions[editedIndex].date = updated.date;
+        editedTransactions[editedIndex].recurring = updated.recurring;
         setTransactions(editedTransactions);
         updateDatabaseTransactions(updated);
     }
@@ -208,6 +213,83 @@ function App() {
     };
 
 
+// Piggybank Section fetching Everthing else for updating and adding and posting is in navbar.jsx
+    const fetchSavingsGoal = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php?user_id=${userID}`);
+            const data = await response.json();
+    
+            if (data.success) {
+                setgoal_allocation_amount(parseFloat(data.current_goal_allocation));
+                setmonthly_saving_goal(parseFloat(data.monthly_saving_goal));
+            } else {
+                console.error("Error fetching savings goal / Current Savings:", data.message);
+            }
+        } catch (error) {
+            console.error("Error fetching savings goal:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchSavingsGoal();
+    }, []);
+
+    const updateGoalAllocation = async (amount) => {
+        const newAllocation = goal_allocation_amount + amount;
+    
+    
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userID: userID,
+                    allocation: amount,
+                }),
+            });
+    
+            const data = await response.json();
+            if (data.success) {
+                // Fetch the updated goals after successfully updating
+                fetchSavingsGoal(); 
+            } else {
+                console.error("Error updating savings goal:", data.message);
+            }
+        } catch (error) {
+            console.error("Error updating savings goal:", error);
+        }
+    };
+    
+    const updateMonthlySavingsGoal = async (newGoal) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userID: userID,
+                    monthlySavingGoal: newGoal,
+                }),
+            });
+    
+            const textResponse = await response.text(); // Get the raw response as text
+            console.log("Raw response:", textResponse); // Log the raw response
+    
+            const data = JSON.parse(textResponse); // Try to parse the text response as JSON
+            if (data.success) {
+                // Fetch the updated goals after successfully updating
+                fetchSavingsGoal();
+            } else {
+                console.error("Error updating monthly savings goal:", data.message);
+            }
+        } catch (error) {
+            console.error("Error updating monthly savings goal:", error);
+        }
+    };
+// END OF PIGGY BANK
     const updateEditTransaction = (transaction) => {
         setEditTransaction(transaction);
     }
@@ -216,18 +298,18 @@ function App() {
         setMaxTransID(e)
     }
 
-    const saveTransactions = async (saveItem) => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({userID, userToken, saveItem}),
-            });
-            if (!response.ok) {
-                console.error("Error saving transactions...")
-            }
+        const saveTransactions = async (saveItem) => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({userID, userToken, saveItem}),
+                });
+                if (!response.ok) {
+                    console.error("Error saving transactions...")
+                }
             const reply = await response.json()
             if (!reply.success) {
                 alert("Invalid user credentials, please sign in again...")
@@ -319,7 +401,7 @@ function App() {
     const updateDatabaseGoals = async (updateGoal) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
-                method: 'UPDATE', // PUT is usually used to update a resource. If your server requires a different method, change accordingly.
+                method: 'UPDATE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -519,7 +601,10 @@ function App() {
       <HashRouter>
         <div className="App">
           <header className="App-header">
-            <Navbar username={username} pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
+          <Navbar username={username} pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} 
+        openSettings={openSettings} allocated_saving_amount={goal_allocation_amount} 
+        monthly_saving_goal={monthly_savings_goal} onUpdateMonthlyGoal={updateMonthlySavingsGoal}
+        onUpdateAllocation={updateGoalAllocation}/>
             <Routes>
             <Route path={"/"} element={<Homepage
                 saveGoalAllocation={saveGoalAllocation}

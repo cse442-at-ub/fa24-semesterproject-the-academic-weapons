@@ -73,6 +73,7 @@ const GoalsList = ({openEditGoal, setGoalCompletion, saveGoalAllocation, income,
 
     const handleEditGoal = (goal) => {
         updateEditGoal(goal);
+        closeAllocateDropdown()
         openEditGoal();
     };
 
@@ -200,6 +201,13 @@ const GoalsList = ({openEditGoal, setGoalCompletion, saveGoalAllocation, income,
         )
     };
 
+    const clearFilters = () => {
+        setStartDate('')
+        setEndDate('')
+        setCategoryFilter('')
+        setFilterModal(false)
+    }
+
     return (
         <>
             <div className="goals-list">
@@ -265,6 +273,7 @@ const GoalsList = ({openEditGoal, setGoalCompletion, saveGoalAllocation, income,
                                     }
                                 </div>
                             </div>
+                            <button onClick={clearFilters} className={"clear_btn"}>Clear Filters</button>
                         </div>
                     }
                 </div>
@@ -318,7 +327,7 @@ const GoalsList = ({openEditGoal, setGoalCompletion, saveGoalAllocation, income,
                                                     }
                                                 </div>
                                             </div>
-                                            <span>{goal.name}</span>
+                                            <span className={"item_name"}>{goal.name}</span>
                                             <span>{"$" + goal.cost}</span>
                                             <span onClick={e => setCategoryFilter(goal.category)}
                                                   className={"goal_category"}>{goal.category}</span>
@@ -389,7 +398,7 @@ const GoalsList = ({openEditGoal, setGoalCompletion, saveGoalAllocation, income,
                                                     }
                                                 </div>
                                             </div>
-                                            <span>{goal.name}</span>
+                                            <span className={"item_name"}>{goal.name}</span>
                                             <span>{"$" + goal.cost}</span>
                                             <span className={"goal_category"} onClick={e => setCategoryFilter(goal.category)}>{goal.category}</span>
                                             <span>{goal.date}</span>

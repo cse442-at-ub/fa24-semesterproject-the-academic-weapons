@@ -37,7 +37,7 @@ const IncomeChart = ({income, transactions }) => {
 
   return (
     <div className="income-widget">
-      <h2>Income Summary</h2>
+      <h2 className={"Category_spend_txt"}>Income Summary</h2>
       <PieChart width={200} height={200}>
         <Pie
           data={data}
