@@ -29,6 +29,7 @@ import img7 from "./Assets/Profile Pictures/Person8.svg"
 import AddGoal from "./Component/AddGoals.jsx";
 import EditTransaction from "./Component/EditTransaction.jsx";
 import EditGoal from "./Component/EditGoal.jsx";
+import MessagePopup from "./Component/MessagePopup.jsx";
 //import { fetchGoals, addGoal, updateGoal, deleteGoal } from './api/GoalAPI';
 
 
@@ -55,7 +56,9 @@ function App() {
     // Add Piggybank Section
     const [goal_allocation_amount, setgoal_allocation_amount] = useState(0);
     const [monthly_savings_goal, setmonthly_saving_goal] = useState(0);
-  
+    const [showMessagePopup, setShowMessagePopup] = useState(false)
+    const [popupMessage, setPopupMessage] = useState('')
+
 
     useEffect(() => {
 
@@ -112,7 +115,8 @@ function App() {
                     setMaxTransID(Math.max(transIDs))
                 }
             } else {
-                alert("Invalid user credentials, please sign in again...")
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
                 sessionStorage.clear()
                 window.location.reload()
             }
@@ -145,7 +149,8 @@ function App() {
                     setMaxGoalID(Math.max(...goalIDs));
                 }
             } else {
-                alert("Invalid user credentials, please sign in again...");
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
                 sessionStorage.clear();
                 window.location.reload();
             }
@@ -218,7 +223,7 @@ function App() {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php?user_id=${userID}`);
             const data = await response.json();
-    
+
             if (data.success) {
                 setgoal_allocation_amount(parseFloat(data.current_goal_allocation));
                 setmonthly_saving_goal(parseFloat(data.monthly_saving_goal));
@@ -233,8 +238,8 @@ function App() {
 
     const updateGoalAllocation = async (amount) => {
         const newAllocation = goal_allocation_amount + amount;
-    
-    
+
+
         try {
             const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php`, {
                 method: 'PUT',
@@ -246,11 +251,11 @@ function App() {
                     allocation: amount,
                 }),
             });
-    
+
             const data = await response.json();
             if (data.success) {
                 // Fetch the updated goals after successfully updating
-                fetchSavingsGoal(); 
+                fetchSavingsGoal();
             } else {
                 console.error("Error updating savings goal:", data.message);
             }
@@ -258,7 +263,7 @@ function App() {
             console.error("Error updating savings goal:", error);
         }
     };
-    
+
     const updateMonthlySavingsGoal = async (newGoal) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php`, {
@@ -271,10 +276,10 @@ function App() {
                     monthlySavingGoal: newGoal,
                 }),
             });
-    
+
             const textResponse = await response.text(); // Get the raw response as text
             console.log("Raw response:", textResponse); // Log the raw response
-    
+
             const data = JSON.parse(textResponse); // Try to parse the text response as JSON
             if (data.success) {
                 // Fetch the updated goals after successfully updating
@@ -310,7 +315,8 @@ function App() {
                 }
             const reply = await response.json()
             if (!reply.success) {
-                alert("Invalid user credentials, please sign in again...")
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
                 sessionStorage.clear()
                 window.location.reload()
             }
@@ -337,7 +343,8 @@ function App() {
             }
             const reply = await response.json();
             if (!reply.success) {
-                alert("Invalid user credentials, please sign in again...");
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
                 sessionStorage.clear();
                 window.location.reload();
             }
@@ -361,8 +368,8 @@ function App() {
             }
             const reply = await response.json()
             if (!reply.success) {
-                console.log(reply.message)
-                alert("Invalid user credentials, please sign in again...")
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
                 sessionStorage.clear()
                 window.location.reload()
             }
@@ -386,8 +393,8 @@ function App() {
             }
             const reply = await response.json()
             if (!reply.success) {
-                console.log(reply.message)
-                alert("Invalid user credentials, please sign in again...")
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
                 sessionStorage.clear()
                 window.location.reload()
             }
@@ -411,7 +418,8 @@ function App() {
             }
             const reply = await response.json()
             if (!reply.success) {
-                alert("Invalid user credentials, please sign in again...")
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
                 sessionStorage.clear()
                 window.location.reload()
             }
@@ -434,7 +442,8 @@ function App() {
             }
             const reply = await response.json();
             if (!reply.success) {
-                alert("Invalid user credentials, please sign in again...");
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
                 sessionStorage.clear();
                 window.location.reload();
             }
@@ -458,7 +467,8 @@ function App() {
             }
             const reply = await response.json();
             if (!reply.success) {
-                alert("Invalid user credentials, please sign in again...");
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
                 sessionStorage.clear();
                 window.location.reload();
             }
@@ -483,7 +493,8 @@ function App() {
             }
             const reply = await response.json();
             if (!reply.success) {
-                alert("Invalid user credentials, please sign in again...");
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
                 sessionStorage.clear();
                 window.location.reload();
             }
@@ -565,18 +576,32 @@ function App() {
         setMaxGoalID(newID);
     };
 
+    const openPopup = () => {
+        setShowMessagePopup(true)
+    }
+
+    const closePopup = () => {
+        setShowMessagePopup(false)
+    }
+
+    const setAlertMessage = (e) => {
+        setPopupMessage(e)
+    }
+
 
 
   return (
       <HashRouter>
         <div className="App">
           <header className="App-header">
-          <Navbar username={username} pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} 
-        openSettings={openSettings} allocated_saving_amount={goal_allocation_amount} 
+          <Navbar username={username} pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal}
+        openSettings={openSettings} allocated_saving_amount={goal_allocation_amount}
         monthly_saving_goal={monthly_savings_goal} onUpdateMonthlyGoal={updateMonthlySavingsGoal}
-        onUpdateAllocation={updateGoalAllocation}/>
+        onUpdateAllocation={updateGoalAllocation} openError={openPopup} setErrorMessage={setAlertMessage}/>
             <Routes>
             <Route path={"/"} element={<Homepage
+                openError={openPopup}
+                setErrorMessage={setAlertMessage}
                 saveGoalAllocation={saveGoalAllocation}
                 setGoalCompletion={setGoalCompletion}
                 openEditModal={openEditModal}
@@ -591,23 +616,22 @@ function App() {
                 deleteGoal={removeGoal}
                 goals={goals}
                 openGoalModal={openGoalModal}
-            />}/> 
-              <Route path={"/settings"} element={<Settings/>}/>
-              <Route path={"/forget-password"} element={<ForgotPassword/>}/>
-              <Route path={"/reset-password"} element={<ResetPassword/>}/>
-              <Route path="/registration" element={<Registration />} />
-              <Route path="/income" element={<Income />} />
+            />}/>
+              <Route path={"/forget-password"} element={<ForgotPassword openError={openPopup} setErrorMessage={setAlertMessage}/>}/>
+              <Route path={"/reset-password"} element={<ResetPassword openError={openPopup} setErrorMessage={setAlertMessage}/>}/>
+              <Route path="/registration" element={<Registration openError={openPopup} setErrorMessage={setAlertMessage} />} />
+              <Route path="/income" element={<Income openError={openPopup} setErrorMessage={setAlertMessage}/>} />
             </Routes>
               {showEditTransaction && <EditTransaction saveEditTransaction={saveEditTransaction} oldTransaction={editTransaction} closeModal={closeEditModal}/>}
               {showAddTransaction && <AddTransaction maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>}
               {showEditGoal && <EditGoal saveEditGoal={saveEditGoal} oldGoal={editGoal} closeModal={closeEditGoal}/>}
               {showAddGoal && <AddGoal maxGoalID={maxGoalID} updateMaxGoalID={updateMaxGoalID} addGoal={addGoal} closeModal={closeGoalModal} deleteGoal ={removeGoal} />}
-              {showSettings &&  <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>}
-
+              {showSettings &&  <Settings openError={openPopup} setErrorMessage={setAlertMessage} username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>}
+              {showMessagePopup && <MessagePopup closeModal={closePopup} message={popupMessage} />}
           </header>
         </div>
       </HashRouter>
   );
-};
+    }
 
 export default App;

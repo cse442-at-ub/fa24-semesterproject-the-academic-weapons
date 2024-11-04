@@ -19,3 +19,36 @@
     margin-inline: auto;
     max-width: 80%;
 }
+
+.notice_container {
+    background-color: white;
+    border: 2px solid #A3AAD9;
+    border-radius: 10px;
+    width: 90vw;
+    max-width: 400px;
+    height: fit-content;
+    padding-bottom: 30px;
+    margin-top: 30vh;
+    margin-inline: auto;
+}
+
+.notice_title {
+    padding: 10px;
+    font-size: 30px;
+    font-weight: bold;
+    width: 90%;
+    word-break: break-word;
+    text-align: center;
+    margin-inline: auto;
+    color: #5661AC;
+}
+
+.notice_text {
+    font-size: 25px;
+    width: 90%;
+    word-break: break-word;
+    text-align: center;
+    margin-inline: auto;
+    margin-bottom: 20px;
+    color: #5661AC;
+}

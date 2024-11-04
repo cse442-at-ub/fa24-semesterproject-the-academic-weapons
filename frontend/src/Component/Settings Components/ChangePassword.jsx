@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../CSS Files/Settings Components/ChangePassword.css";
 
-const ChangePassword = ({ closeModal }) => {
+const ChangePassword = ({setErrorMessage, openError, closeModal }) => {
     const navigate = useNavigate();
     const userID = sessionStorage.getItem('User');
     const userToken = sessionStorage.getItem('auth_token');
@@ -33,7 +33,9 @@ const ChangePassword = ({ closeModal }) => {
 
     const saveNewPassword = async () => {
         if (newPassword !== retypePassword) {
-            alert("New Password and Retype Password do not match.");
+
+            setErrorMessage("New Password and Retype Password do not match.");
+            openError()
             return;
         }
     
@@ -52,28 +54,25 @@ const ChangePassword = ({ closeModal }) => {
     
         const data = await response.json();
     
-        // if (!data.auth) {
-        //     alert("Invalid user credentials, please sign in again...T");
-        //     sessionStorage.clear();
-        //     window.location.reload();
-        //     return;
-        // }
-    
         if (!data.success) {
-            alert(data.message || 'Changing password failed!');
+            setErrorMessage(data.message || 'Changing password failed!');
+            openError()
         } else {
-            alert("Password changed successfully!");
+            setErrorMessage("Password changed successfully!");
+            openError()
             closeModal();  // Close modal on success 
         }
     };
 
     const handleSave = () => {
         if (!validatePassword(newPassword)) {
-            alert("New Password does not meet requirements.");
+            setErrorMessage("New Password does not meet requirements.");
+            openError()
             return;
         }
         if (newPassword !== retypePassword) {
-            alert("New Password and Retype Password do not match.");
+            setErrorMessage("New Password and Retype Password do not match.");
+            openError()
             return;
         }
         saveNewPassword();

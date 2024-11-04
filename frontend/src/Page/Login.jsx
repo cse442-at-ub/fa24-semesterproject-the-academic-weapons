@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS Files/Login.css';
 
-const Login = () => {
+const Login = ( { openError, setErrorMessage, } ) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -35,11 +35,13 @@ const Login = () => {
         navigate('/');
         window.location.reload()
       } else {
-        alert(data.message || 'Login failed');
+        setErrorMessage(data.message || 'Login failed')
+        openError()
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while trying to log in.');
+      setErrorMessage("An error occurred while trying to log in. Please try again.")
+      openError()
     }
   };
 

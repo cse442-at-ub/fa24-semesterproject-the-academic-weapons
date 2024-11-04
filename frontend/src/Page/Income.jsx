@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import '../CSS Files/Income.css'; // Ensure this CSS file exists for styling
 
-const Income = () => {
+const Income = ( { setErrorMessage, openError } ) => {
   const [monthlyIncome, setMonthlyIncome] = useState('');
   const [totalIncome, setTotalIncome] = useState(0); // Set initial income to 0
   const [monthlyIncomeValue, setMonthlyIncomeValue] = useState(0); // Initial monthly income
@@ -85,12 +85,12 @@ const Income = () => {
       const data = await response.json();
 
       if (data.success) {
-        alert('Income added successfully!');
         // Update total income in the component state
         setTotalIncome(prevTotalIncome => prevTotalIncome + incomeAmount);
         sessionStorage.setItem('totalIncome', totalIncome + incomeAmount); // Update sessionStorage
       } else {
-        alert(`Error: ${data.message}`);
+        setErrorMessage(`Error: ${data.message}`);
+        openError()
       }
     } catch (error) {
       console.error('Error submitting income:', error);
@@ -112,7 +112,8 @@ const Income = () => {
 
       setMonthlyIncome(''); // Reset input field
     } else {
-      alert('Please enter a valid income amount.');
+      setErrorMessage('Please enter a valid income amount.');
+      openError()
     }
   };
 

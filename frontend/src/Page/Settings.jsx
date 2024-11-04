@@ -4,7 +4,7 @@ import ChangeUsername from "../Component/Settings Components/ChangeUsername";
 import ChangePFP from "../Component/Settings Components/ChangePFP";
 import ChangePassword from "../Component/Settings Components/ChangePassword.jsx";
 
-const Settings = ({ closeSettings, pfpMap, changePFP, pfp, username, changeUsername }) => {
+const Settings = ({openError, setErrorMessage, closeSettings, pfpMap, changePFP, pfp, username, changeUsername }) => {
     const active = 'settings_button_active';
     const inactive = 'settings_button_inactive';
     const top_active = "settings_top_tab_button_active";
@@ -61,9 +61,9 @@ const Settings = ({ closeSettings, pfpMap, changePFP, pfp, username, changeUsern
                         }
                     </div>
                 </div>
-                {showChangeUsername && <ChangeUsername closeModal={closeUsername} changeUsername={changeUsername} />}
-                {showChangePFP && <ChangePFP pfpMap={pfpMap} changePFP={changePFP} closeModal={closeChangePFP} />}
-                {showChangePassword && <ChangePassword closeModal={closeChangePassword} />}
+                {showChangeUsername && <ChangeUsername openError={openError} setErrorMessage={setErrorMessage} closeModal={closeUsername} changeUsername={changeUsername} />}
+                {showChangePFP && <ChangePFP openError={openError} setErrorMessage={setErrorMessage} pfpMap={pfpMap} changePFP={changePFP} closeModal={closeChangePFP} />}
+                {showChangePassword && <ChangePassword openError={openError} setErrorMessage={setErrorMessage} closeModal={closeChangePassword} />}
             </div>
         </div>
     );

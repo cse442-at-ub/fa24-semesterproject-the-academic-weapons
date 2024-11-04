@@ -9,7 +9,7 @@ const CloseButton = ({ onClick }) => (
     </button>
 );
 
-const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, monthly_saving_goal, onUpdateMonthlyGoal, onUpdateAllocation }) => {
+const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp, allocated_saving_amount, monthly_saving_goal, onUpdateMonthlyGoal, onUpdateAllocation }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const navigate = useNavigate();
     const userID = sessionStorage.getItem("User");
@@ -56,7 +56,8 @@ const Navbar = ({ username, openSettings, pfpMap, pfp, allocated_saving_amount, 
     const handleSaveMonthlyGoal = () => {
         const parsedGoal = Number(tempSavingsGoal);
         if (isNaN(parsedGoal) || parsedGoal < 0) {
-            alert("Please enter a valid savings goal.");
+            setErrorMessage("Please enter a valid savings goal.");
+            openError()
             return;
         }
         onUpdateMonthlyGoal(parsedGoal);
