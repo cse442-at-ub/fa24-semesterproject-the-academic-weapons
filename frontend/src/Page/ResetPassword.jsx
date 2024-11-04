@@ -64,9 +64,9 @@ const ResetPassword = () => {
 
       if (data.success) {
         setMessage(data.message);
-        sessionStorage.setItem('username', data.username)
-        sessionStorage.setItem('pfp', data.pfp)
-        sessionStorage.setItem("User", data.id)
+        // sessionStorage.setItem('username', data.username)
+        // sessionStorage.setItem('pfp', data.pfp)
+        // sessionStorage.setItem("User", data.id)
         // Redirect to login page after a successful reset
         setTimeout(() => navigate('/'));
 

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react"
 import {useNavigate} from "react-router-dom";
 
 
-const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
+const ChangePFP = ( { setErrorMessage, openError, closeModal, changePFP, pfpMap,  } ) => {
     const navigate = useNavigate();
     const userID = sessionStorage.getItem('User');
     const userToken = sessionStorage.getItem('auth_token')
@@ -34,14 +34,16 @@ const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
         const data = await response.json();
 
         if (!data.auth) {
-            alert("Invalid user credentials, please sign in again...")
+            setErrorMessage("Invalid user credentials, please sign in again...")
+            openError()
             sessionStorage.clear()
             window.location.reload()
             return
         }
 
         if (!data.success) {
-            alert(data.message || 'Saving new profile picture failed!');
+            setErrorMessage(data.message || 'Saving new profile picture failed!');
+            openError()
         }
     }
 
