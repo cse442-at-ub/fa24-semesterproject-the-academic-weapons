@@ -24,6 +24,7 @@
 }
 
 .edit_trans_title {
+    padding-top: 20px;
     font-size: clamp(25px, 2vw, 35px);
     text-align: center;
     color: #5661AC;
@@ -37,6 +38,19 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
+}
+
+.edit_trans_form_input_group_recurring {
+    width: 60%;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.edit_trans_checkbox {
+    width: 20px;
 }
 
 .edit_trans_input_label {
@@ -60,12 +74,11 @@
     background-color: #7984D2;
     border: 1px solid rgb(0,0,0,0);
     color: white;
-    border-radius: 30px;
+    border-radius: 5px;
     font-size: 20px;
     margin-top: 20px;
     width: 100%;
-    max-width: 200px;
-    padding: 10px;
+    padding: 8px;
     margin-inline: auto;
     cursor: pointer;
     transition: background-color .3s ease;

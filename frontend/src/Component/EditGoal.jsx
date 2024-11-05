@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
-
-
-const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) => {
-    const [name, setName] = useState(oldTransaction.name);
-    const [price, setPrice] = useState(oldTransaction.price);
-    const [category, setCategory] = useState(oldTransaction.category);
-    const [date, setDate] = useState(oldTransaction.date);
-    const[recurring, setRecurring] = useState(oldTransaction.recurring);
-
-    const handleUpdateTransaction = (e) => {
-        const updated = {...oldTransaction};
+const EditGoal = ( {saveEditGoal,  oldGoal, closeModal } ) => {
+    const [name, setName] = useState(oldGoal.name);
+    const [price, setPrice] = useState(parseFloat(oldGoal.cost));
+    const [category, setCategory] = useState(oldGoal.category);
+    const [date, setDate] = useState(oldGoal.date);
+    const oldAllocated = oldGoal.allocated
+    const handleUpdateGoal = (e) => {
+        const updated = {...oldGoal};
         if (name.trim() === '' || price.trim() === '' || category.trim() === '' || date === null) return
         updated.name = name;
-        updated.price = price;
+        if (price < oldAllocated) {
+            updated.allocated = price
+        } else {
+            updated.allocated = oldAllocated
+        }
+        updated.cost = price;
         updated.category = category;
         updated.date = date;
-        updated.recurring= recurring;
-        saveEditTransaction(updated);
+        saveEditGoal(updated);
         closeModal();
     }
-
-
     return (
         <div onClick={closeModal} className={'edit_background'}>
             <div onClick={e => e.stopPropagation()} className={'edit_trans_modal_container'}>
@@ -33,7 +32,7 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
                                onChange={e => setName(e.target.value)}/>
                     </div>
                     <div className={'edit_trans_form_input_group'}>
-                        <label className={"edit_trans_input_label"}>Price<span
+                        <label className={"edit_trans_input_label"}>Amount<span
                             className={'required_field'}>*</span></label>
                         <input className={'edit_trans_input_field'} value={price} type={'number'} required={true}
                                onChange={e => setPrice(e.target.value)}/>
@@ -50,17 +49,8 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
                         <input className={'edit_trans_input_field'} value={date} type={"date"} required={true}
                                onChange={e => setDate(e.target.value)}/>
                     </div>
-                    <div className={'edit_trans_form_input_group_recurring'}>
-                        <label className={"edit_trans_input_label"}>Recurring?</label>
-                        <input
-                            type="checkbox"
-                            checked={recurring}
-                            onChange={(e) => setRecurring(e.target.checked)}
-                            className={'edit_trans_checkbox'}
-                        />
-                    </div>
                     <div className={'edit_trans_form_input_group'}>
-                        <button onClick={e => handleUpdateTransaction(e)}
+                        <button onClick={e => handleUpdateGoal(e)}
                                 className={"edit_trans_edit_btn"}>Update
                         </button>
                     </div>
@@ -70,5 +60,4 @@ const EditTransaction = ( {saveEditTransaction,  oldTransaction, closeModal } ) 
         </div>
     );
 };
-
-export default EditTransaction;
+export default EditGoal;

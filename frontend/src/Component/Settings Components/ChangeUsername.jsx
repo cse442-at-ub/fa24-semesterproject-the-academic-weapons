@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom";
 
-const ChangeUsername = ({ closeModal, changeUsername }) => {
+const ChangeUsername = ({ setErrorMessage, openError, closeModal, changeUsername }) => {
     const [newUsername, setNewUsername] = useState('');
     const navigate = useNavigate();
     const userID = sessionStorage.getItem('User');
@@ -42,14 +42,16 @@ const ChangeUsername = ({ closeModal, changeUsername }) => {
         const data = await response.json();
 
         if (!data.auth) {
-            alert("Invalid user credentials, please sign in again...")
+            setErrorMessage("Invalid user credentials, please sign in again...")
+            openError()
             sessionStorage.clear()
             window.location.reload()
             return
         }
 
         if (!data.success) {
-            alert(data.message || 'Saving new username failed!');
+            setErrorMessage(data.message || 'Saving new username failed!')
+            openError()
         }
     }
 

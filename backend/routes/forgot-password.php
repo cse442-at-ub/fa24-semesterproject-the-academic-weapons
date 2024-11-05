@@ -62,7 +62,7 @@ if (!$updateStmt->execute()) {
 }
 
 // Construct the password reset link
-$resetLink = "https://se-dev.cse.buffalo.edu/CSE442/2024-Fall/zcsanger/#/reset-password?token=$token";
+$resetLink = "https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442an/#/reset-password?token=$token";
 
 // Email details
 $subject = "Password Reset Request";

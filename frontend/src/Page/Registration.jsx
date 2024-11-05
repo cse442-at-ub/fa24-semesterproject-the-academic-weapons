@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS Files/Registration.css';
 
-const Registration = () => {
+const Registration = ( { setErrorMessage, openError } ) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -15,11 +15,13 @@ const Registration = () => {
     e.preventDefault();
     //Checking if password are the same
     if (password !== confirmpassword) {
-      alert('Passwords do not Match!')
+      setErrorMessage('Passwords do not Match!')
+      openError()
       return
     }
     if (!email.endsWith('@buffalo.edu')) {
-      alert('Only @buffalo.edu emails are allowed!');
+      setErrorMessage('Only @buffalo.edu emails are allowed!');
+      openError()
       return;
     }
     try {
@@ -39,14 +41,14 @@ const Registration = () => {
       console.log(data); // Log response data for debugging
 
       if (data.success) {
-        sessionStorage.setItem("User", "1")
         navigate('/');
       } else {
-        alert(data.message || 'Registration failed');
+        setErrorMessage(data.message || 'Registration failed');
+        openError()
       }
     } catch (error) {
-      console.error('Error:', error);
-      // alert('An error occurred while trying to registr.');
+      setErrorMessage('An error occurred while trying to register. Please try again.');
+      openError()
     }
   };
 
