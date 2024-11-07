@@ -74,4 +74,5 @@ const Settings = ({ openError, setErrorMessage, closeSettings, pfpMap, changePFP
     );
 };
 
+
 export default Settings;

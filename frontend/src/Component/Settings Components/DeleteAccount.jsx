@@ -99,4 +99,6 @@ const DeleteAccount = ({ setErrorMessage, openError, closeModal }) => {
     );
 };
 
+
 export default DeleteAccount;
+
