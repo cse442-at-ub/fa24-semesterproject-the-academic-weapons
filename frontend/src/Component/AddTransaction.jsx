@@ -141,7 +141,9 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
                             </button>
                         </div>
                     </form>
-                    <div className={"add_trans_close_text"} onClick={closeModal}>Cancel</div>
+                    <div className="add_trans_close_text_container">
+                        <div className={"add_trans_close_text"} onClick={closeModal}>Cancel</div>
+                    </div>
                 </div>
                 <div className={'add_trans_added_box_container'}>
                     <h1 className={'add_trans_title'}>Added</h1>
@@ -166,7 +168,7 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
                             </div>
                                 ))
                             )): (
-                            <p className={"no_content_text"}>No goals added yet.</p>
+                            <p className={"no_content_text"}>No transactions added yet.</p>
                             )}
                     </div>
                     <div className={'add_trans_added_save_exit_container'}>
