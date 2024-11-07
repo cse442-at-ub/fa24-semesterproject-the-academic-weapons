@@ -7,9 +7,10 @@ const Income = () => {
   const [totalIncome, setTotalIncome] = useState(100); // Initial total income set to 100
   const [monthlyIncomeValue, setMonthlyIncomeValue] = useState(0); // Initial monthly income
   const [expenses, setExpenses] = useState(0); // Dynamic expenses value
-
+  const [message, setMessage] = useState('');
   const userID = sessionStorage.getItem('User');
   const userToken = sessionStorage.getItem('auth_token');
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Fetch user transactions (expenses) from the backend
   useEffect(() => {
@@ -57,16 +58,30 @@ const Income = () => {
     if (!isNaN(incomeValue) && incomeValue > 0) {
       setMonthlyIncomeValue(incomeValue); // Update monthly income value
       setTotalIncome(prevTotalIncome => prevTotalIncome + incomeValue); // Add monthly income to total income
-      alert(`Monthly Income Submitted: $${incomeValue}`);
+      setMessage(`Monthly Income Submitted: $${incomeValue}`); // Set success message
+      setIsSuccess(true);
       setMonthlyIncome(''); // Reset input field
     } else {
-      alert('Please enter a valid income amount.');
-    }
+       setMessage('Please enter a valid income amount.'); // Set error message
+      setIsSuccess(false);
+      }
   };
 
   return (
     <div className="income-page">
       <h1>Income Details</h1>
+      {message && (
+      <div
+        style={{
+          color: isSuccess ? 'green' : 'red', // Green for success, red for error
+          marginTop: '10px',
+          fontSize: '0.9em',
+          textAlign: 'center',
+        }}
+      >
+        {message}
+      </div>
+    )}
       <h3>Total Income: ${totalIncome}</h3>
       <h3>Total Expenses: ${expenses}</h3>
 

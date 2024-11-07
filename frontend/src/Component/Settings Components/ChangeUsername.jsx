@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 
 const ChangeUsername = ({ closeModal, changeUsername }) => {
     const [newUsername, setNewUsername] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
     const navigate = useNavigate();
     const userID = sessionStorage.getItem('User');
     const userToken = sessionStorage.getItem('auth_token')
@@ -26,6 +27,7 @@ const ChangeUsername = ({ closeModal, changeUsername }) => {
     }
 
     const saveUsernameToDatabase = async () => {
+    try{
         let url = `${import.meta.env.VITE_API_PATH}/routes/change_username.php`
         const response = await fetch(url, {
             method: 'POST',
@@ -42,14 +44,22 @@ const ChangeUsername = ({ closeModal, changeUsername }) => {
         const data = await response.json();
 
         if (!data.auth) {
-            alert("Invalid user credentials, please sign in again...")
-            sessionStorage.clear()
-            window.location.reload()
-            return
-        }
+        setMessage("Invalid user credentials, please sign in again...");
+        sessionStorage.clear();
+        window.location.reload();
+        return;
+      }
 
-        if (!data.success) {
-            alert(data.message || 'Saving new username failed!');
+          if (!data.success) {
+            setMessage(data.message || 'Saving new username failed!');
+            setIsSuccess(false);
+          } else {
+            setMessage('Username updated successfully.');
+            setIsSuccess(true);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          setMessage('An error occurred while saving your username.');
         }
     }
 
@@ -62,6 +72,19 @@ const ChangeUsername = ({ closeModal, changeUsername }) => {
                         account.
                     </div>
                 </div>
+                {message && (
+          <div
+            style={{
+              color: isSuccess ? 'green' : 'red', // Green for success, red for error
+              marginTop: '10px',
+              fontSize: '0.9em',
+              textAlign: 'center',
+            }}
+          >
+            {message}
+                  </div>
+                )}
+
                 <div className={"change_form"}>
                     <div className={"label_container"}>
                         <label className={"change_label"}>New Username</label>

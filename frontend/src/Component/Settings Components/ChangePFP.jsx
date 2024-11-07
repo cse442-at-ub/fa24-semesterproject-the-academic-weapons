@@ -6,6 +6,8 @@ const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
     const navigate = useNavigate();
     const userID = sessionStorage.getItem('User');
     const userToken = sessionStorage.getItem('auth_token')
+    const [message, setMessage] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
 
     useEffect(() => {
 
@@ -34,15 +36,19 @@ const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
         const data = await response.json();
 
         if (!data.auth) {
-            alert("Invalid user credentials, please sign in again...")
+            setMessage("Invalid user credentials, please sign in again...");
             sessionStorage.clear()
             window.location.reload()
             return
         }
 
-        if (!data.success) {
-            alert(data.message || 'Saving new profile picture failed!');
-        }
+         if (!data.success) {
+        setMessage(data.message || 'Saving new profile picture failed!');
+        setIsSuccess(false);
+      } else {
+        setMessage('Profile picture updated successfully.');
+        setIsSuccess(true);
+      }
     }
 
     const newPFP = (e) => {
@@ -58,6 +64,18 @@ const ChangePFP = ( { closeModal, changePFP, pfpMap } ) => {
                     <h2>Change Profile Picture</h2>
                     <div className={"change_modal_desc"}>Choose a profile picture</div>
                 </div>
+                {message && (
+                  <div
+                    style={{
+                      color: isSuccess ? 'green' : 'red', // Green for success, red for error
+                      marginTop: '10px',
+                      fontSize: '0.9em',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {message}
+                    </div>
+                    )}
                 <div className={"change_pfp_options_container"}>
                     {Object.values(pfpMap).map((pic, index) =>
                     <div onClick={e => newPFP(index)} className={"profile_picture_container"} key={index}>
