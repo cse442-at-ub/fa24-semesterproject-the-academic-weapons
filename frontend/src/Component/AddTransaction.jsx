@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
+import Creatable, { useCreatable } from 'react-select/creatable';
 
-const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTransID, updateMaxTransID }) => {
+const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, updateMaxTransID }) => {
     const todayDate = new Date().toISOString().substr(0,10)
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
@@ -9,15 +10,25 @@ const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTran
     const [date, setDate] = useState(todayDate);
     const [recurring, setRecurring] = useState(false);
     const [newTransactions, setNewTransactions] = useState([]);
+    const uniqueNames = Array.from(new Set(transactions.map(item => item.name)));
+    const nameOptions = uniqueNames.map(name => ({
+        label: name,
+        value: name
+    }));
+    const uniqueCategories = Array.from(new Set(transactions.map(item => item.category)));
+    const categoryOptions = uniqueCategories.map(category => ({
+        label: category,
+        value: category
+    }));
 
     useEffect(() => { }, [newTransactions]);
 
     const handleAddTransaction = (e) => {
         e.preventDefault();
-        if (name.trim() === '' || price.trim() === '' || category.trim() === '' || date === name) return;
+        if (name.value.trim() === '' || price.trim() === '' || category.value.trim() === '' || date === name) return;
         const addNewTrans = [...newTransactions];
         const newID = maxTransID + 1;
-        addNewTrans.push({ "id": newID, "name": name, "price": price, "category": category, "date": date, "recurring": recurring });
+        addNewTrans.push({ "id": newID, "name": name.value, "price": price, "category": category.value, "date": date, "recurring": recurring });
         updateMaxTransID(newID);
         setNewTransactions(addNewTrans);
         setName('');
@@ -39,6 +50,14 @@ const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTran
         setNewTransactions(delTrans);
     };
 
+    const handleSetCategory = (option) => {
+        setCategory(option);
+    };
+
+    const handleSetName = (option) => {
+        setName(option)
+    }
+
     return (
         <div className={"add_trans_modal_container"}>
             <div className={"add_trans_modal_container_inside"}>
@@ -47,13 +66,20 @@ const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTran
                     <form>
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Name<span className={'required_field'}>*</span></label>
-                            <input
-                                className={'add_trans_input_field'}
+                            <Creatable
                                 value={name}
-                                type={"text"}
+                                options={nameOptions}
+                                onChange={handleSetName}
+                                // className={'add_trans_input_field'}
                                 required={true}
-                                onChange={e => setName(e.target.value)}
                             />
+                            {/*<input*/}
+                            {/*    className={'add_trans_input_field'}*/}
+                            {/*    value={name}*/}
+                            {/*    type={"text"}*/}
+                            {/*    required={true}*/}
+                            {/*    onChange={e => setName(e.target.value)}*/}
+                            {/*/>*/}
                         </div>
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Price<span className={'required_field'}>*</span></label>
@@ -67,13 +93,20 @@ const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTran
                         </div>
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Category<span className={'required_field'}>*</span></label>
-                            <input
-                                className={'add_trans_input_field'}
+                            <Creatable
                                 value={category}
+                                options={categoryOptions}
+                                onChange={handleSetCategory}
+                                // className={'add_trans_input_field'}
                                 required={true}
-                                type={"text"}
-                                onChange={e => setCategory(e.target.value)}
                             />
+                            {/*<input*/}
+                            {/*    className={'add_trans_input_field'}*/}
+                            {/*    value={category}*/}
+                            {/*    required={true}*/}
+                            {/*    type={"text"}*/}
+                            {/*    onChange={e => setCategory(e.target.value)}*/}
+                            {/*/>*/}
                         </div>
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Date<span className={'required_field'}>*</span></label>
