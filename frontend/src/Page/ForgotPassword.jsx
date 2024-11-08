@@ -83,30 +83,32 @@ const ForgotPassword = () => {
                   required
               />
             </div>
-            {error && (
-                  <div
-                    style={{
-                      color: isSuccess ? 'green' : 'red', // Green for success, red for error
-                      marginTop: '10px',
-                      fontSize: '0.9em',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {error}
-                    </div>
-                    )}
-            {message && (
-                  <div
-                    style={{
-                      color: isSuccess ? 'green' : 'red', // Green for success, red for error
-                      marginTop: '10px',
-                      fontSize: '0.9em',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {message}
-                    </div>
-                    )}
+             <div className="message-container">
+              {error && (
+                <div
+                  style={{
+                    color: 'red',
+                    marginTop: '10px',
+                    fontSize: '0.9em',
+                    textAlign: 'center',
+                  }}
+                >
+                  {error}
+                </div>
+              )}
+              {message && (
+                <div
+                  style={{
+                    color: 'green',
+                    marginTop: '10px',
+                    fontSize: '0.9em',
+                    textAlign: 'center',
+                  }}
+                >
+                  {message}
+                </div>
+              )}
+            </div>
             <button type="submit" className="send-code-button">Send Code</button>
             <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
           </form>
