@@ -11,6 +11,7 @@ const Income = ( { setErrorMessage, openError } ) => {
   const [monthlyIncomeForCurrentMonth, setMonthlyIncomeForCurrentMonth] = useState(0); // Monthly income for current month
   const userID = sessionStorage.getItem('User');
   const userToken = sessionStorage.getItem('auth_token');
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Fetch user transactions (expenses) and total income from the backend
   useEffect(() => {
@@ -107,6 +108,7 @@ const Income = ( { setErrorMessage, openError } ) => {
     const incomeValue = parseFloat(monthlyIncome);
     if (!isNaN(incomeValue) && incomeValue > 0) {
       setMonthlyIncomeValue(incomeValue); // Update monthly income value
+
       // Submit the income to the backend
       submitIncomeToDB(incomeValue);
 

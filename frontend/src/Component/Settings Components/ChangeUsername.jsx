@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 
 const ChangeUsername = ({ setErrorMessage, openError, closeModal, changeUsername }) => {
     const [newUsername, setNewUsername] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
     const navigate = useNavigate();
     const userID = sessionStorage.getItem('User');
     const userToken = sessionStorage.getItem('auth_token')
@@ -26,6 +27,7 @@ const ChangeUsername = ({ setErrorMessage, openError, closeModal, changeUsername
     }
 
     const saveUsernameToDatabase = async () => {
+    try{
         let url = `${import.meta.env.VITE_API_PATH}/routes/change_username.php`
         const response = await fetch(url, {
             method: 'POST',
@@ -64,6 +66,19 @@ const ChangeUsername = ({ setErrorMessage, openError, closeModal, changeUsername
                         account.
                     </div>
                 </div>
+                {message && (
+          <div
+            style={{
+              color: isSuccess ? 'green' : 'red', // Green for success, red for error
+              marginTop: '10px',
+              fontSize: '0.9em',
+              textAlign: 'center',
+            }}
+          >
+            {message}
+                  </div>
+                )}
+
                 <div className={"change_form"}>
                     <div className={"label_container"}>
                         <label className={"change_label"}>New Username</label>

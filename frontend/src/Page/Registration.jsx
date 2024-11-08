@@ -7,21 +7,27 @@ const Registration = ( { setErrorMessage, openError } ) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [confirmpassword, setConfirmPassword] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
   window.scrollTo(0, 0);
 
   const handleRegristration = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
     //Checking if password are the same
     if (password !== confirmpassword) {
-      setErrorMessage('Passwords do not Match!')
-      openError()
-      return
+      setErrorMessage('Passwords do not match!');
+      setIsSuccess(false);
+      return;
     }
+
+    // Checking if email is from the allowed domain
     if (!email.endsWith('@buffalo.edu')) {
       setErrorMessage('Only @buffalo.edu emails are allowed!');
-      openError()
+      setIsSuccess(false);
+
       return;
     }
     try {
@@ -41,14 +47,18 @@ const Registration = ( { setErrorMessage, openError } ) => {
       console.log(data); // Log response data for debugging
 
       if (data.success) {
-        navigate('/');
+        sessionStorage.setItem("User", "1")
+        setErrorMessage('Registration successful! Redirecting...')
+        setIsSuccess(true);
+        setTimeout(() => navigate('/'), 1500);
       } else {
-        setErrorMessage(data.message || 'Registration failed');
-        openError()
+         setErrorMessage(data.message || 'Registration failed');
+         setIsSuccess(false);
       }
     } catch (error) {
-      setErrorMessage('An error occurred while trying to register. Please try again.');
-      openError()
+      console.error('Error:', error);
+      setErrorMessage('An error occurred while trying to register.');
+      setIsSuccess(false);
     }
   };
 
