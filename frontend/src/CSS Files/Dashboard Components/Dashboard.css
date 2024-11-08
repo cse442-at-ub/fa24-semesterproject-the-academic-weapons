@@ -12,7 +12,7 @@
   grid-gap: 20px;
   flex-wrap: wrap;
   /*max-width: 50vw;*/
-  margin: 0 auto;
+  margin-inline: auto;
   padding: 20px;
 }
 
@@ -26,7 +26,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 45vw;
+  max-width: 50vw;
   /*overflow: hidden;*/
 }
 
@@ -44,6 +44,7 @@
 .highest-spending-box {
   margin-inline: auto;
   max-width: 100%;
+  width: 100%;
   grid-column: 2; /* Left column */
   grid-row: 2;    /* Place in the first row */
 }
@@ -83,6 +84,7 @@
   }
 
   .box {
+    width: 100%;
     margin-inline: auto;
     max-width: 90vw;
   }

@@ -1,51 +1,102 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
-import '../CSS Files/Income.css'; // Ensure to create this CSS file for styling
+import '../CSS Files/Income.css'; // Ensure this CSS file exists for styling
 
-const Income = () => {
+const Income = ( { setErrorMessage, openError } ) => {
   const [monthlyIncome, setMonthlyIncome] = useState('');
-  const [totalIncome, setTotalIncome] = useState(100); // Initial total income set to 100
+  const [totalIncome, setTotalIncome] = useState(0); // Set initial income to 0
   const [monthlyIncomeValue, setMonthlyIncomeValue] = useState(0); // Initial monthly income
-  const [expenses, setExpenses] = useState(0); // Dynamic expenses value
-  const [message, setMessage] = useState('');
+  const [totalExpenses, setTotalExpenses] = useState(0); // Total dynamic expenses value
+  const [monthlyExpenses, setMonthlyExpenses] = useState(0); // Monthly expenses
+  const [monthlyIncomeForCurrentMonth, setMonthlyIncomeForCurrentMonth] = useState(0); // Monthly income for current month
   const userID = sessionStorage.getItem('User');
   const userToken = sessionStorage.getItem('auth_token');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Fetch user transactions (expenses) from the backend
+  // Fetch user transactions (expenses) and total income from the backend
   useEffect(() => {
-    const fetchExpenses = async () => {
+    const fetchIncomeAndExpenses = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php?id=${userID}&token=${userToken}`);
-        const data = await response.json();
-
-        if (data.success) {
-          const totalExpenses = data.transactions.reduce((total, transaction) => total + parseFloat(transaction.price), 0);
-          setExpenses(totalExpenses); // Set the total expenses from transactions
+        // Fetch total income
+        const incomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}`);
+        const incomeData = await incomeResponse.json();
+        
+        if (incomeData.success) {
+          const total = parseFloat(incomeData.totalIncome) || 0; // Ensure totalIncome is a number
+          setTotalIncome(total);
+          sessionStorage.setItem('totalIncome', total); // Save to sessionStorage
         } else {
-          console.error("Error fetching expenses:", data.message);
+          console.error("Error fetching total income:", incomeData.message);
         }
+
+        // Fetch expenses
+        const expensesResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php?id=${userID}&token=${userToken}`);
+        const expensesData = await expensesResponse.json();
+
+        if (expensesData.success) {
+          const totalExpensesValue = expensesData.transactions.reduce((total, transaction) => total + parseFloat(transaction.price), 0);
+          setTotalExpenses(totalExpensesValue); // Set the total expenses from transactions
+        } else {
+          console.error("Error fetching expenses:", expensesData.message);
+        }
+
+        // Fetch current month's expenses
+        const monthlyExpensesData = expensesData.transactions.reduce((total, transaction) => {
+          const transactionDate = new Date(transaction.date);
+          if (transactionDate.getMonth() === new Date().getMonth() && transactionDate.getFullYear() === new Date().getFullYear()) {
+            return total + parseFloat(transaction.price);
+          }
+          return total;
+        }, 0);
+        setMonthlyExpenses(monthlyExpensesData); // Set the total expenses for the current month
+
+        // Fetch current month's income
+        const currentMonthIncomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&current_month=true`);
+        const currentMonthIncomeData = await currentMonthIncomeResponse.json();
+
+        if (currentMonthIncomeData.success) {
+          setMonthlyIncomeForCurrentMonth(parseFloat(currentMonthIncomeData.totalIncome) || 0);
+        } else {
+          console.error("Error fetching current month's income:", currentMonthIncomeData.message);
+        }
+
       } catch (error) {
-        console.error("Error fetching expenses:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchExpenses();
+    fetchIncomeAndExpenses();
   }, [userID, userToken]);
 
-  // Data for Total Income chart (total income minus expenses)
-  const totalIncomeData = [
-    { name: 'Net Income', value: totalIncome - expenses }, // Net income after expenses
-    { name: 'Expenses', value: expenses }, // Fetched expenses
-  ];
+  // Function to submit income to the backend
+  const submitIncomeToDB = async (incomeAmount) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          user_id: userID,
+          income_amount: incomeAmount,
+          date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+        }),
+      });
 
-  // Data for Monthly Income chart
-  const monthlyIncomeData = [
-    { name: 'Monthly Income', value: monthlyIncomeValue }, // Chart for monthly income
-    { name: 'Remaining', value: expenses }, // Remaining from total income (or some other value based on your logic)
-  ];
+      const data = await response.json();
 
-  const COLORS = ['#00C49F', '#FF8042'];
+      if (data.success) {
+        // Update total income in the component state
+        setTotalIncome(prevTotalIncome => prevTotalIncome + incomeAmount);
+        sessionStorage.setItem('totalIncome', totalIncome + incomeAmount); // Update sessionStorage
+      } else {
+        setErrorMessage(`Error: ${data.message}`);
+        openError()
+      }
+    } catch (error) {
+      console.error('Error submitting income:', error);
+    }
+  };
 
   // Handle monthly income input change
   const handleMonthlyIncomeChange = (e) => {
@@ -57,38 +108,41 @@ const Income = () => {
     const incomeValue = parseFloat(monthlyIncome);
     if (!isNaN(incomeValue) && incomeValue > 0) {
       setMonthlyIncomeValue(incomeValue); // Update monthly income value
-      setTotalIncome(prevTotalIncome => prevTotalIncome + incomeValue); // Add monthly income to total income
-      setMessage(`Monthly Income Submitted: $${incomeValue}`); // Set success message
-      setIsSuccess(true);
+
+      // Submit the income to the backend
+      submitIncomeToDB(incomeValue);
+
       setMonthlyIncome(''); // Reset input field
     } else {
-       setMessage('Please enter a valid income amount.'); // Set error message
-      setIsSuccess(false);
-      }
+      setErrorMessage('Please enter a valid income amount.');
+      openError()
+    }
   };
+
+  // Data for Total Income chart (total income minus total expenses)
+  const totalIncomeData = [
+    { name: 'Net Income', value: totalIncome - totalExpenses }, // Net income after total expenses
+    { name: 'Total Expenses', value: totalExpenses }, // Fetched total expenses
+  ];
+
+  // Data for Monthly Income chart
+  const monthlyIncomeData = [
+    { name: 'Monthly Income', value: monthlyIncomeForCurrentMonth - monthlyExpenses }, // Current month's income
+    { name: 'Monthly Expenses', value: monthlyExpenses }, // Fetched monthly expenses
+  ];
+
+  const COLORS = ['#00C49F', '#FF8042'];
 
   return (
     <div className="income-page">
       <h1>Income Details</h1>
-      {message && (
-      <div
-        style={{
-          color: isSuccess ? 'green' : 'red', // Green for success, red for error
-          marginTop: '10px',
-          fontSize: '0.9em',
-          textAlign: 'center',
-        }}
-      >
-        {message}
-      </div>
-    )}
-      <h3>Total Income: ${totalIncome}</h3>
-      <h3>Total Expenses: ${expenses}</h3>
+      <h3>Total Income: ${totalIncome.toFixed(2)}</h3>
+      <h3>Total Expenses: ${totalExpenses.toFixed(2)}</h3>
 
       <div className="charts-container">
         {/* Total Income Chart */}
         <div className="pie-chart-container">
-          <h3>Total Income (Net After Expenses)</h3>
+          <h3>Total Income (Net After Total Expenses)</h3>
           <PieChart width={300} height={300}>
             <Pie
               data={totalIncomeData}

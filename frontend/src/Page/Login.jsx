@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS Files/Login.css';
 
-const Login = () => {
+const Login = ( { openError, setErrorMessage, } ) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -48,7 +48,6 @@ const Login = () => {
       console.error('Error:', error);
       setMessage('An error occurred while trying to log in.');
       setIsSuccess(false);
-
     }
   };
 

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS Files/Registration.css';
 
-const Registration = () => {
+const Registration = ( { setErrorMessage, openError } ) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -27,6 +27,7 @@ const Registration = () => {
     if (!email.endsWith('@buffalo.edu')) {
       setErrorMessage('Only @buffalo.edu emails are allowed!');
       setIsSuccess(false);
+
       return;
     }
     try {
@@ -86,6 +87,7 @@ const Registration = () => {
                   type="text"
                   id="username"
                   name="username"
+                  maxLength={20}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required

@@ -14,7 +14,7 @@ const colors = [
     "#BB8FCE", "#5D6D7E"
 ];
 
-const MainPieChart = ( { transactions } ) => {
+const MainPieChart = ( { transactions, openModal } ) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [data, setData] = useState([]);
     const [subData, setSubData] = useState({});
@@ -23,15 +23,16 @@ const MainPieChart = ( { transactions } ) => {
 
     useEffect(() => {
 
-
-        if (data.length === 0) {
-            totalsByCategory(transactions)
-            transactionsByCategory(transactions)
-        }
-
-        if (data.length > 0) {
-            const highestCat = getHighestCategory(data)
-            setHighest(highestCat.name)
+        if (transactions.length > 0) {
+            if (data.length === 0 || !isLoaded) {
+                totalsByCategory(transactions)
+                transactionsByCategory(transactions)
+                setIsLoaded(true)
+            } else if (data.length > 0) {
+                const highestCat = getHighestCategory(data)
+                setHighest(highestCat.name)
+                setIsLoaded(false)
+            }
         }
 
     }, [transactions, data])
@@ -92,6 +93,7 @@ const MainPieChart = ( { transactions } ) => {
     return (
         <div className="chart-container"> {/* Add a fixed container */}
             <h2 className="Category_spend_txt">Categorized Spending</h2>
+            {transactions.length > 0 ?
                 <div>
                     {!selectedCategory ? (
                             <>
@@ -122,7 +124,7 @@ const MainPieChart = ( { transactions } ) => {
                                          category={selectedCategory}
                                          onBack={() => setSelectedCategory(null)} // Back to main chart
                             />
-                        )}</div>
+                        )}</div> : <p style={{textAlign:"center"}}>No transactions data to display yet. <br/>Try <span onClick={openModal} style={{color:"#7984D2", textDecoration: "underline", cursor:"pointer"}}>adding a transaction</span></p>}
         </div>
 
     );

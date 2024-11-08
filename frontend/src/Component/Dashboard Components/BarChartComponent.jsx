@@ -4,7 +4,7 @@ import '../../CSS Files/Dashboard Components/BarChartComponent.css';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const BarChartComponent = ({ transactions }) => {
+const BarChartComponent = ({openTransactionModal, transactions }) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Default to current year
   const [availableYears, setAvailableYears] = useState([]);
   const [barData, setBarData] = useState([]);
@@ -72,8 +72,7 @@ const BarChartComponent = ({ transactions }) => {
   return (
       <div className="bar-chart-component">
         <div className="bar-chart-header">
-          <h3>Monthly Spending - {selectedYear}</h3>
-
+          <h2 className={"Category_spend_txt"}>Monthly Spending</h2>
           {availableYears.length > 0 ? (
               <select value={selectedYear} onChange={handleYearChange} className="year-dropdown">
                 {availableYears.map(year => (
@@ -100,12 +99,16 @@ const BarChartComponent = ({ transactions }) => {
                   <XAxis dataKey="name" />
                   <YAxis tickFormatter={formatYAxis} /> {/* Y-axis now correctly formatted */}
                   <Tooltip formatter={tooltipFormatter} /> {/* Tooltip formatted with dollar sign and commas */}
-                  <Legend width={80} />
+                  {/*<Legend width={80} />*/}
                   <Bar dataKey="value" fill="#8884d8" />
                 </BarChart>
               </ResponsiveContainer>
           ) : (
-              <p>No transactions to display for the selected year.</p>
+              <p className={"no_content_text"}>No transactions to display for the selected year.<br/>Try <span onClick={openTransactionModal} style={{
+                color: "#7984D2",
+                textDecoration: "underline",
+                cursor: "pointer"
+              }}>adding a transaction</span></p>
           )}
         </div>
       </div>

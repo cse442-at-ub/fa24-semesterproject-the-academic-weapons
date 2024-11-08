@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom";
 
-const ChangeUsername = ({ closeModal, changeUsername }) => {
+const ChangeUsername = ({ setErrorMessage, openError, closeModal, changeUsername }) => {
     const [newUsername, setNewUsername] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
     const navigate = useNavigate();
@@ -44,22 +44,16 @@ const ChangeUsername = ({ closeModal, changeUsername }) => {
         const data = await response.json();
 
         if (!data.auth) {
-        setMessage("Invalid user credentials, please sign in again...");
-        sessionStorage.clear();
-        window.location.reload();
-        return;
-      }
+            setErrorMessage("Invalid user credentials, please sign in again...")
+            openError()
+            sessionStorage.clear()
+            window.location.reload()
+            return
+        }
 
-          if (!data.success) {
-            setMessage(data.message || 'Saving new username failed!');
-            setIsSuccess(false);
-          } else {
-            setMessage('Username updated successfully.');
-            setIsSuccess(true);
-          }
-        } catch (error) {
-          console.error('Error:', error);
-          setMessage('An error occurred while saving your username.');
+        if (!data.success) {
+            setErrorMessage(data.message || 'Saving new username failed!')
+            openError()
         }
     }
 
@@ -89,7 +83,7 @@ const ChangeUsername = ({ closeModal, changeUsername }) => {
                     <div className={"label_container"}>
                         <label className={"change_label"}>New Username</label>
                     </div>
-                    <input className={"change_field"} type={"text"} value={newUsername}
+                    <input maxLength={20} className={"change_field"} type={"text"} value={newUsername}
                            onChange={e => setNewUsername(e.target.value)}/>
                     <button title={newUsername.trim() === '' ? "Please type a new username to change username":null} disabled={newUsername.trim() === ''} onClick={updateUsername} className={newUsername.trim() === '' ? 'change_button_disabled':"change_button"}>Change</button>
                 </div>

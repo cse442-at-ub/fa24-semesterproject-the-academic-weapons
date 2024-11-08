@@ -7,7 +7,7 @@ import HighestSpending from '../Component/Dashboard Components/IncomeChart.jsx';
 import GoalsList from '../Component/Dashboard Components/Goals.jsx';
 import Navbar from "../Component/Navbar.jsx";
 
-const Dashboard = ({updateEditTransaction, openEditModal, openTransactionModal, transactions, deleteTransaction, addGoal, deleteGoal, goals, openGoalModal}) => { // Default to an empty array
+const Dashboard = ({updateEditGoal, openEditGoal, setGoalCompletion, saveGoalAllocation, income, updateEditTransaction, openEditModal, openTransactionModal, transactions, deleteTransaction, addGoal, deleteGoal, goals, openGoalModal}) => { // Default to an empty array
   const [goalsState, setGoalsState] = useState(goals);
 
   return (
@@ -16,14 +16,14 @@ const Dashboard = ({updateEditTransaction, openEditModal, openTransactionModal, 
         {/*- Pie Chart */}
         <div className="box">
           <div className="pie-chart-box">
-            <MainPieChart transactions={transactions} />
+            <MainPieChart openModal={openTransactionModal} transactions={transactions} />
           </div>
         </div>
 
         {/* - Bar Chart  */}
         <div className="box">
           <div className={'bar-chart-box'}>
-            <BarChartComponent transactions={transactions} />
+            <BarChartComponent openTransactionModal={openTransactionModal} transactions={transactions} />
           </div>
         </div>
 
@@ -37,14 +37,14 @@ const Dashboard = ({updateEditTransaction, openEditModal, openTransactionModal, 
         {/* - Highest Spending Category */}
         <div className="box">
           <div className="highest-spending-box">
-            <HighestSpending />
+            <HighestSpending income={income} transactions={transactions} />
           </div>
         </div>
 
         {/* - Goals Category */}
         <div className="box">
           <div className="goals-list-box">
-            <GoalsList goals={goals} deleteGoal={deleteGoal} addGoal={addGoal} openModal={openGoalModal}/>
+            <GoalsList updateEditGoal={updateEditGoal} openEditGoal={openEditGoal} setGoalCompletion={setGoalCompletion} saveGoalAllocation={saveGoalAllocation} income={income} goals={goals} deleteGoal={deleteGoal} addGoal={addGoal} openModal={openGoalModal}/>
           </div>
         </div>
       </div>

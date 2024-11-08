@@ -4,7 +4,9 @@ import './CSS Files/AddTransaction.css'
 import './CSS Files/Settings.css'
 import './CSS Files/Settings Components/ChangeModals.css'
 import './CSS Files/EditTransaction.css'
+import './CSS Files/SavingsGoalBox.css'
 import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Settings from "./Page/Settings";
 import Login from './Page/Login';
 import Dashboard from './Page/Dashboard';
@@ -26,6 +28,8 @@ import img6 from "./Assets/Profile Pictures/Person7.svg"
 import img7 from "./Assets/Profile Pictures/Person8.svg"
 import AddGoal from "./Component/AddGoals.jsx";
 import EditTransaction from "./Component/EditTransaction.jsx";
+import EditGoal from "./Component/EditGoal.jsx";
+import MessagePopup from "./Component/MessagePopup.jsx";
 //import { fetchGoals, addGoal, updateGoal, deleteGoal } from './api/GoalAPI';
 
 
@@ -37,17 +41,23 @@ function App() {
     const [username, setUsername] = useState("DefaultName")
     const [isLoaded, setIsLoaded] = useState(false)
     const [transactions, setTransactions] = useState([]);
+    const [income, setIncome] = useState(0);
     const [editTransaction, setEditTransaction] = useState({});
     const [editGoal, setEditGoal] = useState({});
-
     const [maxTransID, setMaxTransID] = useState(1);
     // Add Goals section
     const [showAddGoal, setShowAddGoal] = useState(false);
+    const [showEditGoal, setShowEditGoal] = useState(false)
     const [goals, setGoals] = useState([]);
     const [maxGoalID, setMaxGoalID] = useState(1);
     // Add Goals section
     const userID = sessionStorage.getItem('User');
     const userToken = sessionStorage.getItem('auth_token');
+    // Add Piggybank Section
+    const [goal_allocation_amount, setgoal_allocation_amount] = useState(0);
+    const [monthly_savings_goal, setmonthly_saving_goal] = useState(0);
+    const [showMessagePopup, setShowMessagePopup] = useState(false)
+    const [popupMessage, setPopupMessage] = useState('')
 
 
     useEffect(() => {
@@ -61,11 +71,28 @@ function App() {
                 if (getPFP) setPFP(parseInt(getPFP) || 0);
                 getTransactions();
                 getGoals()
+                fetchIncome()
+                fetchSavingsGoal();
                 setIsLoaded(true);
             }
         }
 
     }, [isLoaded])
+
+    const fetchIncome = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}`); // Update to the correct endpoint
+            const data = await response.json();
+
+            if (data.success) {
+                setIncome(parseFloat(data.totalIncome)); // Set the total income from the database
+            } else {
+                console.error("Error fetching income:", data.message);
+            }
+        } catch (error) {
+            console.error("Error fetching income:", error);
+        }
+    };
 
     const getTransactions = async () => {
         try {
@@ -88,7 +115,8 @@ function App() {
                     setMaxTransID(Math.max(transIDs))
                 }
             } else {
-                alert("Invalid user credentials, please sign in again...")
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
                 sessionStorage.clear()
                 window.location.reload()
             }
@@ -121,7 +149,8 @@ function App() {
                     setMaxGoalID(Math.max(...goalIDs));
                 }
             } else {
-                alert("Invalid user credentials, please sign in again...");
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
                 sessionStorage.clear();
                 window.location.reload();
             }
@@ -161,6 +190,7 @@ function App() {
         editedTransactions[editedIndex].price = updated.price;
         editedTransactions[editedIndex].category = updated.category;
         editedTransactions[editedIndex].date = updated.date;
+        editedTransactions[editedIndex].recurring = updated.recurring;
         setTransactions(editedTransactions);
         updateDatabaseTransactions(updated);
     }
@@ -176,42 +206,117 @@ function App() {
             editedGoals[editedIndex].name = updatedGoal.name;
             editedGoals[editedIndex].cost = updatedGoal.cost;
             editedGoals[editedIndex].date = updatedGoal.date;
+            editedGoals[editedIndex].category = updatedGoal.category;
+            editedGoals[editedIndex].allocated = updatedGoal.allocated;
 
             // Update the state with the modified goals list
             setGoals(editedGoals);
 
             // Optionally update the backend/database
-            updateDatabaseGoals(updatedGoal);
+            saveEditGoalDatabase(updatedGoal);
         }
     };
 
 
+// Piggybank Section fetching 
+    const fetchSavingsGoal = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php?user_id=${userID}`);
+            const data = await response.json();
+
+            if (data.success) {
+                setgoal_allocation_amount(parseFloat(data.current_goal_allocation));
+                setmonthly_saving_goal(parseFloat(data.monthly_saving_goal));
+            } else {
+                console.error("Error fetching savings goal / Current Savings:", data.message);
+            }
+        } catch (error) {
+            console.error("Error fetching savings goal:", error);
+        }
+    };
+
+
+    const updateGoalAllocation = async (amount) => {
+        const newAllocation = goal_allocation_amount + amount;
+
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userID: userID,
+                    allocation: amount,
+                }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                // Fetch the updated goals after successfully updating
+                fetchSavingsGoal();
+            } else {
+                console.error("Error updating savings goal:", data.message);
+            }
+        } catch (error) {
+            console.error("Error updating savings goal:", error);
+        }
+    };
+
+    const updateMonthlySavingsGoal = async (newGoal) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/piggybank_goals.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userID: userID,
+                    monthlySavingGoal: newGoal,
+                }),
+            });
+
+            const textResponse = await response.text(); // Get the raw response as text
+            console.log("Raw response:", textResponse); // Log the raw response
+
+            const data = JSON.parse(textResponse); // Try to parse the text response as JSON
+            if (data.success) {
+                // Fetch the updated goals after successfully updating
+                fetchSavingsGoal();
+            } else {
+                console.error("Error updating monthly savings goal:", data.message);
+            }
+        } catch (error) {
+            console.error("Error updating monthly savings goal:", error);
+        }
+    };
+// END OF PIGGY BANK
+
     const updateEditTransaction = (transaction) => {
         setEditTransaction(transaction);
     }
-    const updateEditGoal = (goal) => {
-        setEditGoal(goal);
-    };
 
     const updateMaxTransID = (e) => {
         setMaxTransID(e)
     }
 
-    const saveTransactions = async (saveItem) => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({userID, userToken, saveItem}),
-            });
-            if (!response.ok) {
-                console.error("Error saving transactions...")
-            }
+        const saveTransactions = async (saveItem) => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({userID, userToken, saveItem}),
+                });
+                if (!response.ok) {
+                    console.error("Error saving transactions...")
+                }
             const reply = await response.json()
             if (!reply.success) {
-                alert("Invalid user credentials, please sign in again...")
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
                 sessionStorage.clear()
                 window.location.reload()
             }
@@ -238,15 +343,42 @@ function App() {
             }
             const reply = await response.json();
             if (!reply.success) {
-                alert("Invalid user credentials, please sign in again...");
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
                 sessionStorage.clear();
                 window.location.reload();
             }
+            getGoals()
         } catch (error) {
             console.error('Error:', error);
         }
     };
 
+    const saveEditGoalDatabase = async (updateItem) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({userID, userToken, updateItem}),
+            });
+            if (!response.ok) {
+                console.error("Error updating transactions...")
+            }
+            const reply = await response.json()
+            if (!reply.success) {
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
+                sessionStorage.clear()
+                window.location.reload()
+            }
+            setIsLoaded(false);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+// END OF PIGGYBANK
     const updateDatabaseTransactions = async (updateItem) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php`, {
@@ -261,8 +393,8 @@ function App() {
             }
             const reply = await response.json()
             if (!reply.success) {
-                console.log(reply.message)
-                alert("Invalid user credentials, please sign in again...")
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
                 sessionStorage.clear()
                 window.location.reload()
             }
@@ -271,34 +403,6 @@ function App() {
             console.error('Error:', error);
         }
     }
-    const updateDatabaseGoals = async (updateGoal) => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
-                method: 'UPDATE', // PUT is usually used to update a resource. If your server requires a different method, change accordingly.
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userID, userToken, updateGoal }),
-            });
-
-            if (!response.ok) {
-                console.error("Error updating goal...");
-            }
-
-            const reply = await response.json();
-
-            if (!reply.success) {
-                console.log(reply.message);
-                alert("Invalid user credentials, please sign in again...");
-                sessionStorage.clear();
-                window.location.reload();
-            }
-
-            setIsLoaded(false);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
 
     const saveRemoveTransaction = async (removeID) => {
         try {
@@ -314,7 +418,8 @@ function App() {
             }
             const reply = await response.json()
             if (!reply.success) {
-                alert("Invalid user credentials, please sign in again...")
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
                 sessionStorage.clear()
                 window.location.reload()
             }
@@ -337,7 +442,8 @@ function App() {
             }
             const reply = await response.json();
             if (!reply.success) {
-                alert("Invalid user credentials, please sign in again...");
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
                 sessionStorage.clear();
                 window.location.reload();
             }
@@ -347,6 +453,56 @@ function App() {
     };
 
 
+    const saveGoalAllocation = async (goalID, allocation) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'UPDATE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userID, userToken, goalID, allocation }),
+            });
+            if (!response.ok) {
+                console.error("Error updating allocation for goal...");
+            }
+            const reply = await response.json();
+            if (!reply.success) {
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
+                sessionStorage.clear();
+                window.location.reload();
+            }
+            getGoals()
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+
+    const setGoalCompletion = async (goalID, completion, date) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/goal.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userID, userToken, goalID, completion, date }),
+            });
+            if (!response.ok) {
+                console.error("Error updating allocation for goal...");
+            }
+            const reply = await response.json();
+            if (!reply.success) {
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
+                sessionStorage.clear();
+                window.location.reload();
+            }
+            getGoals()
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     const removeTransaction = (id) => {
         const newTransactions = [...transactions]
@@ -355,14 +511,12 @@ function App() {
         setTransactions(newTransactions)
         saveRemoveTransaction(id);
     }
+
     const removeGoal = (id) => {
         const updatedGoals = goals.filter(goal => goal.id !== id);
         setGoals(updatedGoals);
         saveRemoveGoal(id);
     };
-
-
-
 
     const openTransactionModal = () => {
         setShowAddTransaction(true);
@@ -379,6 +533,17 @@ function App() {
         setShowAddGoal(false);
     };
 
+    const openEditGoal = () => {
+        setShowEditGoal(true)
+    }
+
+    const closeEditGoal = () => {
+        setShowEditGoal(false)
+    }
+
+    const updateEditGoal = (oldGoal) => {
+        setEditGoal(oldGoal)
+    }
 
     const openEditModal = () => {
         setShowEditTransaction(true);
@@ -411,41 +576,62 @@ function App() {
         setMaxGoalID(newID);
     };
 
+    const openPopup = () => {
+        setShowMessagePopup(true)
+    }
+
+    const closePopup = () => {
+        setShowMessagePopup(false)
+    }
+
+    const setAlertMessage = (e) => {
+        setPopupMessage(e)
+    }
+
 
 
   return (
       <HashRouter>
         <div className="App">
           <header className="App-header">
-            <Navbar pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal} openSettings={openSettings}/>
+          <Navbar username={username} pfp={pfp} pfpMap={pfpMap} openModal={openTransactionModal}
+        openSettings={openSettings} allocated_saving_amount={goal_allocation_amount}
+        monthly_saving_goal={monthly_savings_goal} onUpdateMonthlyGoal={updateMonthlySavingsGoal}
+        onUpdateAllocation={updateGoalAllocation} openError={openPopup} setErrorMessage={setAlertMessage}/>
             <Routes>
             <Route path={"/"} element={<Homepage
+                openError={openPopup}
+                setErrorMessage={setAlertMessage}
+                saveGoalAllocation={saveGoalAllocation}
+                setGoalCompletion={setGoalCompletion}
                 openEditModal={openEditModal}
+                openEditGoal={openEditGoal}
+                updateEditGoal={updateEditGoal}
                 updateEditTransaction={updateEditTransaction}
                 deleteTransaction={removeTransaction}
                 transactions={transactions}
                 openTransactionModal={openTransactionModal}
-
+                income={income}
                 addGoal={addGoal}
                 deleteGoal={removeGoal}
                 goals={goals}
                 openGoalModal={openGoalModal}
-            />}/> =
-              <Route path={"/settings"} element={<Settings/>}/>
-              <Route path={"/forget-password"} element={<ForgotPassword/>}/>
-              <Route path={"/reset-password"} element={<ResetPassword/>}/>
-              <Route path="/registration" element={<Registration />} />
-              <Route path="/income" element={<Income />} />
+            />}/>
+              <Route path={"/forget-password"} element={<ForgotPassword openError={openPopup} setErrorMessage={setAlertMessage}/>}/>
+              <Route path={"/reset-password"} element={<ResetPassword openError={openPopup} setErrorMessage={setAlertMessage}/>}/>
+              <Route path="/registration" element={<Registration openError={openPopup} setErrorMessage={setAlertMessage} />} />
+              <Route path="/income" element={<Income openError={openPopup} setErrorMessage={setAlertMessage}/>} />
             </Routes>
-              {showEditTransaction ? <EditTransaction saveEditTransaction={saveEditTransaction} oldTransaction={editTransaction} closeModal={closeEditModal}/>:null}
-              {showAddTransaction ? <AddTransaction maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>:null}
+              {showEditTransaction && <EditTransaction saveEditTransaction={saveEditTransaction} oldTransaction={editTransaction} closeModal={closeEditModal}/>}
+              {showAddTransaction && <AddTransaction transactions={transactions} maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>}
+              {showEditGoal && <EditGoal saveEditGoal={saveEditGoal} oldGoal={editGoal} closeModal={closeEditGoal}/>}
               {showAddGoal && <AddGoal maxGoalID={maxGoalID} updateMaxGoalID={updateMaxGoalID} addGoal={addGoal} closeModal={closeGoalModal} deleteGoal ={removeGoal} />}
-              {showSettings ? <Settings username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>:null}
-
+              {showSettings &&  <Settings openError={openPopup} setErrorMessage={setAlertMessage} username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>}
+              {showMessagePopup && <MessagePopup closeModal={closePopup} message={popupMessage} />}
           </header>
         </div>
       </HashRouter>
   );
-};
+    }
 
 export default App;

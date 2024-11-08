@@ -62,7 +62,6 @@ if (!$updateStmt->execute()) {
 }
 
 // Construct the password reset link
-https
 $resetLink = "https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442an/#/reset-password?token=$token";
 
 // Email details
