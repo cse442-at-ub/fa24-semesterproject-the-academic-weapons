@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS Files/Registration.css';
 
-const Registration = ( { setErrorMessage, openError } ) => {
+const Registration = ( { openError } ) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
