@@ -59,18 +59,7 @@ const Login = ( { openError, setErrorMessage, } ) => {
           <h1>Wealth Wise</h1>
         </div>
         <form className="login_section" onSubmit={handleLogin}>
-          {message && (
-                  <div
-                    style={{
-                      color: isSuccess ? 'green' : 'red', // Green for success, red for error
-                      marginTop: '10px',
-                      fontSize: '0.9em',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {message}
-                    </div>
-                    )}
+
           <div className="email_section">
             <label htmlFor="email" className="email_text">Email</label>
             <input
@@ -94,6 +83,18 @@ const Login = ( { openError, setErrorMessage, } ) => {
             />
             <a className="forgot_password" onClick={() => navigate('/forget-password')}>Forgot Password</a>
           </div>
+          {message && (
+                  <div
+                    style={{
+                      color: isSuccess ? 'green' : 'red', // Green for success, red for error
+                      marginTop: '10px',
+                      fontSize: '0.9em',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {message}
+                    </div>
+                    )}
           <button type="submit" className="log_in_box">
             <h2>Log in</h2>
           </button>

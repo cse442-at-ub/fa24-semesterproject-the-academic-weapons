@@ -8,7 +8,7 @@ const ForgotPassword = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
+  const [isSuccess, setIsSuccess] = useState(false);
   const isValidEmail = (email) => {
     // Regular expression to validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,6 +22,7 @@ const ForgotPassword = () => {
 
   if (!isValidEmail(email)) {
     setError('Please enter a valid email address.');
+    setIsSuccess(false);
     return;
   }
 
@@ -45,13 +46,16 @@ const ForgotPassword = () => {
     // Handle the success response
     if (data.success) {
       setMessage('Password recovery link has been sent to your email.');
+      setIsSuccess(true);
       setTimeout(() => navigate(`/reset-password?email=${encodeURIComponent(email)}`), 1500);
     } else {
       setError(data.message || 'An error occurred. Please try again.');
+      setIsSuccess(false);
     }
   } catch (error) {
     console.error('Error:', error);
     setError('An error occurred while trying to send the recovery email.');
+    setIsSuccess(false);
   }
 };
 
@@ -79,8 +83,30 @@ const ForgotPassword = () => {
                   required
               />
             </div>
-            {error && <p className="error-message">{error}</p>}
-            {message && <p className="success-message">{message}</p>}
+            {error && (
+                  <div
+                    style={{
+                      color: isSuccess ? 'green' : 'red', // Green for success, red for error
+                      marginTop: '10px',
+                      fontSize: '0.9em',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {error}
+                    </div>
+                    )}
+            {message && (
+                  <div
+                    style={{
+                      color: isSuccess ? 'green' : 'red', // Green for success, red for error
+                      marginTop: '10px',
+                      fontSize: '0.9em',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {message}
+                    </div>
+                    )}
             <button type="submit" className="send-code-button">Send Code</button>
             <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
           </form>

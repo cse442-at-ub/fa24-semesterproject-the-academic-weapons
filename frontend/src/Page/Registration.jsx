@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS Files/Registration.css';
 
-const Registration = ( { setErrorMessage, openError } ) => {
+const Registration = ( { openError } ) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -122,6 +122,18 @@ const Registration = ( { setErrorMessage, openError } ) => {
                   title="Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character."
               />
             </div>
+            {errorMessage && (
+                  <div
+                    style={{
+                      color: isSuccess ? 'green' : 'red', // Green for success, red for error
+                      marginTop: '10px',
+                      fontSize: '0.9em',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {errorMessage}
+                    </div>
+                    )}
             <button type="submit" className="Register_in_box">
               <h2>Register</h2>
             </button>

@@ -9,6 +9,7 @@ const ResetPassword = () => {
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -30,7 +31,6 @@ const ResetPassword = () => {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-
     // Clear previous messages
     setError('');
     setMessage('');
@@ -44,6 +44,7 @@ const ResetPassword = () => {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
+      setIsSuccess(false);
       return;
     }
 
@@ -64,6 +65,7 @@ const ResetPassword = () => {
 
       if (data.success) {
         setMessage(data.message);
+        setIsSuccess(true);
         // sessionStorage.setItem('username', data.username)
         // sessionStorage.setItem('pfp', data.pfp)
         // sessionStorage.setItem("User", data.id)
@@ -72,10 +74,12 @@ const ResetPassword = () => {
 
       } else {
         setError(data.message || 'Failed to reset password. Please try again.');
+        setIsSuccess(false);
       }
     } catch (error) {
       console.error('Error:', error);
       setError('An error occurred while trying to reset the password.');
+      setIsSuccess(false);
     }
   };
 
@@ -129,8 +133,35 @@ const ResetPassword = () => {
                   placeholder="Please Confirm Password"
               />
             </div>
-            {error && <p className="error-message">{error}</p>}
-            {message && <p className="success-message">{message}</p>}
+
+            <div className="message-container">
+              {error && (
+                <div
+                  style={{
+                    color: 'red',
+                    marginTop: '10px',
+                    fontSize: '0.9em',
+                    textAlign: 'center',
+                  }}
+                >
+                  {error}
+                </div>
+              )}
+              {message && (
+                <div
+                  style={{
+                    color: 'green',
+                    marginTop: '10px',
+                    fontSize: '0.9em',
+                    textAlign: 'center',
+                  }}
+                >
+                  {message}
+                </div>
+              )}
+            </div>
+
+
             <button type="submit" className="reset-button">Reset Password</button>
             <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
           </form>
