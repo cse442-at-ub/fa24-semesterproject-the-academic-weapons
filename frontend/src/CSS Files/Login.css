@@ -1,4 +1,8 @@
 /* File: frontend/src/CSS Files/Login.css */
+.login_page {
+    width: 100%;
+    height: 100%;
+}
 
 .LoginContainer * {
     margin: 0;
@@ -16,14 +20,13 @@
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     flex-direction: column; /* Ensure that items are stacked vertically */
-    width: 100vw; 
-    height: 100vh; 
+    /*width: 100vw; */
+    /*height: 100vh; */
     /* Current issue is that login page has issue with loading all in page if height is too small 
     This seems to be becasue before loading this page we load app and height is auto so it then takes this height
     As of now the flex item is centered only cuz of the height taking 100 perent so it can center correctly vertically 
     For now its fine since the smallest it can be would be iphone SE and it works for that but other then that it would break */
-    margin: 0; 
-    padding: 0; 
+    /*margin: 0; */
     overflow-x: hidden; /* Prevent horizontal overflow */
     box-sizing: border-box; 
     text-align: center;
@@ -39,12 +42,12 @@
 
 .LoginContainer .Login_box
 {
-
+    padding-top: 20px;
     width:  35vw;
     min-width: 420px;
     min-height: 250px;
     flex-direction: column;
-      
+    padding-bottom: 20px;
 }
 
 .Login_Title
@@ -55,12 +58,12 @@
     background-color: #A3AAD9;
     width: 32vw;
     min-width: 350px;
-    height: 180px;
+    height: 150px;
     border-radius: 10px;
     cursor: pointer;
     font-size: clamp(15px, 2vw, 40px);
     color: #FFFFFF;
-    font-family: 'Assistant';
+    font-family: 'Assistant', serif;
 }
 
 .LoginContainer .login_section
@@ -192,7 +195,7 @@
     .LoginContainer .login_section {
         width: 90vw;
         margin-top: 40px;
-        outline: none;
+        outline: 2px solid #A3AAD9;
     }
 
 

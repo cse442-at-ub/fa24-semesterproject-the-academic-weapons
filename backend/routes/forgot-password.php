@@ -67,7 +67,7 @@ $resetLink = "https://se-prod.cse.buffalo.edu/CSE442/2024-Fall/cse-442an/#/reset
 // Email details
 $subject = "Password Reset Request";
 $body = "Hello,\n\nPlease see your code below:\nCode: $token\nClick the link below to reset your password:\n$resetLink\n\nThis link will expire in 24 hour.\n\nIf you did not request a password reset, please ignore this email.";
-$headers = 'From: no-reply@yourdomain.com';
+$headers = 'From: no-reply@wealthwise.com';
 
 // Send the email
 if (mail($email, $subject, $body, $headers)) {
