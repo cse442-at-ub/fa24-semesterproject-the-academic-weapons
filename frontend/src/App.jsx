@@ -5,6 +5,7 @@ import './CSS Files/Settings.css'
 import './CSS Files/Settings Components/ChangeModals.css'
 import './CSS Files/EditTransaction.css'
 import './CSS Files/SavingsGoalBox.css'
+import './CSS Files/Settings Components/ReorderWidgets.css'
 import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Settings from "./Page/Settings";
@@ -58,6 +59,9 @@ function App() {
     const [monthly_savings_goal, setmonthly_saving_goal] = useState(0);
     const [showMessagePopup, setShowMessagePopup] = useState(false)
     const [popupMessage, setPopupMessage] = useState('')
+    // Widget Order
+    const [widgetOrder, setWidgetOrder] = useState([])
+    const [widgetsLoaded, setWidgetsLoaded] = useState(false)
 
 
     useEffect(() => {
@@ -70,9 +74,12 @@ function App() {
                 if (getUsername) setUsername(getUsername);
                 if (getPFP) setPFP(parseInt(getPFP) || 0);
                 getTransactions();
-                getGoals()
-                fetchIncome()
+                getGoals();
+                fetchIncome();
                 fetchSavingsGoal();
+                if (!widgetsLoaded) {
+                    getWidgetOrder().then(r => setWidgetsLoaded(true));
+                }
                 setIsLoaded(true);
             }
         }
@@ -158,6 +165,58 @@ function App() {
             console.error('Error:', error);
         }
     };
+
+    const getWidgetOrder = async () => {
+        try {
+            // Assume we have an API that fetches goals
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/widgets.php?id=${userID}&token=${userToken}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            let reply = await response.json();
+            if (reply.success) {
+                if (reply.widget_order !== "Default") {
+                    setWidgetOrder(reply.widget_order);
+                }
+            } else {
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
+                sessionStorage.clear();
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const handleSaveWidgetOrder = (newOrder) => {
+        setWidgetOrder(newOrder)
+        saveWidgetOrder(newOrder)
+    }
+
+    const saveWidgetOrder = async (newOrder) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/widgets.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({userID, userToken, newOrder}),
+            });
+            const reply = await response.json()
+            if (!reply.success) {
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
+                sessionStorage.clear()
+                window.location.reload()
+            }
+            setIsLoaded(false);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     const pfpMap = {
         0: img0,
@@ -600,6 +659,7 @@ function App() {
         onUpdateAllocation={updateGoalAllocation} openError={openPopup} setErrorMessage={setAlertMessage}/>
             <Routes>
             <Route path={"/"} element={<Homepage
+                widgetOrder={widgetOrder}
                 openError={openPopup}
                 setErrorMessage={setAlertMessage}
                 saveGoalAllocation={saveGoalAllocation}
@@ -626,7 +686,7 @@ function App() {
               {showAddTransaction && <AddTransaction transactions={transactions} maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>}
               {showEditGoal && <EditGoal saveEditGoal={saveEditGoal} oldGoal={editGoal} closeModal={closeEditGoal}/>}
               {showAddGoal && <AddGoal maxGoalID={maxGoalID} updateMaxGoalID={updateMaxGoalID} addGoal={addGoal} closeModal={closeGoalModal} deleteGoal ={removeGoal} />}
-              {showSettings &&  <Settings openError={openPopup} setErrorMessage={setAlertMessage} username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>}
+              {showSettings &&  <Settings setWidgetOrder={handleSaveWidgetOrder} widgetOrder={widgetOrder} openError={openPopup} setErrorMessage={setAlertMessage} username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>}
               {showMessagePopup && <MessagePopup closeModal={closePopup} message={popupMessage} />}
           </header>
         </div>

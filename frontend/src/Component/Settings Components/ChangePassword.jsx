@@ -89,7 +89,7 @@ const ChangePassword = ({setErrorMessage, openError, closeModal }) => {
     };
     
     return (
-        <div onClick={closeModal} className="change_background">
+        <div onClick={closeModal} className="change_password_background">
             <div onClick={(event) => event.stopPropagation()} className="change_modal_container_homepage">
                 <div className="change_modal_title_desc_container">
                     <h2 className="Change_password_homepage">Change Password</h2>

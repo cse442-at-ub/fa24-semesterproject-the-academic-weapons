@@ -174,7 +174,7 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
                     }
                 </div>
 
-                <div className={"goals-list-content"}>
+                <div className={"transactions-list-content"}>
                     {filteredTransactions.length > 0 ? (
                         filteredTransactions.map((transaction) => (
                             <div className={"transaction_items"} key={transaction.id}>

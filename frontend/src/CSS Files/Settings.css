@@ -1,86 +1,34 @@
 .settings_modal_bg_container {
     position: fixed;
-    width: 100vw;
-    height: 107vh;
+    width: 100%;
+    height: 100%;
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.31);
+    display: flex;
+    align-items: center;
 }
 
 .settings_modal_container {
-    margin-top: 5%;
     margin-inline: auto;
-    width: 80vw;
-    height: fit-content;
-    padding-bottom: 20px;
-    min-height: 80vh;
-    position: relative;
+    width: 90vw;
+    max-width: 1200px;
+    height: 80vh;
+    /*padding-bottom: 20px;*/
+    /*position: relative;*/
     background-color: white;
     border: 3px solid #8884d8;
     border-radius: 10px;
 }
 
-/* Overlay */
-
-.change_password_overlay {
-    /* Center the overlay */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #F2F4F7;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.change_password_fields label {
-    display: block;
-    margin-bottom: 10px;
-}
-
-.change_password_buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.back_button_Change_password_home
-{
-    color: #7984D2;
-    align-self: flex-end;
-    text-decoration: underline;
-    cursor: pointer;
-    transition: color .3s ease;
-    border: none;
-    background-color: transparent;
-}
-
-.back_button_Change_password_home:hover
-{
-    color: #596296;;
-}
-
- .save_button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.save_button {
-    background-color: #4caf50;
-    color: #fff;
-}
-
-
-
 .settings_modal_title_band {
     width: 100%;
+    height: 15%;
     position: relative;
     background-color: rgba(163, 170, 217, 0);
     display: flex;
     justify-content: space-between;
+    align-content: center;
 }
 
 .settings_modal_title_band h2 {
@@ -102,7 +50,7 @@
 
 .settings_modal_content {
     width: 100%;
-    height: fit-content;
+    height: 85%;
     display: flex;
     flex-direction: column;
 }
@@ -153,6 +101,8 @@
     width: 90%;
     display: flex;
     flex-direction: column;
+    max-height: fit-content;
+    overflow-y: scroll;
 }
 
 .settings_tab_row {
@@ -215,7 +165,7 @@
     width: 100%;
     display: flex;
     flex-direction: row;
-    margin-bottom: 30px;
+    padding-bottom: 30px;
     font-size: 20px;
 }
 
@@ -237,3 +187,57 @@
     color: #8884d8;
     background-color: white;
 }
+
+/* Overlay */
+
+.change_password_overlay {
+    /* Center the overlay */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #F2F4F7;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.change_password_fields label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.change_password_buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.back_button_Change_password_home
+{
+    color: #7984D2;
+    align-self: flex-end;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color .3s ease;
+    border: none;
+    background-color: transparent;
+}
+
+.back_button_Change_password_home:hover
+{
+    color: #596296;;
+}
+
+.save_button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save_button {
+    background-color: #4caf50;
+    color: #fff;
+}
+

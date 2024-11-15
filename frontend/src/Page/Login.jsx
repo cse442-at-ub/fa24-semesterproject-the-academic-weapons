@@ -35,11 +35,9 @@ const Login = ( { openError, setErrorMessage, } ) => {
         sessionStorage.setItem("User", data.id)
         sessionStorage.setItem("auth_token", data.auth_token)
         setIsSuccess(true);
-        setMessage('Login successful! Redirecting...');
-         setTimeout(() => {
-          navigate('/');
-          window.location.reload();
-        }, 1500);
+        // setMessage('Login successful! Redirecting...');
+        navigate('/');
+        window.location.reload();
       } else {
         setMessage(data.message || 'Login failed');
         setIsSuccess(false);
