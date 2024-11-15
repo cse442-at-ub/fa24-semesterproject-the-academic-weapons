@@ -110,11 +110,7 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
     };
 
     const closeAllModals = () => {
-        if (currentModal === 'savings') {
             setCurrentModal(null);
-        } else {
-            setCurrentModal('savings');
-        }
     };
 
     const validSavingsGoal = Number(savingsGoal) || 0;

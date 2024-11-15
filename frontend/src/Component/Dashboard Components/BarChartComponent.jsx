@@ -1,13 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  Tooltip,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  LineChart,
+  Line,
+  ResponsiveContainer
+} from 'recharts';
 import '../../CSS Files/Dashboard Components/BarChartComponent.css';
+import GraphSelectionModal from "./GraphSelectionModal.jsx";
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const colors = [
+  "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40",
+  "#E7E9ED", "#FFCD56", "#4D5360", "#A3E4D7", "#F1948A", "#C39BD3"
+];
 
 const BarChartComponent = ({openTransactionModal, transactions }) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Default to current year
   const [availableYears, setAvailableYears] = useState([]);
   const [barData, setBarData] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedChart, setSelectedChart] = useState('bar');
 
   useEffect(() => {
     if (!transactions || transactions.length === 0) {
@@ -64,54 +85,93 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
     return `$${tickItem.toLocaleString()}`;
   };
 
+  const handleChartTypeSelect = (type) => {
+    setSelectedChart(type);
+    setIsModalOpen(false);
+  };
+
   // Formatter for the tooltip to display properly formatted value with dollar sign and commas
   const tooltipFormatter = (value) => {
     return `$${parseFloat(value).toLocaleString()}`;
   };
 
   return (
-      <div className="bar-chart-component">
-        <div className="bar-chart-header">
-          <h2 className={"Category_spend_txt"}>Monthly Spending</h2>
+    <div className="bar-chart-component">
+      <div className="bar-chart-header">
+        <h2 className="Category_spend_txt">Monthly Spending</h2>
+        <div className="header-controls">
           {availableYears.length > 0 ? (
-              <select value={selectedYear} onChange={handleYearChange} className="year-dropdown">
-                {availableYears.map(year => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                ))}
-              </select>
+            <select value={selectedYear} onChange={handleYearChange} className="year-dropdown">
+              {availableYears.map(year => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
           ) : (
-              <p>No data available for any year</p>
+            <p>No data available for any year</p>
           )}
-        </div>
-
-        <div className="bar-chart-wrapper">
-          {barData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart
-                    data={barData}
-                    margin={{
-                      top: 20, right: 30, left: 20, bottom: 30,
-                    }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis tickFormatter={formatYAxis} /> {/* Y-axis now correctly formatted */}
-                  <Tooltip formatter={tooltipFormatter} /> {/* Tooltip formatted with dollar sign and commas */}
-                  {/*<Legend width={80} />*/}
-                  <Bar dataKey="value" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
-          ) : (
-              <p className={"no_content_text"}>No transactions to display for the selected year.<br/>Try <span onClick={openTransactionModal} style={{
-                color: "#7984D2",
-                textDecoration: "underline",
-                cursor: "pointer"
-              }}>adding a transaction</span></p>
-          )}
+          <button onClick={() => setIsModalOpen(true)} className="chart-type-button">Select Chart Type</button>
         </div>
       </div>
+
+      <GraphSelectionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSelect={handleChartTypeSelect}
+      />
+
+      <div className="bar-chart-wrapper">
+        {barData.length > 0 ? (
+          <ResponsiveContainer width="100%" height={400}>
+            {selectedChart === 'bar' && (
+              <BarChart data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" interval={0} angle={-45} textAnchor="end" /> {/* Force all months to show */}
+                <YAxis tickFormatter={formatYAxis} />
+                <Tooltip formatter={tooltipFormatter} />
+                <Legend />
+                <Bar dataKey="value" fill="#8884d8" />
+              </BarChart>
+            )}
+            {selectedChart === 'line' && (
+              <LineChart data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" interval={0} angle={-45} textAnchor="end" /> {/* Force all months to show */}
+                <YAxis tickFormatter={formatYAxis} />
+                <Tooltip formatter={tooltipFormatter} />
+                <Legend />
+                <Line type="monotone" dataKey="value" stroke="#8884d8" />
+              </LineChart>
+            )}
+            {selectedChart === 'pie' && (
+              <PieChart>
+                <Pie
+                  data={barData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label
+                >
+                  {barData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={tooltipFormatter} />
+                <Legend />
+              </PieChart>
+            )}
+          </ResponsiveContainer>
+        ) : (
+          <p className="no_content_text">
+            No transactions to display for the selected year.<br />
+            Try <span onClick={openTransactionModal} style={{ color: "#7984D2", textDecoration: "underline", cursor: "pointer" }}>adding a transaction</span>
+          </p>
+        )}
+      </div>
+    </div>
   );
 };
 
