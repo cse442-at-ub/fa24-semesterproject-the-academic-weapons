@@ -28,7 +28,8 @@ const ReorderWidgets = ( { closeModal, setWidgetOrder, widgetOrder } ) => {
     }
 
     const handleSave = () => {
-        setWidgetOrder(newOrder)
+        if (newOrder.length === 0) setWidgetOrder(defaultOrder)
+        else setWidgetOrder(newOrder)
         closeModal()
     }
 
