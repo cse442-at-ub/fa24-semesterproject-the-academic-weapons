@@ -1,7 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
+import {
+    PieChart,
+    Pie,
+    Cell,
+    Legend,
+    Tooltip,
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    LineChart,
+    Line,
+    ResponsiveContainer
+} from 'recharts';
+
+
 import '../../CSS Files/Dashboard Components/MainPieChart.css';
 import SubPieChart from './SubPieChart.jsx';
+import GraphSelectionModal from "./GraphSelectionModal.jsx";
 
 const colors = [
     "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40", "#E7E9ED",
@@ -20,22 +37,18 @@ const MainPieChart = ( { transactions, openModal } ) => {
     const [subData, setSubData] = useState({});
     const [highest, setHighest] = useState('')
     const [isLoaded, setIsLoaded] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedGraph, setSelectedGraph] = useState('pie');
 
-    useEffect(() => {
-
-        if (transactions.length > 0) {
-            if (data.length === 0 || !isLoaded) {
-                totalsByCategory(transactions)
-                transactionsByCategory(transactions)
-                setIsLoaded(true)
-            } else if (data.length > 0) {
-                const highestCat = getHighestCategory(data)
-                setHighest(highestCat.name)
-                setIsLoaded(false)
-            }
+     useEffect(() => {
+        if (transactions.length > 0 && (!isLoaded || data.length === 0)) {
+            totalsByCategory(transactions);
+            transactionsByCategory(transactions);
+            setIsLoaded(true);
+            const highestCat = getHighestCategory(data);
+            if (highestCat) setHighest(highestCat.name);
         }
-
-    }, [transactions, data])
+    }, [transactions, data, isLoaded]);
 
 
     function getHighestCategory(totals) {
@@ -90,43 +103,83 @@ const MainPieChart = ( { transactions, openModal } ) => {
         setSelectedCategory(data.name); // Set the clicked category name
     };
 
+    const handleChartTypeSelect = (type) => {
+        setSelectedGraph(type);
+        setIsModalOpen(false);
+    };
     return (
-        <div className="chart-container"> {/* Add a fixed container */}
+        <div className="chart-container">
             <h2 className="Category_spend_txt">Categorized Spending</h2>
-            {transactions.length > 0 ?
+            <button onClick={() => setIsModalOpen(true)} className="chart-type-button">Select Chart Type</button>
+            <GraphSelectionModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSelect={handleChartTypeSelect}
+            />
+            {transactions.length > 0 ? (
                 <div>
                     {!selectedCategory ? (
-                            <>
-                                <PieChart width={280} height={400}>
-                                    <Pie
-                                        data={data}
-                                        cx={140}
-                                        cy={140}
-                                        labelLine={false}
-                                        outerRadius={90}
-                                        fill="#ffffff"
-                                        dataKey="value"
-                                        onClick={(e) => handleClick(e)} // Pass event data
-                                    >
-                                        {data.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={colors[index]}/>
-                                        ))}
-                                    </Pie>
-                                    <Legend width={280}/>
-                                    <Tooltip/>
-                                </PieChart>
-                                <h3 className="Category_spend_txt">{"Highest Category: " + highest}</h3>
-                            </>
-                        )
-                        :
-                        (
-                            <SubPieChart subData={subData}
-                                         category={selectedCategory}
-                                         onBack={() => setSelectedCategory(null)} // Back to main chart
-                            />
-                        )}</div> : <p style={{textAlign:"center"}}>No transactions data to display yet. <br/>Try <span onClick={openModal} style={{color:"#7984D2", textDecoration: "underline", cursor:"pointer"}}>adding a transaction</span></p>}
+                        <>
+                            <ResponsiveContainer width="100%" height={400}>
+                                {selectedGraph === 'pie' && (
+                                    <PieChart>
+                                        <Pie
+                                            data={data}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            outerRadius="80%"
+                                            fill="#ffffff"
+                                            dataKey="value"
+                                            onClick={(e) => handleClick(e)}
+                                        >
+                                            {data.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Legend />
+                                        <Tooltip />
+                                    </PieChart>
+                                )}
+                                {selectedGraph === 'bar' && (
+                                    <BarChart data={data}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Bar dataKey="value" fill="#8884d8" />
+                                    </BarChart>
+                                )}
+                                {selectedGraph === 'line' && (
+                                    <LineChart data={data}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                                    </LineChart>
+                                )}
+                            </ResponsiveContainer>
+                            <h3 className="Category_spend_txt">{"Highest Category: " + highest}</h3>
+                        </>
+                    ) : (
+                        <SubPieChart
+                            subData={subData}
+                            category={selectedCategory}
+                            onBack={() => setSelectedCategory(null)}
+                        />
+                    )}
+                </div>
+            ) : (
+                <p style={{ textAlign: "center" }}>
+                    No transactions data to display yet.
+                    <br />
+                    Try <span onClick={openModal} style={{ color: "#7984D2", textDecoration: "underline", cursor: "pointer" }}>adding a transaction</span>
+                </p>
+            )}
         </div>
-
     );
 };
 

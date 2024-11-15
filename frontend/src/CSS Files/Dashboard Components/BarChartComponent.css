@@ -14,15 +14,24 @@
   align-items: center;
 }
 
-.year-dropdown {
+.header-controls {
+  display: flex;
+  align-items: center;
+}
+
+.year-dropdown, .chart-type-button {
   padding: 5px 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #fff;
   font-size: 14px;
   cursor: pointer;
-  display: inline-block;
 }
+
+.chart-type-button {
+  margin-left: 10px;
+}
+
 
 .bar-chart-wrapper {
   display: flex;
@@ -32,35 +41,25 @@
   padding: 10px;
 }
 
-p {
+.no_content_text {
   color: #888;
   font-size: 14px;
 }
 
-/* Media query for smaller screens */
 @media (max-width: 768px) {
   .bar-chart-header {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .year-dropdown {
-    margin-top: 10px; /* Add space between dropdown and title */
-    width: 100%; /* Make the dropdown fill the available width */
+  .header-controls {
+    width: 100%;
+    margin-top: 10px;
   }
 
-  .bar-chart-wrapper {
-    padding: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .bar-chart-header h3 {
-    /*font-size: 1rem;*/
-  }
-
-  .year-dropdown {
-    font-size: 12px;
+  .year-dropdown, .chart-type-button {
+    width: 100%;
+    font-size: 14px;
   }
 
   .bar-chart-wrapper {
