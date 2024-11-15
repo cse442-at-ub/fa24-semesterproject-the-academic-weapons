@@ -60,7 +60,14 @@ function App() {
     const [showMessagePopup, setShowMessagePopup] = useState(false)
     const [popupMessage, setPopupMessage] = useState('')
     // Widget Order
-    const [widgetOrder, setWidgetOrder] = useState([])
+    const defaultOrder = [
+        'Categorized Spending',
+        'Monthly Spending',
+        'Transactions',
+        'Income Report',
+        'Goals'
+    ]
+    const [widgetOrder, setWidgetOrder] = useState(defaultOrder)
     const [widgetsLoaded, setWidgetsLoaded] = useState(false)
 
 

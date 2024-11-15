@@ -11,7 +11,9 @@ const ReorderWidgets = ( { closeModal, setWidgetOrder, widgetOrder } ) => {
         'Income Report',
         'Goals'
     ]
-    const [newOrder, setNewOrder] = useState(widgetOrder !== "Default" ? widgetOrder:defaultOrder)
+    const [newOrder, setNewOrder] = useState(
+        widgetOrder && Array.isArray(widgetOrder) && widgetOrder.length > 0 ? widgetOrder : defaultOrder
+    );
 
     const handleMoveUp = (index) => {
         if (index === 0) return; // First item, no need to move up
@@ -28,7 +30,8 @@ const ReorderWidgets = ( { closeModal, setWidgetOrder, widgetOrder } ) => {
     }
 
     const handleSave = () => {
-        setWidgetOrder(newOrder)
+        if (newOrder.length === 0) setWidgetOrder(defaultOrder)
+        else setWidgetOrder(newOrder)
         closeModal()
     }
 
