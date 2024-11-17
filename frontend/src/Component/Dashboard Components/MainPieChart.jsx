@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+// MainPieChart.jsx
+import React, { useEffect, useState } from 'react';
 import {
     PieChart,
     Pie,
@@ -15,7 +16,6 @@ import {
     ResponsiveContainer
 } from 'recharts';
 
-
 import '../../CSS Files/Dashboard Components/MainPieChart.css';
 import SubPieChart from './SubPieChart.jsx';
 import GraphSelectionModal from "./GraphSelectionModal.jsx";
@@ -31,42 +31,53 @@ const colors = [
     "#BB8FCE", "#5D6D7E"
 ];
 
-const MainPieChart = ( { transactions, openModal } ) => {
+const MainPieChart = ({ transactions, openModal }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [data, setData] = useState([]);
     const [subData, setSubData] = useState({});
-    const [highest, setHighest] = useState('')
-    const [isLoaded, setIsLoaded] = useState(false)
+    const [highest, setHighest] = useState('');
+    const [isLoaded, setIsLoaded] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedGraph, setSelectedGraph] = useState('pie');
 
-     useEffect(() => {
+    // Effect to aggregate transactions by category
+    useEffect(() => {
         if (transactions.length > 0 && (!isLoaded || data.length === 0)) {
             totalsByCategory(transactions);
             transactionsByCategory(transactions);
             setIsLoaded(true);
-            const highestCat = getHighestCategory(data);
-            if (highestCat) setHighest(highestCat.name);
         }
-    }, [transactions, data, isLoaded]);
+    }, [transactions, isLoaded]); // Removed 'data' from dependencies to prevent immediate re-run
 
+    // Effect to calculate the highest category whenever 'data' changes
+    useEffect(() => {
+        if (data.length > 0) {
+            const highestCat = getHighestCategory(data);
+            console.log('Highest Category:', highestCat); // Debugging
+            if (highestCat) setHighest(highestCat.name);
+        } else {
+            setHighest('');
+        }
+    }, [data]);
 
+    // Function to find the category with the highest value
     function getHighestCategory(totals) {
         return totals.reduce((highest, category) => {
             return (category.value > highest.value) ? category : highest;
         }, totals[0]); // Start with the first category as the highest
     }
 
+    // Function to aggregate transactions by category
     const totalsByCategory = (inputTransactions) => {
         let categorized = inputTransactions.reduce((acc, transaction) => {
-            const {category, price} = transaction;
+            const { category, price } = transaction;
 
             // Find existing category in the accumulator
             let categoryObj = acc.find(obj => obj.name === category);
 
             // If category does not exist, create it
             if (!categoryObj) {
-                categoryObj = {name: category, value: 0};
+                categoryObj = { name: category, value: 0 };
                 acc.push(categoryObj);
             }
 
@@ -75,15 +86,17 @@ const MainPieChart = ( { transactions, openModal } ) => {
 
             return acc;
         }, []);
-        setData(categorized)
+        setData(categorized);
+        console.log('Aggregated Data:', categorized); // Debugging
     }
 
+    // Function to categorize transactions for sub-charts
     const transactionsByCategory = (inputTransactions) => {
         let categorized = inputTransactions.reduce((acc, transaction) => {
-            const {category, ...rest} = transaction;
+            const { category, ...rest } = transaction;
 
             // Rename 'price' to 'value'
-            const renamedTransaction = {...rest, value: parseFloat(transaction.price)};
+            const renamedTransaction = { ...rest, value: parseFloat(transaction.price) };
             delete renamedTransaction.price; // Remove 'price'
 
             // Initialize the category array if it doesn't exist
@@ -96,20 +109,23 @@ const MainPieChart = ( { transactions, openModal } ) => {
 
             return acc;
         }, {});
-        setSubData(categorized)
+        setSubData(categorized);
     }
 
+    // Handler for clicking on a category slice
     const handleClick = (data) => {
         setSelectedCategory(data.name); // Set the clicked category name
     };
 
+    // Handler for selecting chart type from modal
     const handleChartTypeSelect = (type) => {
         setSelectedGraph(type);
         setIsModalOpen(false);
     };
+
     return (
         <div className="chart-container">
-            <h2 className="Category_spend_txt">Categorized Spending</h2>
+            <h2 className="category-spend-text">Categorized Spending</h2>
             <button onClick={() => setIsModalOpen(true)} className="chart-type-button">Select Chart Type</button>
             <GraphSelectionModal
                 isOpen={isModalOpen}
@@ -117,10 +133,10 @@ const MainPieChart = ( { transactions, openModal } ) => {
                 onSelect={handleChartTypeSelect}
             />
             {transactions.length > 0 ? (
-                <div>
+                <div className="chart-wrapper">
                     {!selectedCategory ? (
-                        <>
-                            <ResponsiveContainer width="100%" height={400}>
+                        <div className="chart-content">
+                            <ResponsiveContainer width="100%" aspect={1}>
                                 {selectedGraph === 'pie' && (
                                     <PieChart>
                                         <Pie
@@ -131,7 +147,7 @@ const MainPieChart = ( { transactions, openModal } ) => {
                                             outerRadius="80%"
                                             fill="#ffffff"
                                             dataKey="value"
-                                            onClick={(e) => handleClick(e)}
+                                            onClick={handleClick}
                                         >
                                             {data.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
@@ -162,8 +178,12 @@ const MainPieChart = ( { transactions, openModal } ) => {
                                     </LineChart>
                                 )}
                             </ResponsiveContainer>
-                            <h3 className="Category_spend_txt">{"Highest Category: " + highest}</h3>
-                        </>
+                            {highest && (
+                                <div className="highest-category-container">
+                                    <h3 className="highest-category-text">{"Highest Category: " + highest}</h3>
+                                </div>
+                            )}
+                        </div>
                     ) : (
                         <SubPieChart
                             subData={subData}
@@ -173,14 +193,15 @@ const MainPieChart = ( { transactions, openModal } ) => {
                     )}
                 </div>
             ) : (
-                <p style={{ textAlign: "center" }}>
+                <p className="no-data-text">
                     No transactions data to display yet.
                     <br />
-                    Try <span onClick={openModal} style={{ color: "#7984D2", textDecoration: "underline", cursor: "pointer" }}>adding a transaction</span>
+                    Try <span onClick={openModal} className="add-transaction-link">adding a transaction</span>
                 </p>
             )}
         </div>
     );
+
 };
 
 export default MainPieChart;
