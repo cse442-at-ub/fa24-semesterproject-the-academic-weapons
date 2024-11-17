@@ -174,5 +174,4 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
     </div>
   );
 };
-
 export default BarChartComponent;
