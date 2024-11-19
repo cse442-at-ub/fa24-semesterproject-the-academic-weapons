@@ -5,6 +5,7 @@ import BarChartComponent from '../Component/Dashboard Components/BarChartCompone
 import RecentTransactions from '../Component/Dashboard Components/RecentTransactions';
 import HighestSpending from '../Component/Dashboard Components/IncomeChart.jsx';
 import GoalsList from '../Component/Dashboard Components/Goals.jsx';
+import AccountHealthWidget from "../Component/Dashboard Components/AccountHealthWidget.jsx";
 
 const Dashboard = ( { widgetOrder, updateEditGoal, openEditGoal, setGoalCompletion, saveGoalAllocation, income, updateEditTransaction, openEditModal, openTransactionModal, transactions, deleteTransaction, addGoal, deleteGoal, goals, openGoalModal}) => {
   const defaultOrder = [
@@ -70,6 +71,9 @@ const Dashboard = ( { widgetOrder, updateEditGoal, openEditGoal, setGoalCompleti
   return (
       <div className="dashboard">
         <div className="dashboard-content">
+          <div className={"box"}>
+            <AccountHealthWidget />
+          </div>
           {dashOrder.map((widget, index) => (
               <div className={"box"} key={index}>
                 {dashboardWidgets[widget]}

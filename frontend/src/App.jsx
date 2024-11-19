@@ -6,6 +6,7 @@ import './CSS Files/Settings Components/ChangeModals.css'
 import './CSS Files/EditTransaction.css'
 import './CSS Files/SavingsGoalBox.css'
 import './CSS Files/Settings Components/ReorderWidgets.css'
+import './CSS Files/Dashboard Components/AccountHealthWidget.css'
 import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Settings from "./Page/Settings";
