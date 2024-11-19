@@ -143,14 +143,18 @@ const MainPieChart = ({ transactions, openModal }) => {
                                             data={data}
                                             cx="50%"
                                             cy="50%"
-                                            labelLine={false}
                                             outerRadius="80%"
-                                            fill="#ffffff"
+                                            fill="#8884d8"
                                             dataKey="value"
                                             onClick={handleClick}
                                         >
                                             {data.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                                                <Cell
+                                                    key={`cell-${index}`}
+                                                    fill={colors[index % colors.length]}
+                                                    onClick={() => handleCellClick(entry.name)}
+                                                    style={{ cursor: 'pointer' }}
+                                                />
                                             ))}
                                         </Pie>
                                         <Legend />
@@ -201,7 +205,7 @@ const MainPieChart = ({ transactions, openModal }) => {
             )}
         </div>
     );
-
 };
 
 export default MainPieChart;
+

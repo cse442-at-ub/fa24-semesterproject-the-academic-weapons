@@ -49,7 +49,7 @@ const IncomeChart = ({income, transactions }) => {
         onClose={() => setIsModalOpen(false)}
         onSelect={handleChartTypeSelect}
       />
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width="100%" aspect={1}>
         {selectedChart === 'pie' && (
           <PieChart>
             <Pie

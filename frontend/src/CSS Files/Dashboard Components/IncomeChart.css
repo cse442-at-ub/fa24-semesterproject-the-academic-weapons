@@ -1,16 +1,16 @@
 .income-widget {
-  margin-inline: auto;
+  width: 100%;
+  max-width: 90%;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  /*background-color: #f5f5f5; !* Add background color *!*/
   padding: 20px;
-  border-radius: 10px; /* Rounded corners */
-  /*box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); !* Add subtle shadow *!*/
-  max-width: 90%; /* Fixed width to prevent resizing */
-  /*height: auto; !* Changed to auto so that each box doesnt take unneccesary Y axis stuff *!*/
-  /* HOWEVEV we need to test min height so it doenst break perhaps*/
+  border-radius: 10px;
+  box-sizing: border-box;
+  background-color: #f9f9f9; /* Optional: Add a background color */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
 }
 
 .income-button {
