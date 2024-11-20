@@ -67,19 +67,12 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Name<span className={'required_field'}>*</span></label>
                             <Creatable
+                                placeholder={''}
                                 value={name}
                                 options={nameOptions}
                                 onChange={handleSetName}
-                                // className={'add_trans_input_field'}
                                 required={true}
                             />
-                            {/*<input*/}
-                            {/*    className={'add_trans_input_field'}*/}
-                            {/*    value={name}*/}
-                            {/*    type={"text"}*/}
-                            {/*    required={true}*/}
-                            {/*    onChange={e => setName(e.target.value)}*/}
-                            {/*/>*/}
                         </div>
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Price<span className={'required_field'}>*</span></label>
@@ -94,19 +87,12 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Category<span className={'required_field'}>*</span></label>
                             <Creatable
+                                placeholder={''}
                                 value={category}
                                 options={categoryOptions}
                                 onChange={handleSetCategory}
-                                // className={'add_trans_input_field'}
                                 required={true}
                             />
-                            {/*<input*/}
-                            {/*    className={'add_trans_input_field'}*/}
-                            {/*    value={category}*/}
-                            {/*    required={true}*/}
-                            {/*    type={"text"}*/}
-                            {/*    onChange={e => setCategory(e.target.value)}*/}
-                            {/*/>*/}
                         </div>
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Date<span className={'required_field'}>*</span></label>
