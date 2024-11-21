@@ -118,6 +118,7 @@
   }
 
   .progress_bar_a {
+    border-radius: 1px;
     background-color: #8884d8;
   }
 
@@ -129,6 +130,7 @@
   }
 
   .progress_bar_c {
+    border-radius: 1px;
     color: black;
     background-color: #d8d8d8;
   }

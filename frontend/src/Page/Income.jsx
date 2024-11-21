@@ -19,66 +19,68 @@ const Income = ({ setErrorMessage, openError }) => {
   const [removeID, setRemoveID] = useState(-1)
 
   useEffect(() => {
-    const fetchIncomeAndExpenses = async () => {
-      try {
-        // Fetch total income
-        const incomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&token=${userToken}`);
-        const incomeData = await incomeResponse.json();
-
-        if (incomeData.success) {
-          const total = parseFloat(incomeData.totalIncome) || 0;
-          setTotalIncome(total);
-          sessionStorage.setItem('totalIncome', total);
-        } else {
-          console.error("Error fetching total income:", incomeData.message);
-        }
-
-        // Fetch expenses
-        const expensesResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php?id=${userID}&token=${userToken}`);
-        const expensesData = await expensesResponse.json();
-
-        if (expensesData.success) {
-          const totalExpensesValue = expensesData.transactions.reduce((total, transaction) => total + parseFloat(transaction.price), 0);
-          setTotalExpenses(totalExpensesValue);
-        } else {
-          console.error("Error fetching expenses:", expensesData.message);
-        }
-
-        const monthlyExpensesData = expensesData.transactions.reduce((total, transaction) => {
-          const transactionDate = new Date(transaction.date);
-          if (transactionDate.getMonth() === new Date().getMonth() && transactionDate.getFullYear() === new Date().getFullYear()) {
-            return total + parseFloat(transaction.price);
-          }
-          return total;
-        }, 0);
-        setMonthlyExpenses(monthlyExpensesData);
-
-        // Fetch current month's income
-        const currentMonthIncomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&current_month=true&token=${userToken}`);
-        const currentMonthIncomeData = await currentMonthIncomeResponse.json();
-
-        if (currentMonthIncomeData.success) {
-          setMonthlyIncomeForCurrentMonth(parseFloat(currentMonthIncomeData.totalIncome) || 0);
-        } else {
-          console.error("Error fetching current month's income:", currentMonthIncomeData.message);
-        }
-
-        // Fetch all incomes for the user
-        const incomesResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&detailed=true&token=${userToken}`);
-        const incomesData = await incomesResponse.json();
-
-        if (incomesData.success) {
-          setIncomes(incomesData.incomes);
-        } else {
-          console.error("Error fetching incomes:", incomesData.message);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
 
     fetchIncomeAndExpenses();
+
   }, [userID, userToken]);
+
+  const fetchIncomeAndExpenses = async () => {
+    try {
+      // Fetch total income
+      const incomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&token=${userToken}`);
+      const incomeData = await incomeResponse.json();
+
+      if (incomeData.success) {
+        const total = parseFloat(incomeData.totalIncome) || 0;
+        setTotalIncome(total);
+        sessionStorage.setItem('totalIncome', total);
+      } else {
+        console.error("Error fetching total income:", incomeData.message);
+      }
+
+      // Fetch expenses
+      const expensesResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/transactions.php?id=${userID}&token=${userToken}`);
+      const expensesData = await expensesResponse.json();
+
+      if (expensesData.success) {
+        const totalExpensesValue = expensesData.transactions.reduce((total, transaction) => total + parseFloat(transaction.price), 0);
+        setTotalExpenses(totalExpensesValue);
+      } else {
+        console.error("Error fetching expenses:", expensesData.message);
+      }
+
+      const monthlyExpensesData = expensesData.transactions.reduce((total, transaction) => {
+        const transactionDate = new Date(transaction.date);
+        if (transactionDate.getMonth() === new Date().getMonth() && transactionDate.getFullYear() === new Date().getFullYear()) {
+          return total + parseFloat(transaction.price);
+        }
+        return total;
+      }, 0);
+      setMonthlyExpenses(monthlyExpensesData);
+
+      // Fetch current month's income
+      const currentMonthIncomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&current_month=true&token=${userToken}`);
+      const currentMonthIncomeData = await currentMonthIncomeResponse.json();
+
+      if (currentMonthIncomeData.success) {
+        setMonthlyIncomeForCurrentMonth(parseFloat(currentMonthIncomeData.totalIncome) || 0);
+      } else {
+        console.error("Error fetching current month's income:", currentMonthIncomeData.message);
+      }
+
+      // Fetch all incomes for the user
+      const incomesResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&detailed=true&token=${userToken}`);
+      const incomesData = await incomesResponse.json();
+
+      if (incomesData.success) {
+        setIncomes(incomesData.incomes);
+      } else {
+        console.error("Error fetching incomes:", incomesData.message);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const submitIncomeToDB = async () => {
     if (!monthlyIncome || !incomeCategory || !incomeDate) {
@@ -114,22 +116,24 @@ const Income = ({ setErrorMessage, openError }) => {
 
       if (data.success) {
         if (editMode) {
-          setIncomes((prevIncomes) =>
-              prevIncomes.map((income) =>
-                  income.id === editIncomeId
-                      ? {...income, income_amount: monthlyIncome, category: incomeCategory, date: incomeDate}
-                      : income
-              )
-          );
+          // setIncomes((prevIncomes) =>
+          //     prevIncomes.map((income) =>
+          //         income.id === editIncomeId
+          //             ? {...income, income_amount: monthlyIncome, category: incomeCategory, date: incomeDate}
+          //             : income
+          //     )
+          // );
+          fetchIncomeAndExpenses()
           setEditMode(false);
           setEditIncomeId(null);
         } else {
           setTotalIncome((prevTotalIncome) => prevTotalIncome + parseFloat(monthlyIncome));
           sessionStorage.setItem('totalIncome', totalIncome + parseFloat(monthlyIncome));
-          setIncomes((prevIncomes) => [
-            ...prevIncomes,
-            {id: Date.now(), income_amount: monthlyIncome, category: incomeCategory, date: incomeDate},
-          ]);
+          fetchIncomeAndExpenses()
+          // setIncomes((prevIncomes) => [
+          //   ...prevIncomes,
+          //   {id: Date.now(), income_amount: monthlyIncome, category: incomeCategory, date: incomeDate},
+          // ]);
         }
 
         setMonthlyIncome('');
@@ -153,6 +157,7 @@ const Income = ({ setErrorMessage, openError }) => {
   };
 
   const handleDeleteClick = async ( id ) => {
+    setShowConfirmDelete(false)
     try {
       const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php`, {
         method: 'DELETE',
@@ -166,7 +171,8 @@ const Income = ({ setErrorMessage, openError }) => {
       if (data.success) {
         const deletedIncome = incomes.find((income) => income.id === id);
         setTotalIncome((prevTotalIncome) => prevTotalIncome - parseFloat(deletedIncome.income_amount));
-        setIncomes((prevIncomes) => prevIncomes.filter((income) => income.id !== id));
+        // setIncomes((prevIncomes) => prevIncomes.filter((income) => income.id !== id));
+        fetchIncomeAndExpenses()
       } else {
         setErrorMessage(`Error: ${data.message}`);
         openError();
