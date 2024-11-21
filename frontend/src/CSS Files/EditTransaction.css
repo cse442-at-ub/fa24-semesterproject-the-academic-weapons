@@ -3,10 +3,12 @@
     background-color: rgba(0, 0, 0, 0.42);
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 120vh;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
     max-height: 100%;
-    overflow-y: auto;
+    /*overflow-y: auto;*/
     z-index: 1000;
 }
 
@@ -19,7 +21,7 @@
     max-width: 400px;
     height: fit-content;
     padding-bottom: 30px;
-    margin-top: 30px;
+    /*margin-top: 30px;*/
     margin-inline: auto;
 }
 
@@ -27,7 +29,7 @@
     padding-top: 20px;
     font-size: clamp(25px, 2vw, 35px);
     text-align: center;
-    color: #5661AC;
+    color: #8884d8;
     font-weight: normal;
     font-family: Arial, sans-serif;
 }
@@ -54,7 +56,7 @@
 }
 
 .edit_trans_input_label {
-    color: #5661AC;
+    color: #8884d8;
     font-size: 20px;
     margin-bottom: 2px;
 }
@@ -65,13 +67,13 @@
     font-size: clamp(15px, 2vw, 20px);
     height: 40px;
     outline: 1px solid rgba(0, 0, 0, 0);
-    border: 1px solid rgb(105, 114, 172);
+    border: 1px solid #8884d8;
     border-radius: 5px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 .edit_trans_edit_btn {
-    background-color: #7984D2;
+    background-color: #8884d8;
     border: 1px solid rgb(0,0,0,0);
     color: white;
     border-radius: 5px;
@@ -85,11 +87,11 @@
 }
 
 .edit_trans_edit_btn:hover {
-    background-color: #596296;
+    background-color: #625eb6;
 }
 
 .edit_trans_close_text {
-    color: #7984D2;
+    color: #8884d8;
     text-align: center;
     text-decoration: underline;
     cursor: pointer;
@@ -97,5 +99,5 @@
 }
 
 .edit_trans_close_text:hover {
-    color: #596296;
+    color: #625eb6;
 }

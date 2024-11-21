@@ -6,6 +6,7 @@ import './CSS Files/Settings Components/ChangeModals.css'
 import './CSS Files/EditTransaction.css'
 import './CSS Files/SavingsGoalBox.css'
 import './CSS Files/Settings Components/ReorderWidgets.css'
+import './CSS Files/Dashboard Components/AccountHealthWidget.css'
 import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Settings from "./Page/Settings";
@@ -69,7 +70,11 @@ function App() {
     ]
     const [widgetOrder, setWidgetOrder] = useState(defaultOrder)
     const [widgetsLoaded, setWidgetsLoaded] = useState(false)
-
+    // Account Health
+    const [filteredTransactions, setFilteredTransactions] = useState([])
+    const spent = filteredTransactions.reduce((sum, item) => sum + parseFloat(item.price), 0);
+    const [monthlyIncome, setMonthlyIncome] = useState(0)
+    const savingsGoal = ((parseFloat(goal_allocation_amount)/parseFloat(monthly_savings_goal)) * 100) || 0;
 
     useEffect(() => {
 
@@ -84,6 +89,7 @@ function App() {
                 getGoals();
                 fetchIncome();
                 fetchSavingsGoal();
+                fetchMonthlyIncome()
                 if (!widgetsLoaded) {
                     getWidgetOrder().then(r => setWidgetsLoaded(true));
                 }
@@ -95,7 +101,7 @@ function App() {
 
     const fetchIncome = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}`); // Update to the correct endpoint
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&token=${userToken}`); // Update to the correct endpoint
             const data = await response.json();
 
             if (data.success) {
@@ -106,6 +112,36 @@ function App() {
         } catch (error) {
             console.error("Error fetching income:", error);
         }
+    };
+
+    const fetchMonthlyIncome = async () => {
+        const currentMonthIncomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&current_month=true&token=${userToken}`);
+        const currentMonthIncomeData = await currentMonthIncomeResponse.json();
+
+        if (currentMonthIncomeData.success) {
+            setMonthlyIncome(parseFloat(currentMonthIncomeData.totalIncome) || 0);
+        } else {
+            console.error("Error fetching current month's income:", currentMonthIncomeData.message);
+        }
+    }
+
+    const filterTransactions = (transactionsParam) => {
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth(); // 0 is January, 11 is December
+        const currentYear = currentDate.getFullYear();
+
+        // Filter transactions based on the current month and year
+        const filtered = transactionsParam.filter((transaction) => {
+            const transactionDate = new Date(transaction.date);
+            const transactionMonth = transactionDate.getMonth();
+            const transactionYear = transactionDate.getFullYear();
+
+            return transactionMonth === currentMonth && transactionYear === currentYear;
+        });
+
+        // Sort the filtered transactions by date in descending order
+        const sorted = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        return sorted;
     };
 
     const getTransactions = async () => {
@@ -124,6 +160,8 @@ function App() {
 
             if (reply.success) {
                 setTransactions(reply.transactions)
+                let filtered = filterTransactions(reply.transactions)
+                setFilteredTransactions(filtered)
                 if (reply.transactions.length > 0) {
                     let transIDs = reply.transactions.filter(trans => trans.id)
                     setMaxTransID(Math.max(transIDs))
@@ -666,6 +704,9 @@ function App() {
         onUpdateAllocation={updateGoalAllocation} openError={openPopup} setErrorMessage={setAlertMessage}/>
             <Routes>
             <Route path={"/"} element={<Homepage
+                monthlyIncome={monthlyIncome}
+                spent={spent}
+                savingsGoal={savingsGoal}
                 widgetOrder={widgetOrder}
                 openError={openPopup}
                 setErrorMessage={setAlertMessage}

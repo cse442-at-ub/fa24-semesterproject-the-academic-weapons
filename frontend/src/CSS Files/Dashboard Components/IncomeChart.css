@@ -14,7 +14,7 @@
 }
 
 .income-button {
-  background-color: #4CAF50; /* Green */
+  background-color: #8884d8; /* Green */
   border: none;
   color: white;
   padding: 10px 20px;
@@ -29,5 +29,5 @@
 }
 
 .income-button:hover {
-  background-color: #45a049; /* Darker green */
+  background-color: #625eb6; /* Darker green */
 }
