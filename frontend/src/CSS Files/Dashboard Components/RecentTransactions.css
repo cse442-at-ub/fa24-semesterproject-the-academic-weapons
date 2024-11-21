@@ -184,23 +184,23 @@
 }
 
 .delete_transaction_button {
-  background-color: #a10000;
+  background-color: #ea878b;
   color: white;
-  border: 1px solid #a10000;
+  border: 1px solid #ea878b;
 }
 
 .delete_transaction_button:hover {
-  background-color: #c53030;
+  background-color: #c85c61;
 }
 
 .cancel_delete_button {
-  background-color: #5661AC;
+  background-color: #8884d8;
   color: white;
-  border: 1px solid #5661AC;
+  border: 1px solid #8884d8;
 }
 
 .cancel_delete_button:hover {
-  background-color: #7984D2;
+  background-color: #625eb6;
 }
 
 .no-transactions {

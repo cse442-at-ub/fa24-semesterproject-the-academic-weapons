@@ -166,7 +166,7 @@ function handleDelete ($conn) {
         exit;
     }
 
-    $userID = $data['user_id'];
+    $userID = $data['userID'];
     $token = $data['userToken'];
 
     if (!authenticateUser($conn, $userID, $token)) {

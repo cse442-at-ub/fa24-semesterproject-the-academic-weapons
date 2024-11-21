@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+import {PieChart, Pie, Cell, Tooltip, Legend} from 'recharts';
 import '../CSS Files/Income.css'; // Ensure this CSS file exists for styling
 
 const Income = ({ setErrorMessage, openError }) => {
@@ -15,6 +15,8 @@ const Income = ({ setErrorMessage, openError }) => {
   const userID = sessionStorage.getItem('User');
   const userToken = sessionStorage.getItem('auth_token');
   const [incomes, setIncomes] = useState([]);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false)
+  const [removeID, setRemoveID] = useState(-1)
 
   useEffect(() => {
     const fetchIncomeAndExpenses = async () => {
@@ -186,45 +188,85 @@ const Income = ({ setErrorMessage, openError }) => {
     setIncomeDate(e.target.value);
   };
 
+  const disableEditMode = () => {
+    setIncomeDate('')
+    setIncomeCategory('')
+    setMonthlyIncome('')
+    setEditMode(false)
+  }
+
+  const closeDeleteModal = () => {
+    setShowConfirmDelete(false)
+  }
+
+  const handleOpenDelete = ( id ) => {
+    setRemoveID(id)
+    setShowConfirmDelete(true)
+  }
+
+  const DeleteModal = ( { closeModal, deleteID, handleDelete } ) => {
+    return (
+        <div onClick={closeModal} className={"edit_background"}>
+          <div onClick={e => e.stopPropagation()} className={"confirm_delete_modal"}>
+            <div className={"confirm_delete_modal_text_container"}>
+              <div
+                  className={"confirm_delete_modal_text"}>{"Are you sure you want to delete this income?"}</div>
+            </div>
+            <div className={"confirm_delete_button_tray"}>
+              <button className={"delete_transaction_button"} onClick={e => handleDelete(deleteID)}>Delete
+              </button>
+              <button className={"cancel_delete_button"}
+                      onClick={closeModal}>Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+    )
+  }
+
   const totalIncomeData = [
-    { name: 'Net Income', value: totalIncome - totalExpenses },
-    { name: 'Total Expenses', value: totalExpenses },
+    {name: 'Net Income', value: totalIncome - totalExpenses},
+    {name: 'Total Expenses', value: totalExpenses},
   ];
 
   const monthlyIncomeData = [
-    { name: 'Monthly Income', value: monthlyIncomeForCurrentMonth - monthlyExpenses },
-    { name: 'Monthly Expenses', value: monthlyExpenses },
+    {name: 'Monthly Income', value: monthlyIncomeForCurrentMonth - monthlyExpenses},
+    {name: 'Monthly Expenses', value: monthlyExpenses},
   ];
 
   const COLORS = ['#8884d8', '#d8d8d8'];
 
   return (
-    <div className="income-page">
-      <h1>Income Details</h1>
-      <div className={"income_details"}>
-        <h3>Total Income: ${totalIncome.toFixed(2)}</h3>
-        <h3>Total Expenses: ${totalExpenses.toFixed(2)}</h3>
-      </div>
-      <div className="charts-container">
-        <div className="pie-chart-container">
-          <h3>Total Income (Net After Total Expenses)</h3>
-          {incomes.length > 0 ?
-              <PieChart width={300} height={300}>
-                <Pie
-                    data={totalIncomeData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={40}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                >
-                  {totalIncomeData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
-                  ))}
-                </Pie>
-                <Tooltip/>
-              </PieChart>
+      <div className="income-page">
+        <h1>Income Details</h1>
+        <div className={"income_details"}>
+          <h3>Total Income: ${totalIncome.toFixed(2)}</h3>
+          {/*<h3>Total Expenses: ${totalExpenses.toFixed(2)}</h3>*/}
+        </div>
+        <div className="charts-container">
+          <div className="pie-chart-container">
+            <h3>Total Income (Net After Total Expenses)</h3>
+            {incomes.length > 0 ?
+              <>
+                <PieChart className={"income_pie_chart"} width={300} height={300}>
+                  <Pie
+                      data={totalIncomeData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={40}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                  >
+                    {totalIncomeData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
+                    ))}
+                  </Pie>
+                  <Tooltip/>
+                </PieChart>
+                <p>Net Income: ${(totalIncome - totalExpenses).toFixed(2)}</p>
+                <p>Total Expenses: ${(totalExpenses).toFixed(2)}</p>
+              </>
               :
               <p className={"no_content_text"}>No income data yet.</p>
           }
@@ -233,22 +275,26 @@ const Income = ({ setErrorMessage, openError }) => {
         <div className="pie-chart-container">
           <h3>Monthly Income</h3>
           {incomes.length > 0 ?
-              <PieChart width={300} height={300}>
-                <Pie
-                    data={monthlyIncomeData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={40}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                >
-                  {monthlyIncomeData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
-                  ))}
-                </Pie>
-                <Tooltip/>
-              </PieChart>
+              <>
+                <PieChart className={"income_pie_chart"} width={300} height={300}>
+                  <Pie
+                      data={monthlyIncomeData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={40}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                  >
+                    {monthlyIncomeData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
+                    ))}
+                  </Pie>
+                  <Tooltip/>
+                </PieChart>
+                <p>Monthly Income: ${(monthlyIncomeForCurrentMonth - monthlyExpenses).toFixed(2)}</p>
+                <p>Monthly Expenses: ${(monthlyExpenses).toFixed(2)}</p>
+              </>
               :
               <p className={"no_content_text"}>No income data yet.</p>
           }
@@ -279,24 +325,25 @@ const Income = ({ setErrorMessage, openError }) => {
             className="income-input"
           />
           <button onClick={submitIncomeToDB} className="submit-button">
-            {editMode ? 'Update' : 'Submit'}
+            {editMode ? 'Save' : 'Add'}
           </button>
+          <div className={"cancel_edit_income_text"} onClick={disableEditMode}>{editMode ? "Cancel":"Clear"}</div>
         </div>
 
         <div className="recent-incomes">
           <h3>Recent Income</h3>
-          <ul>
+          <ul className={"income_list"}>
             {incomes.length > 0 ? (
               incomes.map((income) => (
                 <li key={income.id} className="income-item">
                   <div>
-                    <span>Amount: ${income.income_amount}</span>
-                    <span>Category: {income.category}</span>
-                    <span>Date: {income.date}</span>
+                    <span>${income.income_amount}</span>
+                    <span>{income.category}</span>
+                    <span>{income.date}</span>
                   </div>
                   <div className="income-actions">
                     <button className="edit-button" onClick={() => handleEditClick(income)}>Edit</button>
-                    <button className="delete-button" onClick={() => handleDeleteClick(income.id)}>Delete</button>
+                    <button className="delete-button" onClick={() => handleOpenDelete(income.id)}>Delete</button>
                   </div>
                 </li>
               ))
@@ -306,6 +353,9 @@ const Income = ({ setErrorMessage, openError }) => {
           </ul>
         </div>
       </div>
+      {showConfirmDelete &&
+          <DeleteModal closeModal={closeDeleteModal} deleteID={removeID} handleDelete={handleDeleteClick} />
+      }
     </div>
   );
 };
