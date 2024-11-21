@@ -162,7 +162,8 @@
 
 .close-button_piggy_bank_overlay
 {
-    color: #7984D2;
+    margin-inline: auto;
+    color: #8884d8;
     align-self: flex-end;
     text-decoration: underline;
     cursor: pointer;
@@ -173,12 +174,13 @@
 
 .close-button_piggy_bank_overlay:hover
 {
-    color: #596296;;
+    color: #625eb6;;
 }
 
 .edit_piggy_stuff_allocate
 {
-    background-color: #84d88b;
+    color: white;
+    background-color: #8884d8;
     width: 75%;           
     margin: 0 auto;       
     display: block;       
@@ -189,10 +191,23 @@
     cursor: pointer;
     transition: background-color .3s ease-in-out, color .3s ease-in-out; 
 }
+
 .edit_piggy_stuff_allocate:hover
 {
-    background-color: #488a50;
+    background-color: #625eb6;
     color: white;
+}
+
+.allocate_modal_group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+}
+
+.allocate_modal_group input {
+    margin-inline: auto;
+    width: 80%;
 }
 
 .back_text_piggy_overlay {
@@ -355,7 +370,8 @@ background-color: #c8c8c8;
 }
 
 .piggybank_buttons_container {
-    display: flex; 
+    display: flex;
+    gap: 15px;
     justify-content:center; 
     flex-wrap: wrap;
     padding: 10px; 
@@ -411,7 +427,8 @@ background-color: #c8c8c8;
     transition: background-color .3s ease-in-out, color .3s ease-in-out;
     padding: 8px 15px;
     border-radius: 5px;
-    margin-top: 10px;
+    box-shadow: 0 0 1px 0 #8884d8;
+    /*margin-top: 10px;*/
 }
 
 .save_btn_nav {
@@ -424,12 +441,12 @@ background-color: #c8c8c8;
 }
 
 .allocate_save_btn_nav{
-    background-color: #84d88b;
-    color: #000000;
+    background-color: #8884d8;
+    color: #ffffff;
     border: none; 
 }
 .allocate_save_btn_nav:hover {
-    background-color: #488a50;
+    background-color: #625eb6;
     color: white;
 }
 
@@ -438,6 +455,7 @@ background-color: #c8c8c8;
     color: white;
     border: none;
 }
+
 .deallocate_save_btn_nav:hover {
     background-color: #000000;
     color: white;

@@ -67,11 +67,13 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Name<span className={'required_field'}>*</span></label>
                             <Creatable
+                                formatCreateLabel={(inputText) => inputText}
                                 placeholder={''}
                                 value={name}
                                 options={nameOptions}
                                 onChange={handleSetName}
                                 required={true}
+                                className={"add_trans_input_field_suggest"}
                             />
                         </div>
                         <div className={'add_trans_form_input_group'}>
@@ -87,11 +89,13 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Category<span className={'required_field'}>*</span></label>
                             <Creatable
+                                formatCreateLabel={(inputText) => inputText}
                                 placeholder={''}
                                 value={category}
                                 options={categoryOptions}
                                 onChange={handleSetCategory}
                                 required={true}
+                                className={"add_trans_input_field_suggest"}
                             />
                         </div>
                         <div className={'add_trans_form_input_group'}>
@@ -107,7 +111,7 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
 
                         {/* Recurring Transaction Checkbox */}
                         <div className={'add_trans_recurring_group'}>
-                            <label className={'add_trans_recurring_label'}>Recurring Transaction?</label>
+                            <label className={'add_trans_recurring_label'}>Recurring</label>
                             <input
                                 type="checkbox"
                                 checked={recurring}
@@ -127,9 +131,6 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
                             </button>
                         </div>
                     </form>
-                    <div className="add_trans_close_text_container">
-                        <div className={"add_trans_close_text"} onClick={closeModal}>Cancel</div>
-                    </div>
                 </div>
                 <div className={'add_trans_added_box_container'}>
                     <h1 className={'add_trans_title'}>Added</h1>
@@ -138,27 +139,28 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
                         {newTransactions.length > 0 ? (
                             (newTransactions.map(transaction => (
 
-                            <div key={transaction.id} className={'add_trans_added_transaction_item'}>
-                                <div className={'add_trans_added_item_text'}>
-                                    <div className={'add_trans_added_text'}>{transaction.name}</div>
-                                    <div className={'add_trans_added_text'}>{"$" + transaction.price}</div>
-                                    <div className={'add_trans_added_text'}>{transaction.category}</div>
-                                    <div className={'add_trans_added_text'}>{transaction.date}</div>
-                                    {transaction.recurring && (
-                                        <div className={'add_trans_added_text'}>Recurring</div>
-                                    )}
-                                    <div onClick={() => deleteTransaction(transaction.id)}>
-                                        <MdDelete />
+                                    <div key={transaction.id} className={'add_trans_added_transaction_item'}>
+                                        <div className={'add_trans_added_item_text'}>
+                                            <div className={'add_trans_added_text'}>{transaction.name}</div>
+                                            <div className={'add_trans_added_text'}>{"$" + transaction.price}</div>
+                                            <div className={'add_trans_added_text'}>{transaction.category}</div>
+                                            <div className={'add_trans_added_text'}>{transaction.date}</div>
+                                            {transaction.recurring && (
+                                                <div className={'add_trans_added_text'}>Recurring</div>
+                                            )}
+                                            <div onClick={() => deleteTransaction(transaction.id)}>
+                                                <MdDelete/>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
                                 ))
-                            )): (
+                            )) : (
                             <p className={"no_content_text"}>No transactions added yet.</p>
-                            )}
+                        )}
                     </div>
                     <div className={'add_trans_added_save_exit_container'}>
                         <button onClick={handleSaveAndExit} className={"add_trans_add_btn"}>Save and Exit</button>
+                        <div className={"add_trans_close_text"} onClick={closeModal}>Cancel</div>
                     </div>
                 </div>
             </div>

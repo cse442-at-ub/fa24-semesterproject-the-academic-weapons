@@ -24,9 +24,9 @@ const AccountHealthWidget = ( { savingsGoal, income, spent } ) => {
 
 
     const calculateHealth = () => {
-        console.log("Spent: "+spent)
-        console.log("Income: "+income)
-        console.log("Savings Goal: "+savingsGoal)
+        // console.log("Spent: "+spent)
+        // console.log("Income: "+income)
+        // console.log("Savings Goal: "+savingsGoal)
         if (spent >= income && parseInt(savingsGoal) < 50) {
             setAccountHealth("Bad")
         } else if (spent >= income && parseInt(savingsGoal) >= 50 && parseInt(savingsGoal) < 100) {
@@ -58,7 +58,18 @@ const AccountHealthWidget = ( { savingsGoal, income, spent } ) => {
                         <GaugeChart
                             hideText={true}
                             nrOfLevels={5}
-                            colors={["#FF5F6D", "#FFA863", "#FFF968", "#B7FF6D", "#71FF73"]}
+                            colors={[
+                                // "#FF5F6D",
+                                // "#FFA863",
+                                // "#FFF968",
+                                // "#B7FF6D",
+                                // "#71FF73",
+                                "#c2c2c6",
+                                "#d0d0df",
+                                "#c2c1dd",
+                                "#a8a6d6",
+                                "#8884d8",
+                            ]}
                             percent={healthMeter}
                         />
                         <div className={"account_health_gauge_label " + healthLabel}>{accountHealth}</div>

@@ -101,7 +101,7 @@ function App() {
 
     const fetchIncome = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}`); // Update to the correct endpoint
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&token=${userToken}`); // Update to the correct endpoint
             const data = await response.json();
 
             if (data.success) {
@@ -115,7 +115,7 @@ function App() {
     };
 
     const fetchMonthlyIncome = async () => {
-        const currentMonthIncomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&current_month=true`);
+        const currentMonthIncomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&current_month=true&token=${userToken}`);
         const currentMonthIncomeData = await currentMonthIncomeResponse.json();
 
         if (currentMonthIncomeData.success) {

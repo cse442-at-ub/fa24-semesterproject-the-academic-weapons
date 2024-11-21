@@ -21,23 +21,28 @@
 }
 
 .bad_health {
-    color: #FF5F6D;
+    /*color: #FF5F6D;*/
+    color: #c2c2c6;
 }
 
 .okay_health {
-    color: #FFA863;
+    /*color: #FFA863;*/
+    color: #d0d0df;
 }
 
 .fine_health {
-    color: #FFF968;
+    /*color: #FFF968;*/
+    color: #c2c1dd;
 }
 
 .good_health {
-    color: #B7FF6D;
+    /*color: #B7FF6D;*/
+    color: #a8a6d6;
 }
 
 .great_health {
-    color: #71FF73;
+    /*color: #71FF73;*/
+    color: #8884d8;
 }
 
 .account_health_title {
@@ -48,7 +53,7 @@
     font-weight: bold;
     text-align: center;
     font-size: 40px;
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.77)
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.77)
 }
 
 .account_health_snapshot_button_container {
@@ -60,7 +65,8 @@
 
 .account_health_snapshot_button {
     margin-inline: auto;
-    background-color: #4CAF50;
+    /*background-color: #4CAF50;*/
+    background-color: #8884d8;
     border: none;
     color: white;
     padding: 10px 20px;
@@ -72,5 +78,6 @@
 }
 
 .account_health_snapshot_button:hover {
-    background-color: #45a049;
+    /*background-color: #45a049;*/
+    background-color: #625eb6;
 }

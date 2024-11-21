@@ -38,7 +38,7 @@ const IncomeChart = ({income, transactions }) => {
     setSelectedChart(type);
     setIsModalOpen(false);
   };
-  const COLORS = ['#00C49F', '#FF8042'];
+  const COLORS = ['#8884d8', '#d8d8d8'];
 
   return (
     <div className="income-widget">

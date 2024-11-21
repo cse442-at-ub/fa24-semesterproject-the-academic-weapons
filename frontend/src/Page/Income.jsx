@@ -20,7 +20,7 @@ const Income = ({ setErrorMessage, openError }) => {
     const fetchIncomeAndExpenses = async () => {
       try {
         // Fetch total income
-        const incomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}`);
+        const incomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&token=${userToken}`);
         const incomeData = await incomeResponse.json();
 
         if (incomeData.success) {
@@ -52,7 +52,7 @@ const Income = ({ setErrorMessage, openError }) => {
         setMonthlyExpenses(monthlyExpensesData);
 
         // Fetch current month's income
-        const currentMonthIncomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&current_month=true`);
+        const currentMonthIncomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&current_month=true&token=${userToken}`);
         const currentMonthIncomeData = await currentMonthIncomeResponse.json();
 
         if (currentMonthIncomeData.success) {
@@ -62,7 +62,7 @@ const Income = ({ setErrorMessage, openError }) => {
         }
 
         // Fetch all incomes for the user
-        const incomesResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&detailed=true`);
+        const incomesResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&detailed=true&token=${userToken}`);
         const incomesData = await incomesResponse.json();
 
         if (incomesData.success) {
@@ -85,28 +85,27 @@ const Income = ({ setErrorMessage, openError }) => {
       return;
     }
 
+    let user_id = parseInt(userID);
+    let income_amount = parseFloat(monthlyIncome);
+    let category = incomeCategory;
+    let date = incomeDate
+    let id = editIncomeId;
+
+    let url = `${import.meta.env.VITE_API_PATH}/routes/update_income.php`;
+    let method = 'POST';
+
+    if (editMode) {
+      url = `${import.meta.env.VITE_API_PATH}/routes/update_income.php`;
+      method = 'PUT';
+    }
+
     try {
-      let url = `${import.meta.env.VITE_API_PATH}/routes/update_income.php`;
-      let method = 'POST';
-      let bodyData = new URLSearchParams({
-        user_id: userID,
-        income_amount: monthlyIncome,
-        category: incomeCategory,
-        date: incomeDate,
-      });
-
-      if (editMode) {
-        url = `${import.meta.env.VITE_API_PATH}/routes/update_income.php`;
-        method = 'PUT';
-        bodyData.append('id', editIncomeId);
-      }
-
       const response = await fetch(url, {
-        method,
+        method: method,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json',
         },
-        body: bodyData,
+        body: JSON.stringify({user_id, income_amount, category, date, userToken, id})
       });
 
       const data = await response.json();
@@ -114,11 +113,11 @@ const Income = ({ setErrorMessage, openError }) => {
       if (data.success) {
         if (editMode) {
           setIncomes((prevIncomes) =>
-            prevIncomes.map((income) =>
-              income.id === editIncomeId
-                ? { ...income, income_amount: monthlyIncome, category: incomeCategory, date: incomeDate }
-                : income
-            )
+              prevIncomes.map((income) =>
+                  income.id === editIncomeId
+                      ? {...income, income_amount: monthlyIncome, category: incomeCategory, date: incomeDate}
+                      : income
+              )
           );
           setEditMode(false);
           setEditIncomeId(null);
@@ -127,7 +126,7 @@ const Income = ({ setErrorMessage, openError }) => {
           sessionStorage.setItem('totalIncome', totalIncome + parseFloat(monthlyIncome));
           setIncomes((prevIncomes) => [
             ...prevIncomes,
-            { id: Date.now(), income_amount: monthlyIncome, category: incomeCategory, date: incomeDate },
+            {id: Date.now(), income_amount: monthlyIncome, category: incomeCategory, date: incomeDate},
           ]);
         }
 
@@ -151,14 +150,14 @@ const Income = ({ setErrorMessage, openError }) => {
     setEditMode(true);
   };
 
-  const handleDeleteClick = async (id) => {
+  const handleDeleteClick = async ( id ) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json',
         },
-        body: new URLSearchParams({ id }),
+        body: JSON.stringify({id, userID, userToken}),
       });
       const data = await response.json();
 
@@ -197,71 +196,80 @@ const Income = ({ setErrorMessage, openError }) => {
     { name: 'Monthly Expenses', value: monthlyExpenses },
   ];
 
-  const COLORS = ['#00C49F', '#FF8042'];
+  const COLORS = ['#8884d8', '#d8d8d8'];
 
   return (
     <div className="income-page">
       <h1>Income Details</h1>
-      <h3>Total Income: ${totalIncome.toFixed(2)}</h3>
-      <h3>Total Expenses: ${totalExpenses.toFixed(2)}</h3>
-
+      <div className={"income_details"}>
+        <h3>Total Income: ${totalIncome.toFixed(2)}</h3>
+        <h3>Total Expenses: ${totalExpenses.toFixed(2)}</h3>
+      </div>
       <div className="charts-container">
         <div className="pie-chart-container">
           <h3>Total Income (Net After Total Expenses)</h3>
-          <PieChart width={300} height={300}>
-            <Pie
-              data={totalIncomeData}
-              cx="50%"
-              cy="50%"
-              innerRadius={40}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {totalIncomeData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
+          {incomes.length > 0 ?
+              <PieChart width={300} height={300}>
+                <Pie
+                    data={totalIncomeData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                >
+                  {totalIncomeData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
+                  ))}
+                </Pie>
+                <Tooltip/>
+              </PieChart>
+              :
+              <p className={"no_content_text"}>No income data yet.</p>
+          }
         </div>
 
         <div className="pie-chart-container">
           <h3>Monthly Income</h3>
-          <PieChart width={300} height={300}>
-            <Pie
-              data={monthlyIncomeData}
-              cx="50%"
-              cy="50%"
-              innerRadius={40}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {monthlyIncomeData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
+          {incomes.length > 0 ?
+              <PieChart width={300} height={300}>
+                <Pie
+                    data={monthlyIncomeData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                >
+                  {monthlyIncomeData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
+                  ))}
+                </Pie>
+                <Tooltip/>
+              </PieChart>
+              :
+              <p className={"no_content_text"}>No income data yet.</p>
+          }
         </div>
       </div>
 
       <div className="input-recent-container">
         <div className="income-input-container">
-          <h3>{editMode ? 'Edit Income' : 'Input Monthly Income'}</h3>
+          <h3>{editMode ? 'Edit Income' : 'Add Income'}</h3>
           <input
             type="number"
             value={monthlyIncome}
             onChange={handleMonthlyIncomeChange}
-            placeholder="Enter income amount"
+            placeholder="Amount"
             className="income-input"
           />
           <input
             type="text"
             value={incomeCategory}
             onChange={handleIncomeCategoryChange}
-            placeholder="Enter category"
+            placeholder="Source"
             className="income-input"
           />
           <input
@@ -276,7 +284,7 @@ const Income = ({ setErrorMessage, openError }) => {
         </div>
 
         <div className="recent-incomes">
-          <h3>Recent Incomes</h3>
+          <h3>Recent Income</h3>
           <ul>
             {incomes.length > 0 ? (
               incomes.map((income) => (
@@ -293,7 +301,7 @@ const Income = ({ setErrorMessage, openError }) => {
                 </li>
               ))
             ) : (
-              <p>No income records found.</p>
+              <p className={"no_content_text"}>No income data yet.</p>
             )}
           </ul>
         </div>
