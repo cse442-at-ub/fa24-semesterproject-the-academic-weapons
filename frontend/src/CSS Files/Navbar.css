@@ -192,7 +192,8 @@
 
 .edit_piggy_stuff_allocate
 {
-    background-color: #84d88b;
+    background-color: #8884d8;
+    color: white;
     width: 75%;
     margin: 0 auto;
     display: block;
@@ -385,7 +386,7 @@ background-color: #c8c8c8;
     display: flex;
 
     justify-content:center;
-
+    gap: 15px;
     flex-wrap: wrap;
     padding: 10px;
 }
@@ -454,8 +455,8 @@ background-color: #c8c8c8;
 }
 
 .allocate_save_btn_nav{
-    background-color: #84d88b;
-    color: #000000;
+    background-color: #8884d8;
+    color: #ffffff;
     border: none;
 }
 .allocate_save_btn_nav:hover {
