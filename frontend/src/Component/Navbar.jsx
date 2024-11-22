@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {FaBars, FaPiggyBank} from 'react-icons/fa';
 import logo from '../logo.svg';
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from 'react-router-dom';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const CloseButton = ({ onClick, text }) => (
     <button className="close-button_piggy_bank_overlay" onClick={onClick}>{text}</button>
@@ -11,6 +13,13 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const navigate = useNavigate();
     const userID = sessionStorage.getItem("User");
+
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [notifications, setNotifications] = useState([]); // Empty by default
+
+
+    const bellRef = useRef(null);
+    const dropdownRef = useRef(null);
 
     const [currentModal, setCurrentModal] = useState(null);
     const [showSavingsModal, setShowSavingsModal] = useState(false);
@@ -82,7 +91,42 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
         const numberValue = Number(value);
         setTempManageAmount(isNaN(numberValue) || numberValue < 0 ? 0 : numberValue);
     };
+    const fetchNotifications = async () => {
+    try {
+        const response = await fetch(
+            `${import.meta.env.VITE_API_PATH}/routes/notifications.php?userId=${userID}`
+        );
+        if (!response.ok) {
+            throw new Error(`Failed to fetch notifications: ${response.statusText}`);
+        }
+        const data = await response.json();
+        if (data.success) {
+            setNotifications(data.notifications);
+        } else {
+            console.error("Failed to fetch notifications: ", data.message || "Unknown error");
+        }
+    } catch (error) {
+        console.error("Error fetching notifications:", error);
+    }
+};
+
+
     useEffect(() => {
+        fetchNotifications();
+
+
+         const handleClickOutside = (event) => {
+          if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target) &&
+            !bellRef.current.contains(event.target)
+          ) {
+            setIsNotificationOpen(false);
+          }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
         setCurrentSavings(allocated_saving_amount);
         setSavingsGoal(monthly_saving_goal);
         setTempSavingsGoal(monthly_saving_goal);
@@ -95,7 +139,10 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
 
         document.addEventListener('keydown', handleEscape);
 
-        return () => document.removeEventListener('keydown', handleEscape);
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
     }, [allocated_saving_amount, monthly_saving_goal]);
 
     const progressPercentage = savingsGoal > 0 ? Math.min((Number(currentSavings) / Number(savingsGoal)) * 100, 100) : 0;
@@ -121,13 +168,82 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
             setTempSavingsGoal(value); // Allow valid input
         }
     };
-    // const closeAllModals = () => {
-    //     setShowMainModal(false);
-    //     setShowSavingsModal(false);
-    //     setShowAllocateModal(false);
-    //     setShowDeallocateModal(false);
-    //     setShowGoalModal(false);
-    // };
+    // Handle notification dropdown toggle
+    const toggleNotifications = () => {
+    setIsNotificationOpen((prevState) => !prevState);
+    };
+
+
+    const markNotificationAsRead = async (id) => {
+    try {
+        const response = await fetch(
+            `${import.meta.env.VITE_API_PATH}/routes/notifications.php`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ markAsRead: [id] }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Failed to mark notification as read: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        if (data.success) {
+            setNotifications((prev) =>
+                prev.map((notification) =>
+                    notification.id === id ? { ...notification, isRead: true } : notification
+                )
+            );
+        } else {
+            console.error("Failed to mark notification as read:", data.message || "Unknown error");
+        }
+    } catch (error) {
+        console.error("Error marking notification as read:", error);
+    }
+};
+
+
+const markAllAsRead = async () => {
+    try {
+        const unreadIds = notifications
+            .filter((notification) => !notification.isRead)
+            .map((notification) => notification.id);
+
+        if (unreadIds.length === 0) {
+            console.warn("No unread notifications to mark as read.");
+            return;
+        }
+
+        const response = await fetch(
+            `${import.meta.env.VITE_API_PATH}/routes/notifications.php`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ markAsRead: unreadIds }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Failed to mark all notifications as read: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        if (data.success) {
+            setNotifications((prev) =>
+                prev.map((notification) => ({ ...notification, isRead: true }))
+            );
+        } else {
+            console.error("Failed to mark all notifications as read:", data.message || "Unknown error");
+        }
+    } catch (error) {
+        console.error("Error marking all notifications as read:", error);
+    }
+};
+
+    // Count unread notifications
+    const unreadCount = notifications.filter((n) => !n.isRead).length;
 
     if (!userID) {
         return null;
@@ -170,6 +286,63 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
                     <div className="navbar_name">{username}</div>
                     <img src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon"/>
                 </div>
+                 {/* Notifications */}
+        <div
+          className="notification-icon-container"
+          ref={bellRef}
+          onClick={toggleNotifications}
+        >
+          <FontAwesomeIcon icon={faBell} className="notification-icon" />
+          {unreadCount > 0 && (
+            <span className="notification-badge">{unreadCount}</span>
+          )}
+        </div>
+        {isNotificationOpen && (
+            <div className="notification-dropdown" ref={dropdownRef}>
+                <div className="notification-header">
+                    <h3>Notifications</h3>
+                    <button onClick={markAllAsRead} className="mark-read-btn">
+                        Mark All as Read
+                    </button>
+                </div>
+                <ul className="notification-list">
+                    {notifications.map((notification) => (
+                        <li
+                            key={notification.id}
+                            className={`notification-item ${
+                                notification.isRead ? "read" : "unread"
+                            }`}
+                        >
+                            <div className="notification-card">
+                                <div className="notification-content">
+                                    <p className="notification-title">
+                                        {notification.message}
+                                    </p>
+                                    <p className="notification-due-date">
+                                        <strong>Due Date:</strong> {notification.dueDate}
+                                    </p>
+                                </div>
+                                <div className="notification-actions">
+                                    {!notification.isRead ? (
+                                        <button
+                                            className="mark-read-btn"
+                                            onClick={() => markNotificationAsRead(notification.id)}
+                                        >
+                                            Mark as Read
+                                        </button>
+                                    ) : (
+                                        <span className="read-status">Read</span>
+                                    )}
+                                </div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+                {notifications.length === 0 && (
+                    <p className="no-notifications">No notifications available.</p>
+                )}
+            </div>
+        )}
                 <div className="navbar-savings-container" onClick={() => openModal('savings')}>
                     <FaPiggyBank className="savings-icon" style={{fontSize: '2rem', cursor: 'pointer'}}/>
                     <div className="mini-progress-bar-container">
@@ -189,8 +362,7 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
             {currentModal === 'savings' && (
                 <div className="modal-overlay" onClick={closeAllModals}>
                     <div className="modal-content_piggy" onClick={(e) => e.stopPropagation()}>
-                        <h1 className="edit_trans_title">{"Monthly Savings Goal"}</h1>
-                        <br/>
+                        <CloseButton onClick={closeAllModals}/>
                         <div className='values_container_piggy'>
                             <p className="savings-text_percentage_main">${currentSavings.toFixed(2)} Allocated</p>
                             <p className="allocated-text-piggy-top">${savingsGoal.toFixed(2)} Saved</p>
