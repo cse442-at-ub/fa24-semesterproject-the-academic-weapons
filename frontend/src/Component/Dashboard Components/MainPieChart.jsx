@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+// MainPieChart.jsx
+import React, { useEffect, useState } from 'react';
 import {
     PieChart,
     Pie,
@@ -14,7 +15,6 @@ import {
     Line,
     ResponsiveContainer
 } from 'recharts';
-
 
 import '../../CSS Files/Dashboard Components/MainPieChart.css';
 import SubPieChart from './SubPieChart.jsx';
@@ -36,105 +36,96 @@ const colors = [
     "#C39BD3", "#BB8FCE", "#5D6D7E"
 ];
 
-const MainPieChart = ( { transactions, openModal } ) => {
+const MainPieChart = ({ transactions, openModal }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [data, setData] = useState([]);
     const [subData, setSubData] = useState({});
-    const [highest, setHighest] = useState('')
-    const [isLoaded, setIsLoaded] = useState(false)
+    const [highest, setHighest] = useState('');
+    const [isLoaded, setIsLoaded] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedGraph, setSelectedGraph] = useState('pie');
 
-     useEffect(() => {
-    if (transactions.length > 0 && !isLoaded) {
-        totalsByCategory(transactions);
-        transactionsByCategory(transactions);
-        setIsLoaded(true);
-    }
-}, [transactions, isLoaded]);
+    useEffect(() => {
+        if (transactions.length > 0 && !isLoaded) {
+            totalsByCategory(transactions);
+            transactionsByCategory(transactions);
+            setIsLoaded(true);
+        }
+    }, [transactions, isLoaded]);
 
-
-
-    function getHighestCategory(totals) {
+    const getHighestCategory = (totals) => {
         return totals.reduce((highest, category) => {
             return (category.value > highest.value) ? category : highest;
-        }, totals[0]); // Start with the first category as the highest
-    }
+        }, totals[0]);
+    };
 
     const totalsByCategory = (inputTransactions) => {
-    let categorized = inputTransactions.reduce((acc, transaction) => {
-        const { category, price } = transaction;
+        const categorized = inputTransactions.reduce((acc, transaction) => {
+            const { category, price } = transaction;
+            let categoryObj = acc.find(obj => obj.name === category);
 
-        // Find existing category in the accumulator
-        let categoryObj = acc.find(obj => obj.name === category);
+            if (!categoryObj) {
+                categoryObj = { name: category, value: 0 };
+                acc.push(categoryObj);
+            }
 
-        // If category does not exist, create it
-        if (!categoryObj) {
-            categoryObj = { name: category, value: 0 };
-            acc.push(categoryObj);
+            categoryObj.value += parseFloat(price);
+            return acc;
+        }, []);
+
+        setData(categorized);
+
+        if (categorized.length > 0) {
+            const highestCat = getHighestCategory(categorized);
+            setHighest(highestCat.name);
         }
-
-        // Add the price to the existing category value
-        categoryObj.value += parseFloat(price);
-
-        return acc;
-    }, []);
-
-    setData(categorized);
-
-    // Calculate and set the highest category
-    if (categorized.length > 0) {
-        const highestCat = getHighestCategory(categorized);
-        setHighest(highestCat.name);
-    }
-};
-
+    };
 
     const transactionsByCategory = (inputTransactions) => {
-        let categorized = inputTransactions.reduce((acc, transaction) => {
-            const {category, ...rest} = transaction;
+        const categorized = inputTransactions.reduce((acc, transaction) => {
+            const { category, ...rest } = transaction;
+            const renamedTransaction = { ...rest, value: parseFloat(transaction.price) };
+            delete renamedTransaction.price;
 
-            // Rename 'price' to 'value'
-            const renamedTransaction = {...rest, value: parseFloat(transaction.price)};
-            delete renamedTransaction.price; // Remove 'price'
-
-            // Initialize the category array if it doesn't exist
             if (!acc[category]) {
                 acc[category] = [];
             }
 
-            // Push the renamed transaction into the appropriate category
             acc[category].push(renamedTransaction);
-
             return acc;
         }, {});
-        setSubData(categorized)
-    }
+        setSubData(categorized);
+    };
 
     const handleClick = (data) => {
-        setSelectedCategory(data.name); // Set the clicked category name
+        if (data && data.name) {
+            setSelectedCategory(data.name);
+        }
     };
 
     const handleChartTypeSelect = (type) => {
         setSelectedGraph(type);
         setIsModalOpen(false);
     };
+
     return (
-        <div className="chart-container">
+        <div className="main-pie-chart">
             <h2 className="Category_spend_txt">Categorized Spending</h2>
-            {transactions.length > 0 &&
-                <button onClick={() => setIsModalOpen(true)} className="chart-type-button">Select Chart Type</button>
-            }
+            {transactions.length > 0 && (
+                <button onClick={() => setIsModalOpen(true)} className="chart-type-button">
+                    Select Chart Type
+                </button>
+            )}
             <GraphSelectionModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSelect={handleChartTypeSelect}
             />
             {transactions.length > 0 ? (
-                <div>
+                <>
                     {!selectedCategory ? (
-                        <>
-                            <ResponsiveContainer width="100%" height={400}>
+                        <div className="chart-section">
+                            <ResponsiveContainer width="100%" aspect={1}>
                                 {selectedGraph === 'pie' && (
                                     <PieChart>
                                         <Pie
@@ -145,13 +136,13 @@ const MainPieChart = ( { transactions, openModal } ) => {
                                             outerRadius="80%"
                                             fill="#ffffff"
                                             dataKey="value"
-                                            onClick={(e) => handleClick(e)}
+                                            onClick={handleClick}
                                         >
                                             {data.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                                             ))}
                                         </Pie>
-                                        <Legend />
+                                        <Legend verticalAlign="bottom" height={36}/>
                                         <Tooltip />
                                     </PieChart>
                                 )}
@@ -176,8 +167,8 @@ const MainPieChart = ( { transactions, openModal } ) => {
                                     </LineChart>
                                 )}
                             </ResponsiveContainer>
-                            <h3 className="Category_spend_txt">{"Highest Category: " + highest}</h3>
-                        </>
+                            <h3 className="highest-category">Highest Category: {highest}</h3>
+                        </div>
                     ) : (
                         <SubPieChart
                             subData={subData}
@@ -185,9 +176,9 @@ const MainPieChart = ( { transactions, openModal } ) => {
                             onBack={() => setSelectedCategory(null)}
                         />
                     )}
-                </div>
+                </>
             ) : (
-                <p className={"no_content_text"} style={{ textAlign: "center" }}>
+                <p className="no_content_text" style={{ textAlign: "center" }}>
                     No transactions data to display yet.
                     <br />
                     Try <span onClick={openModal} style={{ color: "#7984D2", textDecoration: "underline", cursor: "pointer" }}>adding a transaction</span>

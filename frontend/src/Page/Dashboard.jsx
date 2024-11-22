@@ -15,11 +15,13 @@ const Dashboard = ( { savingsGoal, monthlyIncome, spent, widgetOrder, updateEdit
     'Income Report',
     'Goals',
     'Monthly Health'
-  ]
+  ];
+
   const dashOrder = widgetOrder.length > 0 ? widgetOrder:defaultOrder
   const CategorizedSpending = () => {
     return (
         // <div className="pie-chart-box">
+
           <MainPieChart openModal={openTransactionModal} transactions={transactions}/>
         // </div>
     )
@@ -69,15 +71,16 @@ const Dashboard = ( { savingsGoal, monthlyIncome, spent, widgetOrder, updateEdit
 
 
   const dashboardWidgets = {
-    "Categorized Spending": <CategorizedSpending/>,
-    "Monthly Spending": <MonthlySpending/>,
-    "Transactions": <Transactions/>,
-    "Income Report": <IncomeReport/>,
-    "Goals": <Goals/>,
+    "Categorized Spending": <CategorizedSpending />,
+    "Monthly Spending": <MonthlySpending />,
+    "Transactions": <Transactions />,
+    "Income Report": <IncomeReport />,
+    "Goals": <Goals />,
     "Monthly Health": <MonthlyHealth />
-  }
+  };
 
   return (
+
       <div className="dashboard">
         <div className="dashboard-content">
           {dashOrder.map((widget, index) => (
@@ -87,6 +90,7 @@ const Dashboard = ( { savingsGoal, monthlyIncome, spent, widgetOrder, updateEdit
           ))}
         </div>
       </div>
+
   );
 };
 

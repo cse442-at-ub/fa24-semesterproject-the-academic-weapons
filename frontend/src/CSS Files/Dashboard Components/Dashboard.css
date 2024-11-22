@@ -129,4 +129,9 @@
     grid-row: 4; /* Last in stack */
     grid-column: 1;
   }
+  .account_health_widget {
+      max-width: 90vw;
+      grid-row: 4; /* Last in stack */
+      grid-column: 1;
+    }
 }
