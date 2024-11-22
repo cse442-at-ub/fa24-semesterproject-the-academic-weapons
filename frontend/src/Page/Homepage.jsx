@@ -3,7 +3,7 @@ import Dashboard from "./Dashboard.jsx";
 import Login from "./Login.jsx";
 
 
-const Homepage = ( {openError, setErrorMessage, updateEditGoal, openEditGoal, setGoalCompletion, saveGoalAllocation, income, updateEditTransaction, openEditModal, openTransactionModal, transactions, deleteTransaction, addGoal, deleteGoal, goals,openGoalModal} ) => {
+const Homepage = ( { savingsGoal, monthlyIncome, spent, widgetOrder, openError, setErrorMessage, updateEditGoal, openEditGoal, setGoalCompletion, saveGoalAllocation, income, updateEditTransaction, openEditModal, openTransactionModal, transactions, deleteTransaction, addGoal, deleteGoal, goals,openGoalModal} ) => {
     const userID = sessionStorage.getItem("User")
     const userToken = sessionStorage.getItem("auth_token")
 
@@ -16,6 +16,10 @@ const Homepage = ( {openError, setErrorMessage, updateEditGoal, openEditGoal, se
         </>
       ) : (
         <Dashboard
+            savingsGoal={savingsGoal}
+            monthlyIncome={monthlyIncome}
+            spent={spent}
+            widgetOrder={widgetOrder}
             updateEditGoal={updateEditGoal}
             openEditGoal={openEditGoal}
             setGoalCompletion={setGoalCompletion}

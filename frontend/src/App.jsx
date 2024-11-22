@@ -5,6 +5,8 @@ import './CSS Files/Settings.css'
 import './CSS Files/Settings Components/ChangeModals.css'
 import './CSS Files/EditTransaction.css'
 import './CSS Files/SavingsGoalBox.css'
+import './CSS Files/Settings Components/ReorderWidgets.css'
+import './CSS Files/Dashboard Components/AccountHealthWidget.css'
 import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Settings from "./Page/Settings";
@@ -58,7 +60,21 @@ function App() {
     const [monthly_savings_goal, setmonthly_saving_goal] = useState(0);
     const [showMessagePopup, setShowMessagePopup] = useState(false)
     const [popupMessage, setPopupMessage] = useState('')
-
+    // Widget Order
+    const defaultOrder = [
+        'Categorized Spending',
+        'Monthly Spending',
+        'Transactions',
+        'Income Report',
+        'Goals'
+    ]
+    const [widgetOrder, setWidgetOrder] = useState(defaultOrder)
+    const [widgetsLoaded, setWidgetsLoaded] = useState(false)
+    // Account Health
+    const [filteredTransactions, setFilteredTransactions] = useState([])
+    const spent = filteredTransactions.reduce((sum, item) => sum + parseFloat(item.price), 0);
+    const [monthlyIncome, setMonthlyIncome] = useState(0)
+    const savingsGoal = ((parseFloat(goal_allocation_amount)/parseFloat(monthly_savings_goal)) * 100) || 0;
 
     useEffect(() => {
 
@@ -70,9 +86,13 @@ function App() {
                 if (getUsername) setUsername(getUsername);
                 if (getPFP) setPFP(parseInt(getPFP) || 0);
                 getTransactions();
-                getGoals()
-                fetchIncome()
+                getGoals();
+                fetchIncome();
                 fetchSavingsGoal();
+                fetchMonthlyIncome()
+                if (!widgetsLoaded) {
+                    getWidgetOrder().then(r => setWidgetsLoaded(true));
+                }
                 setIsLoaded(true);
             }
         }
@@ -81,7 +101,7 @@ function App() {
 
     const fetchIncome = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}`); // Update to the correct endpoint
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&token=${userToken}`); // Update to the correct endpoint
             const data = await response.json();
 
             if (data.success) {
@@ -92,6 +112,36 @@ function App() {
         } catch (error) {
             console.error("Error fetching income:", error);
         }
+    };
+
+    const fetchMonthlyIncome = async () => {
+        const currentMonthIncomeResponse = await fetch(`${import.meta.env.VITE_API_PATH}/routes/update_income.php?user_id=${userID}&current_month=true&token=${userToken}`);
+        const currentMonthIncomeData = await currentMonthIncomeResponse.json();
+
+        if (currentMonthIncomeData.success) {
+            setMonthlyIncome(parseFloat(currentMonthIncomeData.totalIncome) || 0);
+        } else {
+            console.error("Error fetching current month's income:", currentMonthIncomeData.message);
+        }
+    }
+
+    const filterTransactions = (transactionsParam) => {
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth(); // 0 is January, 11 is December
+        const currentYear = currentDate.getFullYear();
+
+        // Filter transactions based on the current month and year
+        const filtered = transactionsParam.filter((transaction) => {
+            const transactionDate = new Date(transaction.date);
+            const transactionMonth = transactionDate.getMonth();
+            const transactionYear = transactionDate.getFullYear();
+
+            return transactionMonth === currentMonth && transactionYear === currentYear;
+        });
+
+        // Sort the filtered transactions by date in descending order
+        const sorted = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        return sorted;
     };
 
     const getTransactions = async () => {
@@ -110,6 +160,8 @@ function App() {
 
             if (reply.success) {
                 setTransactions(reply.transactions)
+                let filtered = filterTransactions(reply.transactions)
+                setFilteredTransactions(filtered)
                 if (reply.transactions.length > 0) {
                     let transIDs = reply.transactions.filter(trans => trans.id)
                     setMaxTransID(Math.max(transIDs))
@@ -158,6 +210,58 @@ function App() {
             console.error('Error:', error);
         }
     };
+
+    const getWidgetOrder = async () => {
+        try {
+            // Assume we have an API that fetches goals
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/widgets.php?id=${userID}&token=${userToken}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            let reply = await response.json();
+            if (reply.success) {
+                if (reply.widget_order !== "Default") {
+                    setWidgetOrder(reply.widget_order);
+                }
+            } else {
+                setAlertMessage("Invalid user credentials, please sign in again...");
+                openPopup()
+                sessionStorage.clear();
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const handleSaveWidgetOrder = (newOrder) => {
+        setWidgetOrder(newOrder)
+        saveWidgetOrder(newOrder)
+    }
+
+    const saveWidgetOrder = async (newOrder) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_PATH}/routes/widgets.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({userID, userToken, newOrder}),
+            });
+            const reply = await response.json()
+            if (!reply.success) {
+                setAlertMessage("Invalid user credentials, please sign in again...")
+                openPopup()
+                sessionStorage.clear()
+                window.location.reload()
+            }
+            setIsLoaded(false);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     const pfpMap = {
         0: img0,
@@ -600,6 +704,10 @@ function App() {
         onUpdateAllocation={updateGoalAllocation} openError={openPopup} setErrorMessage={setAlertMessage}/>
             <Routes>
             <Route path={"/"} element={<Homepage
+                monthlyIncome={monthlyIncome}
+                spent={spent}
+                savingsGoal={savingsGoal}
+                widgetOrder={widgetOrder}
                 openError={openPopup}
                 setErrorMessage={setAlertMessage}
                 saveGoalAllocation={saveGoalAllocation}
@@ -626,7 +734,7 @@ function App() {
               {showAddTransaction && <AddTransaction transactions={transactions} maxTransID={maxTransID} updateMaxTransID={updateMaxTransID} addTransaction={addTransaction} removeTransaction={removeTransaction} closeModal={closeTransactionModal}/>}
               {showEditGoal && <EditGoal saveEditGoal={saveEditGoal} oldGoal={editGoal} closeModal={closeEditGoal}/>}
               {showAddGoal && <AddGoal maxGoalID={maxGoalID} updateMaxGoalID={updateMaxGoalID} addGoal={addGoal} closeModal={closeGoalModal} deleteGoal ={removeGoal} />}
-              {showSettings &&  <Settings openError={openPopup} setErrorMessage={setAlertMessage} username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>}
+              {showSettings &&  <Settings setWidgetOrder={handleSaveWidgetOrder} widgetOrder={widgetOrder} openError={openPopup} setErrorMessage={setAlertMessage} username={username} changeUsername={changeUsername} pfp={pfp} changePFP={changePFP} pfpMap={pfpMap} closeSettings={closeSettings}/>}
               {showMessagePopup && <MessagePopup closeModal={closePopup} message={popupMessage} />}
           </header>
         </div>

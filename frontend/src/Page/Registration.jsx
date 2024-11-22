@@ -47,10 +47,7 @@ const Registration = ( { openError } ) => {
       console.log(data); // Log response data for debugging
 
       if (data.success) {
-        sessionStorage.setItem("User", "1")
-        setErrorMessage('Registration successful! Redirecting...')
-        setIsSuccess(true);
-        setTimeout(() => navigate('/'), 1500);
+        navigate('/')
       } else {
          setErrorMessage(data.message || 'Registration failed');
          setIsSuccess(false);

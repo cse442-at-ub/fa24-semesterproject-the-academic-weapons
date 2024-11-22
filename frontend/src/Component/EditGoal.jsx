@@ -23,7 +23,7 @@ const EditGoal = ( {saveEditGoal,  oldGoal, closeModal } ) => {
     return (
         <div onClick={closeModal} className={'edit_background'}>
             <div onClick={e => e.stopPropagation()} className={'edit_trans_modal_container'}>
-                <h1 className={"edit_trans_title"}>Edit Transaction</h1>
+                <h1 className={"edit_trans_title"}>Edit Goal</h1>
                 <div>
                     <div className={'edit_trans_form_input_group'}>
                         <label className={"edit_trans_input_label"}>Name<span

@@ -5,10 +5,8 @@ import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from 'react-router-dom';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
-const CloseButton = ({ onClick }) => (
-    <button className="close-button_piggy_bank_overlay" onClick={onClick}>
-        Close
-    </button>
+const CloseButton = ({ onClick, text }) => (
+    <button className="close-button_piggy_bank_overlay" onClick={onClick}>{text}</button>
 );
 
 const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp, allocated_saving_amount, monthly_saving_goal, onUpdateMonthlyGoal, onUpdateAllocation }) => {
@@ -38,10 +36,10 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
     const [showGoalModal, setShowGoalModal] = useState(false);
 
     const toggleMobileMenu = () => {
-    if (window.innerWidth < 768) { // Only open the mobile menu for screens smaller than 768px
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-    }
-};
+        if (window.innerWidth < 768) { // Only open the mobile menu for screens smaller than 768px
+            setIsMobileMenuOpen(!isMobileMenuOpen);
+        }
+    };
 
     // const openMainModal = () => {
     //     setShowAllocateModal(false);
@@ -157,7 +155,7 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
     };
 
     const closeAllModals = () => {
-            setCurrentModal(null);
+        setCurrentModal(null);
     };
 
     const validSavingsGoal = Number(savingsGoal) || 0;
@@ -165,10 +163,10 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
     const handleGoalChange = (e) => {
         const value = e.target.value;
         if (value === '' || isNaN(Number(value))) {
-        setTempSavingsGoal(''); // Clear input if empty or invalid
-    } else {
-        setTempSavingsGoal(value); // Allow valid input
-    }
+            setTempSavingsGoal(''); // Clear input if empty or invalid
+        } else {
+            setTempSavingsGoal(value); // Allow valid input
+        }
     };
     // Handle notification dropdown toggle
     const toggleNotifications = () => {
@@ -254,39 +252,39 @@ const markAllAsRead = async () => {
     return (
         <nav className="navbar">
             <div onClick={() => navigate('/')} className="navbar-logo">
-                <img src={logo} alt="Wealth Wise Logo" className="logo-image" />
-                <span className="logo-text">Wealth <br /> Wise</span>
+                <img src={logo} alt="Wealth Wise Logo" className="logo-image"/>
+                <span className="logo-text">Wealth <br/> Wise</span>
             </div>
-             <button className="mobile-menu-icon" onClick={toggleMobileMenu}>
-                <FaBars />
+            <button className="mobile-menu-icon" onClick={toggleMobileMenu}>
+                <FaBars/>
             </button>
 
             {isMobileMenuOpen && (
-    <div className="mobile-nav-dropdown">
-        <div className="mobile-nav-item" onClick={() => {
-            openSettings();
-            setIsMobileMenuOpen(false);
-        }}>
-            <div className="navbar_name_container">
-                <img src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon"/>
-                <div className="navbar_name">{username}</div>
-            </div>
-        </div>
-        <div className="mobile-nav-item" onClick={() => openModal('savings')}>
-            <FaPiggyBank className="savings-icon" />
-            <span>Savings Overview</span>
-        </div>
-        <div className="mobile-nav-item logout_text" onClick={logout}>
-            Log Out
-        </div>
-    </div>
-)}
+                <div className="mobile-nav-dropdown">
+                    <div className="mobile-nav-item" onClick={() => {
+                        openSettings();
+                        setIsMobileMenuOpen(false);
+                    }}>
+                        <div className="navbar_name_container">
+                            <img src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon"/>
+                            <div className="navbar_name">{username}</div>
+                        </div>
+                    </div>
+                    <div className="mobile-nav-item" onClick={() => openModal('savings')}>
+                        <FaPiggyBank className="savings-icon"/>
+                        <span>Savings Overview</span>
+                    </div>
+                    <div className="mobile-nav-item logout_text" onClick={logout}>
+                        Log Out
+                    </div>
+                </div>
+            )}
 
 
             <div className="navbar-profile">
                 <div className="navbar_name_icon_group" onClick={openSettings}>
                     <div className="navbar_name">{username}</div>
-                    <img src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon" />
+                    <img src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon"/>
                 </div>
                  {/* Notifications */}
         <div
@@ -380,192 +378,98 @@ const markAllAsRead = async () => {
                         </div>
                         <p className="savings-Data_Centered_piggy">{`${progressPercentage.toFixed(2)}% of $${savingsGoal.toFixed(2)} saved`}</p>
                         <div className='piggybank_buttons_container'>
-                            <button onClick={() => openModal('allocate')} className="allocate_save_btn_nav">Allocate to Goal</button>
-                            <button onClick={() => openModal('deallocate')} className="deallocate_save_btn_nav">Deallocate from Goal</button>
-                            <button onClick={() => openModal('changeGoal')} className="save_btn_nav">Change Goal Amount</button>
+                            <button onClick={() => openModal('allocate')} className="allocate_save_btn_nav">Allocate
+                            </button>
+                            <button onClick={() => openModal('deallocate')}
+                                    className="deallocate_save_btn_nav">Deallocate
+                            </button>
+                            <button onClick={() => openModal('changeGoal')} className="save_btn_nav">Change Goal
+                            </button>
+                        </div>
+                        <CloseButton text={"Close"} onClick={closeAllModals}/>
+                    </div>
+                </div>
+            )}
+            {/* Allocate Modal */}
+            {currentModal === 'allocate' && (
+                <div className="modal-overlay" onClick={closeAllModals}>
+                    <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
+                        <h1 className="edit_trans_title">Allocate Towards Goal</h1>
+                        <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>
+                        <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
+                        <div className={"allocate_modal_group"}>
+                            <input
+                                className="input_field_piggy"
+                                type="number"
+                                value={tempManageAmount || ''}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value === '' || !isNaN(Number(value))) {
+                                        setTempManageAmount(value);
+                                    }
+                                }}
+                            />
+                            <button onClick={() => handleSaveAllocation(Number(tempManageAmount))}
+                                    className="edit_piggy_stuff_allocate">Allocate
+                            </button>
+                            <CloseButton text={"Cancel"} onClick={closeAllModals}/>
                         </div>
                     </div>
                 </div>
             )}
-{/* Allocate Modal */}
-{currentModal === 'allocate' && (
-    <div className="modal-overlay" onClick={closeAllModals}>
-        <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
-            <CloseButton onClick={closeAllModals} />
-            <h1 className="edit_trans_title">Allocate Towards Goal</h1>
-            <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>
-            <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
-            <input
-                className="input_field_piggy"
-                type="number"
-                value={tempManageAmount || ''}
-                onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === '' || !isNaN(Number(value))) {
-                        setTempManageAmount(value);
-                    }
-                }}
-            />
-            <button onClick={() => handleSaveAllocation(Number(tempManageAmount))} className="edit_piggy_stuff_allocate">Allocate</button>
-        </div>
-    </div>
-)}
 
-{/* Deallocate Modal */}
-{currentModal === 'deallocate' && (
-    <div className="modal-overlay" onClick={closeAllModals}>
-        <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
-            <CloseButton onClick={closeAllModals} />
-            <h1 className="edit_trans_title">Deallocate From Goal</h1>
-            <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>
-            <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
-            <input
-                className="input_field_piggy"
-                type="number"
-                value={tempManageAmount || ''}
-                onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === '' || !isNaN(Number(value))) {
-                        setTempManageAmount(value);
-                    }
-                }}
-            />
-            <button onClick={() => handleSaveAllocation(-Math.abs(Number(tempManageAmount)))} className="edit_piggy_stuff_deallocate">Deallocate</button>
-        </div>
-    </div>
-)}
+            {/* Deallocate Modal */}
+            {currentModal === 'deallocate' && (
+                <div className="modal-overlay" onClick={closeAllModals}>
+                    <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
 
-{/* Change Goal Modal */}
-{currentModal === 'changeGoal' && (
-    <div className="modal-overlay" onClick={closeAllModals}>
-        <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
-            <CloseButton onClick={closeAllModals}/>
-            <h1 className="edit_trans_title">Change Goal Amount</h1>
-            <p className="modal-info">Current Goal: ${savingsGoal.toFixed(2)}</p>
-            <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
-            <input
-                className="input_field_piggy"
-                type="number"
-                value={tempSavingsGoal}
-                onChange={handleGoalChange}
-                onFocus={() => setTempSavingsGoal('')} // Clears the field on focus
-            />
-            <button onClick={handleSaveMonthlyGoal} className="edit_piggy_stuff_change_goal">Save</button>
-        </div>
-    </div>
-)}
+                        <h1 className="edit_trans_title">Deallocate From Goal</h1>
+                        <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>
+                        <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
+                        <div className={"allocate_modal_group"}>
+                            <input
+                                className="input_field_piggy"
+                                type="number"
+                                value={tempManageAmount || ''}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value === '' || !isNaN(Number(value))) {
+                                        setTempManageAmount(value);
+                                    }
+                                }}
+                            />
+                            <button onClick={() => handleSaveAllocation(-Math.abs(Number(tempManageAmount)))}
+                                    className="edit_piggy_stuff_allocate">Deallocate
+                            </button>
+                            <CloseButton text={"Cancel"} onClick={closeAllModals}/>
+                        </div>
+                    </div>
+                </div>
+            )}
 
+            {/* Change Goal Modal */}
+            {currentModal === 'changeGoal' && (
+                <div className="modal-overlay" onClick={closeAllModals}>
+                    <div className="edit_piggy_bank_modal_container" onClick={(e) => e.stopPropagation()}>
 
-            {/*    {showSavingsModal && (*/}
-            {/*        <div className="modal-overlay" onClick={closeAllModals}>*/}
-            {/*            <div className="modal-content_piggy" onClick={(e) => e.stopPropagation()}>*/}
-        {/*                <div className='close_button_piggy_cotnainer'>*/}
-        {/*                    <CloseButton onClick={closeAllModals} />*/}
-        {/*                </div>*/}
-        {/*                <div className='values_container_piggy'>*/}
-        {/*                    <p className="savings-text">${currentSavings.toFixed(2)} Allocated </p>*/}
-        {/*                    <p className="allocated-text">${savingsGoal.toFixed(2)} Saved</p>*/}
-        {/*                </div>*/}
-        {/*                <div className="progress-container_piggy">*/}
-        {/*                    <div*/}
-        {/*                        className="progress-bar"*/}
-        {/*                        style={{*/}
-        {/*                            width: `${progressPercentage}%`,*/}
-        {/*                            backgroundColor: progressColor,*/}
-        {/*                        }}*/}
-        {/*                    />*/}
-        {/*                </div>*/}
-        {/*                <p className="savings-text">{`${progressPercentage.toFixed(2)}% of $${savingsGoal.toFixed(2)} saved`}</p>*/}
-        {/*                */}
-        {/*                <div className='piggybank_buttons_container'>*/}
-        {/*                    <button onClick={() => { setShowAllocateModal(true); setShowSavingsModal(false); }} className="allocate_save_btn_nav">Allocate to Goal</button>*/}
-        {/*                    <button onClick={() => { setShowDeallocateModal(true); setShowSavingsModal(false); }} className="deallocate_save_btn_nav">Deallocate from Goal</button>*/}
-        {/*                    <button onClick={() => { setShowGoalModal(true); setShowSavingsModal(false); }} className="save_btn_nav">Change Goal Amount</button>*/}
-        {/*                </div>*/}
-        {/*            </div>*/}
-        {/*        </div>*/}
-        {/*    )}*/}
-
-        {/*    {showAllocateModal && (*/}
-        {/*        <div className="modal-overlay" onClick={closeAllModals}>*/}
-        {/*            <div onClick={(e) => e.stopPropagation()} className="edit_piggy_bank_modal_container">*/}
-        {/*            <   div className='close_button_piggy_cotnainer'>*/}
-        {/*                    <CloseButton onClick={closeAllModals} />*/}
-        {/*                </div>*/}
-        {/*                <h1 className="edit_trans_title">Allocate Towards Goal</h1>*/}
-        {/*                <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>*/}
-        {/*                <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>*/}
-        {/*                <input*/}
-        {/*                    className="input_field_piggy"*/}
-        {/*                    type="number"*/}
-        {/*                    value={tempManageAmount || ''} // Allow empty input*/}
-        {/*                    onChange={(e) => {*/}
-        {/*                        const value = e.target.value;*/}
-        {/*                        const numberValue = Number(value);*/}
-        {/*                        */}
-        {/*                        // Check if the value is empty or if it is NaN or negative*/}
-        {/*                        if (value === '' || isNaN(numberValue) || numberValue < 0) {*/}
-        {/*                            setTempManageAmount(0); // Clear the input field*/}
-        {/*                        } else {*/}
-        {/*                            setTempManageAmount(numberValue); // Set the number value if valid*/}
-        {/*                        }*/}
-        {/*                    }}*/}
-        {/*                />*/}
-        {/*                <button onClick={() => handleSaveAllocation(tempManageAmount)} className="edit_piggy_stuff_allocate">Allocate</button>*/}
-        {/*                <div className="back_text_piggy_overlay" onClick={openMainModal}>Back</div>*/}
-        {/*            </div>*/}
-        {/*        </div>*/}
-        {/*    )}*/}
-
-        {/*{showDeallocateModal && (*/}
-        {/*    <div className="modal-overlay" onClick={closeAllModals}>*/}
-        {/*        <div onClick={(e) => e.stopPropagation()} className="edit_piggy_bank_modal_container">*/}
-        {/*            <div className='close_button_piggy_cotnainer'>*/}
-        {/*                <CloseButton onClick={closeAllModals} />*/}
-        {/*            </div>*/}
-        {/*            <h1 className="edit_trans_title">Deallocate From Goal</h1>*/}
-        {/*            <p className="modal-info">Goal: ${savingsGoal.toFixed(2)}</p>*/}
-        {/*            <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>*/}
-        {/*            <input*/}
-        {/*                className="input_field_piggy"*/}
-        {/*                type="number"*/}
-        {/*                value={tempManageAmount || ''} // Allow empty input*/}
-        {/*                onChange={(e) => {*/}
-        {/*                    const value = e.target.value;*/}
-        {/*                    const numberValue = Number(value);*/}
-        {/*                    if (value === '') {*/}
-        {/*                        setTempManageAmount(''); // Set state to empty string if input is cleared*/}
-        {/*                    } else if (!isNaN(numberValue)) {*/}
-        {/*                        setTempManageAmount(numberValue);*/}
-        {/*                    }*/}
-        {/*                }}*/}
-        {/*            />*/}
-        {/*            <button onClick={() => handleSaveAllocation(-Math.abs(tempManageAmount))} className="edit_piggy_stuff_deallocate">Deallocate</button>*/}
-        {/*            <div className="back_text_piggy_overlay" onClick={openMainModal}>Back</div>*/}
-        {/*        </div>*/}
-        {/*    </div>*/}
-        {/*)}*/}
-
-        {/*    {showGoalModal && (*/}
-        {/*        <div className="modal-overlay" onClick={closeAllModals}>*/}
-        {/*            <div onClick={(e) => e.stopPropagation()} className="edit_piggy_bank_modal_container">*/}
-        {/*                <div className='close_button_piggy_cotnainer'>*/}
-        {/*                    <CloseButton onClick={closeAllModals} />*/}
-        {/*                </div>*/}
-        {/*                <h1 className="edit_trans_title">Change Goal Amount</h1>*/}
-        {/*                <p className="modal-info">Current Goal: ${savingsGoal.toFixed(2)}</p>*/}
-        {/*                <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>*/}
-        {/*                <input*/}
-        {/*                    className="input_field_piggy"*/}
-        {/*                    type="number"*/}
-        {/*                    value={tempSavingsGoal}*/}
-        {/*                    onChange={(e) => setTempSavingsGoal(Number(e.target.value))}*/}
-        {/*                />*/}
-        {/*                <button onClick={handleSaveMonthlyGoal} className="edit_piggy_stuff_change_goal">Save</button>*/}
-        {/*                <div className="back_text_piggy_overlay" onClick={openMainModal}>Back</div>*/}
-        {/*            </div>*/}
-        {/*        </div>*/}
-        {/*    )}*/}
+                        <h1 className="edit_trans_title">Change Goal Amount</h1>
+                        <p className="modal-info">Current Goal: ${savingsGoal.toFixed(2)}</p>
+                        <p className="modal-info">Allocated: ${currentSavings.toFixed(2)}</p>
+                        <div className={"allocate_modal_group"}>
+                            <input
+                                className="input_field_piggy"
+                                type="number"
+                                value={tempSavingsGoal}
+                                onChange={handleGoalChange}
+                                onFocus={() => setTempSavingsGoal('')} // Clears the field on focus
+                            />
+                            <button onClick={handleSaveMonthlyGoal} className="edit_piggy_stuff_allocate">Save
+                            </button>
+                            <CloseButton text={"Cancel"} onClick={closeAllModals}/>
+                        </div>
+                    </div>
+                </div>
+            )}
         </nav>
     );
 };
