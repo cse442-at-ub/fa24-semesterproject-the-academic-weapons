@@ -1,5 +1,6 @@
 import GaugeChart from 'react-gauge-chart'
 import {useEffect, useState} from "react";
+import HealthSnapshot from "../HealthSnapshot.jsx";
 
 const healthLabelMap = {
     "Bad": "bad_health",
@@ -17,11 +18,64 @@ const healthMeterMap = {
     "Great": .90
 }
 
-const AccountHealthWidget = ( { savingsGoal, income, spent } ) => {
+const AccountHealthWidget = ( { transactions, savingsGoal, income, spent } ) => {
+    const [showModal, setShowModal] = useState(false)
+    const [badFine, setBadFine] = useState(false)
+    const [highest, setHighest] = useState('')
+    const [isLoaded, setIsLoaded] = useState(false)
     const [accountHealth, setAccountHealth] = useState("Fine")
     const healthLabel = healthLabelMap[accountHealth]
     const healthMeter = healthMeterMap[accountHealth]
 
+    useEffect(() => {
+
+        if (transactions.length > 0 && !isLoaded) {
+            totalsByCategory(transactions);
+            setIsLoaded(true);
+        }
+
+    }, [transactions])
+
+    function getHighestCategory(totals) {
+        return totals.reduce((highest, category) => {
+            return (category.value > highest.value) ? category : highest;
+        }, totals[0]); // Start with the first category as the highest
+    }
+
+    const totalsByCategory = (inputTransactions) => {
+        let categorized = inputTransactions.reduce((acc, transaction) => {
+            const { category, price } = transaction;
+
+            // Find existing category in the accumulator
+            let categoryObj = acc.find(obj => obj.name === category);
+
+            // If category does not exist, create it
+            if (!categoryObj) {
+                categoryObj = { name: category, value: 0 };
+                acc.push(categoryObj);
+            }
+
+            // Add the price to the existing category value
+            categoryObj.value += parseFloat(price);
+
+            return acc;
+        }, []);
+
+        // Calculate and set the highest category
+        if (categorized.length > 0) {
+            const highestCat = getHighestCategory(categorized);
+            setHighest(highestCat.name);
+        }
+    };
+
+
+    const openModal = () => {
+        setShowModal(true)
+    }
+
+    const closeModal = () => {
+        setShowModal(false)
+    }
 
     const calculateHealth = () => {
         // console.log("Spent: "+spent)
@@ -33,6 +87,7 @@ const AccountHealthWidget = ( { savingsGoal, income, spent } ) => {
             setAccountHealth("Okay")
         } else if (spent >= income && parseInt(savingsGoal) === 100) {
             setAccountHealth("Fine")
+            setBadFine(true)
         } else if (spent < income && parseInt(savingsGoal) < 50) {
             setAccountHealth("Fine")
         } else if (spent < income && parseInt(savingsGoal) >= 50 && parseInt(savingsGoal) < 100) {
@@ -74,10 +129,13 @@ const AccountHealthWidget = ( { savingsGoal, income, spent } ) => {
                         />
                         <div className={"account_health_gauge_label " + healthLabel}>{accountHealth}</div>
                         <div className={"account_health_snapshot_button_container"}>
-                            <button className={"account_health_snapshot_button"}>View Snapshot</button>
+                            <button onClick={openModal} className={"account_health_snapshot_button"}>View Breakdown</button>
                         </div>
                     </div>
                 </div>
+            {showModal &&
+                <HealthSnapshot highest={highest} badFine={badFine} accountHealth={accountHealth} closeModal={closeModal} />
+            }
         </div>
     );
 };

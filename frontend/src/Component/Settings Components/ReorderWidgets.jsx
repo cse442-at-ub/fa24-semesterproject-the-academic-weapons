@@ -9,7 +9,8 @@ const ReorderWidgets = ( { closeModal, setWidgetOrder, widgetOrder } ) => {
         'Monthly Spending',
         'Transactions',
         'Income Report',
-        'Goals'
+        'Goals',
+        'Monthly Health'
     ]
     const [newOrder, setNewOrder] = useState(
         widgetOrder && Array.isArray(widgetOrder) && widgetOrder.length > 0 ? widgetOrder : defaultOrder
