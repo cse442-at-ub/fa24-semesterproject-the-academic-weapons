@@ -1,7 +1,7 @@
 .bar-chart-component {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /*justify-content: center;*/
   align-items: center;
   max-width: 100%;
   padding: 20px;
@@ -39,6 +39,7 @@
   align-items: center;
   width: 100%;
   padding: 10px;
+  height: 100%;
 }
 
 .no_content_text {

@@ -100,7 +100,8 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
       <div className="bar-chart-header">
         <h2 className="Category_spend_txt">Monthly Spending</h2>
         <div className="header-controls">
-          {availableYears.length > 0 ? (
+          {availableYears.length > 0 && (
+              <>
             <select value={selectedYear} onChange={handleYearChange} className="year-dropdown">
               {availableYears.map(year => (
                 <option key={year} value={year}>
@@ -108,10 +109,9 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
                 </option>
               ))}
             </select>
-          ) : (
-            <p>No data available for any year</p>
-          )}
           <button onClick={() => setIsModalOpen(true)} className="chart-type-button">Select Chart Type</button>
+              </>
+              )}
         </div>
       </div>
 
@@ -166,7 +166,7 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
           </ResponsiveContainer>
         ) : (
           <p className="no_content_text">
-            No transactions to display for the selected year.<br />
+            No transactions to display.<br />
             Try <span onClick={openTransactionModal} style={{ color: "#7984D2", textDecoration: "underline", cursor: "pointer" }}>adding a transaction</span>
           </p>
         )}
