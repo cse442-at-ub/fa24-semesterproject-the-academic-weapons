@@ -41,7 +41,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    
+
 }
 
 .profile-icon {
@@ -134,15 +134,15 @@
 {
     background-color: #434343;
     color: white;
-    width: 75%;           
-    margin: 0 auto;       
-    display: block;       
-    padding: 10px;        
-    font-size: 16px;      
-    border: none;         
-    border-radius: 5px;   
-    cursor: pointer;    
-    transition: background-color .3s ease-in-out, color .3s ease-in-out;  
+    width: 75%;
+    margin: 0 auto;
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color .3s ease-in-out, color .3s ease-in-out;
 }
 
 .edit_piggy_stuff_deallocate:hover
@@ -157,7 +157,7 @@
     display: flex; /* Enable Flexbox for the header */
     justify-content: flex-end; /* Align items to the right */
     width: 100%; /* Take full width */
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
 }
 
 .close-button_piggy_bank_overlay
@@ -179,15 +179,15 @@
 .edit_piggy_stuff_allocate
 {
     background-color: #84d88b;
-    width: 75%;           
-    margin: 0 auto;       
-    display: block;       
-    padding: 10px;        
-    font-size: 16px;      
-    border: none;         
-    border-radius: 5px;   
+    width: 75%;
+    margin: 0 auto;
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color .3s ease-in-out, color .3s ease-in-out; 
+    transition: background-color .3s ease-in-out, color .3s ease-in-out;
 }
 .edit_piggy_stuff_allocate:hover
 {
@@ -213,9 +213,9 @@
 .mini-progress-bar-container {
     width: 50px;
     height: 8px;
-    background-color: #ccc; 
+    background-color: #ccc;
     border-radius: 5px;
-    border: 1px solid #888; 
+    border: 1px solid #888;
     overflow: hidden;
 }
 
@@ -284,18 +284,18 @@
 
 .edit_piggy_stuff_change_goal
 {
-    width: 75%;           
-    margin: 0 auto;       
-    display: block;       
-    padding: 10px;        
-    font-size: 16px;      
-    border: none;         
-    border-radius: 5px;   
+    width: 75%;
+    margin: 0 auto;
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color .3s ease-in-out, color .3s ease-in-out;
     background-color: white;
-    color: black;     
-    
+    color: black;
+
 }
 
 .edit_piggy_stuff_change_goal:hover
@@ -355,10 +355,10 @@ background-color: #c8c8c8;
 }
 
 .piggybank_buttons_container {
-    display: flex; 
-    justify-content:center; 
+    display: flex;
+    justify-content:center;
     flex-wrap: wrap;
-    padding: 10px; 
+    padding: 10px;
 }
 
 
@@ -426,7 +426,7 @@ background-color: #c8c8c8;
 .allocate_save_btn_nav{
     background-color: #84d88b;
     color: #000000;
-    border: none; 
+    border: none;
 }
 .allocate_save_btn_nav:hover {
     background-color: #488a50;
@@ -479,6 +479,142 @@ background-color: #c8c8c8;
 .mobile-nav-item:last-child {
     border-bottom: none;
 }
+/* Notification Bell Styles */
+.notification-icon-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.notification-icon {
+  font-size: 1.5rem;
+  color: #5661ac;
+  transition: transform 0.2s ease-in-out;
+}
+
+.notification-icon:hover {
+  transform: scale(1.1);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-weight: bold;
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  width: 350px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold;
+}
+
+.notification-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background-color: #f9f9f9;
+}
+
+.unread {
+  background-color: #f7faff; /* Light blue background for unread notifications */
+}
+
+.notification-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.notification-content {
+  flex-grow: 1;
+}
+
+.notification-title {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.notification-due-date {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.notification-due-date span {
+  font-weight: bold;
+  color: #555;
+}
+
+.notification-actions {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mark-read-btn {
+  background-color: #7984d2;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.mark-read-btn:hover {
+  background-color: #5f6cb3;
+}
+
+.no-notifications {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.9rem;
+  color: #777;
+}
+
 
 /* Mobile-specific styles */
 @media only screen and (max-width: 768px) {

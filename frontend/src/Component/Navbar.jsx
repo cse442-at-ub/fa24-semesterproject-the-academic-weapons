@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {FaBars, FaPiggyBank} from 'react-icons/fa';
 import logo from '../logo.svg';
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from 'react-router-dom';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const CloseButton = ({ onClick }) => (
     <button className="close-button_piggy_bank_overlay" onClick={onClick}>
@@ -13,6 +15,13 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const navigate = useNavigate();
     const userID = sessionStorage.getItem("User");
+
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [notifications, setNotifications] = useState([]); // Empty by default
+
+
+    const bellRef = useRef(null);
+    const dropdownRef = useRef(null);
 
     const [currentModal, setCurrentModal] = useState(null);
     const [showSavingsModal, setShowSavingsModal] = useState(false);
@@ -84,7 +93,37 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
         const numberValue = Number(value);
         setTempManageAmount(isNaN(numberValue) || numberValue < 0 ? 0 : numberValue);
     };
+    const fetchRecurringNotifications = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_PATH}/routes/notifications.php`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch notifications");
+        }
+        const data = await response.json();
+        setNotifications(data);
+      } catch (error) {
+        console.error("Error fetching recurring notifications:", error);
+      }
+    };
+
     useEffect(() => {
+        fetchRecurringNotifications();
+
+
+         const handleClickOutside = (event) => {
+          if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target) &&
+            !bellRef.current.contains(event.target)
+          ) {
+            setIsNotificationOpen(false);
+          }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
         setCurrentSavings(allocated_saving_amount);
         setSavingsGoal(monthly_saving_goal);
         setTempSavingsGoal(monthly_saving_goal);
@@ -97,7 +136,10 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
 
         document.addEventListener('keydown', handleEscape);
 
-        return () => document.removeEventListener('keydown', handleEscape);
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
     }, [allocated_saving_amount, monthly_saving_goal]);
 
     const progressPercentage = savingsGoal > 0 ? Math.min((Number(currentSavings) / Number(savingsGoal)) * 100, 100) : 0;
@@ -123,13 +165,30 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
         setTempSavingsGoal(value); // Allow valid input
     }
     };
-    // const closeAllModals = () => {
-    //     setShowMainModal(false);
-    //     setShowSavingsModal(false);
-    //     setShowAllocateModal(false);
-    //     setShowDeallocateModal(false);
-    //     setShowGoalModal(false);
-    // };
+    // Handle notification dropdown toggle
+    const toggleNotifications = () => {
+    setIsNotificationOpen((prevState) => !prevState);
+    };
+
+
+    const markNotificationAsRead = (id) => {
+      setNotifications((prev) =>
+        prev.map((notification) =>
+          notification.id === id ? { ...notification, isRead: true } : notification
+        )
+      );
+    };
+
+
+    // Mark all notifications as read
+    const markAllAsRead = () => {
+    setNotifications((prev) =>
+    prev.map((notification) => ({ ...notification, isRead: true }))
+    );
+    };
+
+    // Count unread notifications
+    const unreadCount = notifications.filter((n) => !n.isRead).length;
 
     if (!userID) {
         return null;
@@ -172,8 +231,59 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
                     <div className="navbar_name">{username}</div>
                     <img src={pfpMap[pfp]} alt="Profile Icon" className="profile-icon" />
                 </div>
+                 {/* Notifications */}
+        <div
+          className="notification-icon-container"
+          ref={bellRef}
+          onClick={toggleNotifications}
+        >
+          <FontAwesomeIcon icon={faBell} className="notification-icon" />
+          {unreadCount > 0 && (
+            <span className="notification-badge">{unreadCount}</span>
+          )}
+        </div>
+        {isNotificationOpen && (
+          <div className="notification-dropdown" ref={dropdownRef}>
+            <div className="notification-header">
+              <h3>Notifications</h3>
+              <button onClick={markAllAsRead} className="mark-read-btn">
+                Mark All as Read
+              </button>
+            </div>
+              <ul className="notification-list">
+                  {notifications.map((notification) => (
+                      <li key={notification.id} className={`notification-item ${notification.isRead ? "" : "unread"}`}>
+                          <div className="notification-card">
+                              <div className="notification-content">
+                                  <p className="notification-title">
+                                      <strong>Recurring Transaction:</strong> {notification.message}
+                                  </p>
+                                  <p className="notification-due-date">
+                                      <span>Due Date:</span> <strong>{notification.dueDate}</strong>
+                                  </p>
+                              </div>
+                              <div className="notification-actions">
+                                  <button className="mark-read-btn"
+                                          onClick={() => markNotificationAsRead(notification.id)}>
+                                      Mark as Read
+                                  </button>
+                              </div>
+                          </div>
+                      </li>
+                  ))}
+                  {notifications.length === 0 && (
+                      <li className="no-notifications">
+                          <p>You're all caught up! No notifications available.</p>
+                      </li>
+                  )}
+              </ul>
+              {notifications.length === 0 && (
+                  <p className="no-notifications">No notifications available.</p>
+              )}
+          </div>
+        )}
                 <div className="navbar-savings-container" onClick={() => openModal('savings')}>
-                    <FaPiggyBank className="savings-icon" style={{ fontSize: '2rem', cursor: 'pointer'  }} />
+                    <FaPiggyBank className="savings-icon" style={{fontSize: '2rem', cursor: 'pointer'}}/>
                     <div className="mini-progress-bar-container">
                         <div
                             className="mini-progress-bar"

@@ -41,14 +41,13 @@ const MainPieChart = ( { transactions, openModal } ) => {
     const [selectedGraph, setSelectedGraph] = useState('pie');
 
      useEffect(() => {
-        if (transactions.length > 0 && (!isLoaded || data.length === 0)) {
-            totalsByCategory(transactions);
-            transactionsByCategory(transactions);
-            setIsLoaded(true);
-            const highestCat = getHighestCategory(data);
-            if (highestCat) setHighest(highestCat.name);
-        }
-    }, [transactions, data, isLoaded]);
+    if (transactions.length > 0 && !isLoaded) {
+        totalsByCategory(transactions);
+        transactionsByCategory(transactions);
+        setIsLoaded(true);
+    }
+}, [transactions, isLoaded]);
+
 
 
     function getHighestCategory(totals) {
@@ -58,25 +57,33 @@ const MainPieChart = ( { transactions, openModal } ) => {
     }
 
     const totalsByCategory = (inputTransactions) => {
-        let categorized = inputTransactions.reduce((acc, transaction) => {
-            const {category, price} = transaction;
+    let categorized = inputTransactions.reduce((acc, transaction) => {
+        const { category, price } = transaction;
 
-            // Find existing category in the accumulator
-            let categoryObj = acc.find(obj => obj.name === category);
+        // Find existing category in the accumulator
+        let categoryObj = acc.find(obj => obj.name === category);
 
-            // If category does not exist, create it
-            if (!categoryObj) {
-                categoryObj = {name: category, value: 0};
-                acc.push(categoryObj);
-            }
+        // If category does not exist, create it
+        if (!categoryObj) {
+            categoryObj = { name: category, value: 0 };
+            acc.push(categoryObj);
+        }
 
-            // Add the price to the existing category value
-            categoryObj.value += parseFloat(price);
+        // Add the price to the existing category value
+        categoryObj.value += parseFloat(price);
 
-            return acc;
-        }, []);
-        setData(categorized)
+        return acc;
+    }, []);
+
+    setData(categorized);
+
+    // Calculate and set the highest category
+    if (categorized.length > 0) {
+        const highestCat = getHighestCategory(categorized);
+        setHighest(highestCat.name);
     }
+};
+
 
     const transactionsByCategory = (inputTransactions) => {
         let categorized = inputTransactions.reduce((acc, transaction) => {
