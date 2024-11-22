@@ -1,5 +1,5 @@
 import GaugeChart from 'react-gauge-chart'
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import HealthSnapshot from "../HealthSnapshot.jsx";
 
 const healthLabelMap = {
@@ -83,8 +83,10 @@ const AccountHealthWidget = ( { transactions, savingsGoal, income, spent } ) => 
         // console.log("Savings Goal: "+savingsGoal)
         if (spent >= income && parseInt(savingsGoal) < 50) {
             setAccountHealth("Bad")
+            setBadFine(true)
         } else if (spent >= income && parseInt(savingsGoal) >= 50 && parseInt(savingsGoal) < 100) {
             setAccountHealth("Okay")
+            setBadFine(true)
         } else if (spent >= income && parseInt(savingsGoal) === 100) {
             setAccountHealth("Fine")
             setBadFine(true)
@@ -109,29 +111,34 @@ const AccountHealthWidget = ( { transactions, savingsGoal, income, spent } ) => 
         <div className={"account_health_widget"}>
                 <div className={"account_health_widget_content"}>
                     <h2 className={"account_health_title"}>Monthly Health</h2>
-                    <div className={"account_health_gauge_content"}>
-                        <GaugeChart
-                            hideText={true}
-                            nrOfLevels={5}
-                            colors={[
-                                // "#FF5F6D",
-                                // "#FFA863",
-                                // "#FFF968",
-                                // "#B7FF6D",
-                                // "#71FF73",
-                                "#c2c2c6",
-                                "#d0d0df",
-                                "#c2c1dd",
-                                "#a8a6d6",
-                                "#8884d8",
-                            ]}
-                            percent={healthMeter}
-                        />
-                        <div className={"account_health_gauge_label " + healthLabel}>{accountHealth}</div>
-                        <div className={"account_health_snapshot_button_container"}>
-                            <button onClick={openModal} className={"account_health_snapshot_button"}>View Breakdown</button>
-                        </div>
-                    </div>
+                    {(spent > 0 && income > 0) ?
+                        <div className={"account_health_gauge_content"}>
+                            <GaugeChart
+                                hideText={true}
+                                nrOfLevels={5}
+                                colors={[
+                                    // "#FF5F6D",
+                                    // "#FFA863",
+                                    // "#FFF968",
+                                    // "#B7FF6D",
+                                    // "#71FF73",
+                                    "#c2c2c6",
+                                    "#d0d0df",
+                                    "#c2c1dd",
+                                    "#a8a6d6",
+                                    "#8884d8",
+                                ]}
+                                percent={healthMeter}
+                            />
+                            <div className={"account_health_gauge_label " + healthLabel}>{accountHealth}</div>
+                            <div className={"account_health_snapshot_button_container"}>
+                                <button onClick={openModal} className={"account_health_snapshot_button"}>View
+                                    Breakdown
+                                </button>
+                            </div>
+                        </div> :
+                        <p className={"no_content_text"}>Not enough data to calculate health.</p>
+                    }
                 </div>
             {showModal &&
                 <HealthSnapshot highest={highest} badFine={badFine} accountHealth={accountHealth} closeModal={closeModal} />

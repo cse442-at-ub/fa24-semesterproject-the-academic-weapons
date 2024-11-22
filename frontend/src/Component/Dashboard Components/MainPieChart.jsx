@@ -122,7 +122,9 @@ const MainPieChart = ( { transactions, openModal } ) => {
     return (
         <div className="chart-container">
             <h2 className="Category_spend_txt">Categorized Spending</h2>
-            <button onClick={() => setIsModalOpen(true)} className="chart-type-button">Select Chart Type</button>
+            {transactions.length > 0 &&
+                <button onClick={() => setIsModalOpen(true)} className="chart-type-button">Select Chart Type</button>
+            }
             <GraphSelectionModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
@@ -185,7 +187,7 @@ const MainPieChart = ( { transactions, openModal } ) => {
                     )}
                 </div>
             ) : (
-                <p style={{ textAlign: "center" }}>
+                <p className={"no_content_text"} style={{ textAlign: "center" }}>
                     No transactions data to display yet.
                     <br />
                     Try <span onClick={openModal} style={{ color: "#7984D2", textDecoration: "underline", cursor: "pointer" }}>adding a transaction</span>

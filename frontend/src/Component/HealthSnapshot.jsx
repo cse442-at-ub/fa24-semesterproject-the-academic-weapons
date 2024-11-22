@@ -5,6 +5,9 @@ const HealthSnapshot = ( { highest, badFine, accountHealth, closeModal } ) => {
     const overSpent = ['Bad', 'Okay', 'Fine']
     const underSpent = ['Fine', 'Good', 'Great']
 
+    console.log(highest)
+    console.log(accountHealth)
+
     return (
         <div onClick={closeModal} className={"edit_background"}>
             <div onClick={e => e.stopPropagation()} className={"health_snapshot_content"}>
@@ -80,7 +83,7 @@ const HealthSnapshot = ( { highest, badFine, accountHealth, closeModal } ) => {
                     <div className={"health_snapshot_data_item"}>
                         <h3>Spending Habits</h3>
                         <div className={"health_breakdown_text"}>
-                            {overSpent.includes(accountHealth) && badFine &&
+                            {(overSpent.includes(accountHealth) && badFine) &&
                                 `Your highest spending category this month is ${highest}. While 
                                 it’s natural for certain expenses to take a larger portion of your 
                                 budget, focusing on reducing spending in this area, if possible, can 
@@ -89,7 +92,7 @@ const HealthSnapshot = ( { highest, badFine, accountHealth, closeModal } ) => {
                                 or other financial goals, which can strengthen your budget and boost 
                                 your account health in the long run.`
                             }
-                            {underSpent.includes(accountHealth) && !badFine &&
+                            {(underSpent.includes(accountHealth) && !badFine) &&
                                 `Great job on keeping your spending within your income this month! 
                                 Your highest spending category is ${highest}. While you've managed 
                                 your budget well, reducing expenses in ${highest}—if possible—could 
