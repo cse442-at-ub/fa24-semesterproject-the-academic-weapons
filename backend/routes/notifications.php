@@ -17,8 +17,30 @@ if ($method === 'GET') {
     $currentDate = date("Y-m-d");
     $nextWeekDate = date("Y-m-d", strtotime("+7 days"));
 
+    // Helper function to check if a transaction exists
+    function transactionExists($conn, $transactionId) {
+        $query = "SELECT id FROM transactions WHERE id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $transactionId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result->num_rows > 0;
+    }
+
+    // Helper function to check if an income exists
+    function incomeExists($conn, $incomeId) {
+        $query = "SELECT id FROM income WHERE id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $incomeId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result->num_rows > 0;
+    }
+
     // Retrieve recurring transactions for the user within the next week
-    $recurringQuery = "
+    $recurringTransactionsQuery = "
         SELECT id, name, price, category, date, recurring, next_recurrence_date
         FROM transactions
         WHERE user_id = ?
@@ -26,20 +48,32 @@ if ($method === 'GET') {
         AND next_recurrence_date IS NOT NULL
         AND next_recurrence_date BETWEEN ? AND ?
     ";
-
-    $stmt = $conn->prepare($recurringQuery);
+    $stmt = $conn->prepare($recurringTransactionsQuery);
     $stmt->bind_param("iss", $userId, $currentDate, $nextWeekDate);
     $stmt->execute();
-    $result = $stmt->get_result();
+    $transactionsResult = $stmt->get_result();
 
-    // Insert new notifications only if they don't already exist
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
+    // Retrieve recurring incomes for the user within the next week
+    $recurringIncomesQuery = "
+        SELECT id, income_amount AS amount, category, date, recurring, next_recurrence_date
+        FROM income
+        WHERE user_id = ?
+        AND recurring = 1
+        AND next_recurrence_date IS NOT NULL
+        AND next_recurrence_date BETWEEN ? AND ?
+    ";
+    $incomeStmt = $conn->prepare($recurringIncomesQuery);
+    $incomeStmt->bind_param("iss", $userId, $currentDate, $nextWeekDate);
+    $incomeStmt->execute();
+    $incomesResult = $incomeStmt->get_result();
+
+    // Insert new notifications for transactions if they don't already exist
+    while ($row = $transactionsResult->fetch_assoc()) {
+        if (transactionExists($conn, $row['id'])) {
             $notificationCheckQuery = "
                 SELECT id FROM notifications
-                WHERE user_id = ? AND transaction_id = ?
+                WHERE user_id = ? AND transaction_id = ? AND income_id IS NULL
             ";
-
             $checkStmt = $conn->prepare($notificationCheckQuery);
             $checkStmt->bind_param("ii", $userId, $row['id']);
             $checkStmt->execute();
@@ -48,8 +82,8 @@ if ($method === 'GET') {
             // If no existing notification, create a new one
             if ($checkResult->num_rows === 0) {
                 $insertNotificationQuery = "
-                    INSERT INTO notifications (user_id, transaction_id, message, due_date, is_read)
-                    VALUES (?, ?, ?, ?, 0)
+                    INSERT INTO notifications (user_id, transaction_id, income_id, message, due_date, is_read)
+                    VALUES (?, ?, NULL, ?, ?, 0)
                 ";
 
                 $message = "Upcoming Transaction: {$row['name']} - \${$row['price']}";
@@ -63,14 +97,43 @@ if ($method === 'GET') {
         }
     }
 
+    // Insert new notifications for incomes if they don't already exist
+    while ($row = $incomesResult->fetch_assoc()) {
+        if (incomeExists($conn, $row['id'])) {
+            $notificationCheckQuery = "
+                SELECT id FROM notifications
+                WHERE user_id = ? AND income_id = ? AND transaction_id IS NULL
+            ";
+            $checkStmt = $conn->prepare($notificationCheckQuery);
+            $checkStmt->bind_param("ii", $userId, $row['id']);
+            $checkStmt->execute();
+            $checkResult = $checkStmt->get_result();
+
+            // If no existing notification, create a new one
+            if ($checkResult->num_rows === 0) {
+                $insertNotificationQuery = "
+                    INSERT INTO notifications (user_id, transaction_id, income_id, message, due_date, is_read)
+                    VALUES (?, NULL, ?, ?, ?, 0)
+                ";
+
+                $message = "Upcoming Income: {$row['category']} - \${$row['amount']}";
+                $insertStmt = $conn->prepare($insertNotificationQuery);
+                $insertStmt->bind_param("iiss", $userId, $row['id'], $message, $row['next_recurrence_date']);
+                $insertStmt->execute();
+                $insertStmt->close();
+            }
+
+            $checkStmt->close();
+        }
+    }
+
     // Retrieve all notifications for the user
     $fetchNotificationsQuery = "
-        SELECT id, transaction_id, message, due_date, is_read
+        SELECT id, transaction_id, income_id, message, due_date, is_read
         FROM notifications
         WHERE user_id = ?
         ORDER BY due_date ASC
     ";
-
     $fetchStmt = $conn->prepare($fetchNotificationsQuery);
     $fetchStmt->bind_param("i", $userId);
     $fetchStmt->execute();
@@ -81,6 +144,7 @@ if ($method === 'GET') {
         $notifications[] = [
             "id" => $notification['id'],
             "transactionId" => $notification['transaction_id'],
+            "incomeId" => $notification['income_id'],
             "message" => $notification['message'],
             "dueDate" => $notification['due_date'],
             "isRead" => $notification['is_read'] == 1

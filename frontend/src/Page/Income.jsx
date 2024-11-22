@@ -17,6 +17,7 @@ const Income = ({ setErrorMessage, openError }) => {
   const [incomes, setIncomes] = useState([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false)
   const [removeID, setRemoveID] = useState(-1)
+  const [isRecurring, setIsRecurring] = useState(false);
 
   useEffect(() => {
 
@@ -109,7 +110,7 @@ const Income = ({ setErrorMessage, openError }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({user_id, income_amount, category, date, userToken, id})
+        body: JSON.stringify({user_id, income_amount, category, date, is_recurring: isRecurring, userToken, id})
       });
 
       const data = await response.json();
@@ -139,6 +140,7 @@ const Income = ({ setErrorMessage, openError }) => {
         setMonthlyIncome('');
         setIncomeCategory('');
         setIncomeDate('');
+        setIsRecurring(false);
       } else {
         setErrorMessage(`Error: ${data.message}`);
         openError();
@@ -152,6 +154,7 @@ const Income = ({ setErrorMessage, openError }) => {
     setMonthlyIncome(income.income_amount);
     setIncomeCategory(income.category);
     setIncomeDate(income.date);
+    setIsRecurring(income.is_recurring);
     setEditIncomeId(income.id);
     setEditMode(true);
   };
@@ -198,6 +201,7 @@ const Income = ({ setErrorMessage, openError }) => {
     setIncomeDate('')
     setIncomeCategory('')
     setMonthlyIncome('')
+    setIsRecurring(false)
     setEditMode(false)
   }
 
@@ -321,7 +325,7 @@ const Income = ({ setErrorMessage, openError }) => {
             type="text"
             value={incomeCategory}
             onChange={handleIncomeCategoryChange}
-            placeholder="Source"
+            placeholder="Category"
             className="income-input"
           />
           <input
@@ -330,6 +334,14 @@ const Income = ({ setErrorMessage, openError }) => {
             onChange={handleIncomeDateChange}
             className="income-input"
           />
+          <label className="recurring-checkbox">
+            <input
+              type="checkbox"
+              checked={isRecurring}
+              onChange={(e) => setIsRecurring(e.target.checked)}
+            />
+            Recurring Transaction
+          </label>
           <button onClick={submitIncomeToDB} className="submit-button">
             {editMode ? 'Save' : 'Add'}
           </button>
