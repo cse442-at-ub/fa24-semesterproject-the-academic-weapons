@@ -13,7 +13,8 @@ const Dashboard = ( { savingsGoal, monthlyIncome, spent, widgetOrder, updateEdit
     'Monthly Spending',
     'Transactions',
     'Income Report',
-    'Goals'
+    'Goals',
+    'Monthly Health'
   ]
   const dashOrder = widgetOrder.length > 0 ? widgetOrder:defaultOrder
   const CategorizedSpending = () => {
@@ -60,20 +61,25 @@ const Dashboard = ( { savingsGoal, monthlyIncome, spent, widgetOrder, updateEdit
     )
   }
 
+  const MonthlyHealth = () => {
+    return (
+        <AccountHealthWidget transactions={transactions} savingsGoal={savingsGoal} income={monthlyIncome} spent={spent}/>
+    )
+  }
+
+
   const dashboardWidgets = {
     "Categorized Spending": <CategorizedSpending/>,
     "Monthly Spending": <MonthlySpending/>,
     "Transactions": <Transactions/>,
     "Income Report": <IncomeReport/>,
-    "Goals": <Goals/>
+    "Goals": <Goals/>,
+    "Monthly Health": <MonthlyHealth />
   }
 
   return (
       <div className="dashboard">
         <div className="dashboard-content">
-          <div className={"box"}>
-            <AccountHealthWidget savingsGoal={savingsGoal} income={monthlyIncome} spent={spent} />
-          </div>
           {dashOrder.map((widget, index) => (
               <div className={"box"} key={index}>
                 {dashboardWidgets[widget]}

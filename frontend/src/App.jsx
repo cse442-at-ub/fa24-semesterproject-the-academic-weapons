@@ -7,6 +7,7 @@ import './CSS Files/EditTransaction.css'
 import './CSS Files/SavingsGoalBox.css'
 import './CSS Files/Settings Components/ReorderWidgets.css'
 import './CSS Files/Dashboard Components/AccountHealthWidget.css'
+import './CSS Files/HealthSnapshot.css'
 import {HashRouter, Routes, Route, useLocation} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Settings from "./Page/Settings";
@@ -66,7 +67,8 @@ function App() {
         'Monthly Spending',
         'Transactions',
         'Income Report',
-        'Goals'
+        'Goals',
+        'Monthly Health'
     ]
     const [widgetOrder, setWidgetOrder] = useState(defaultOrder)
     const [widgetsLoaded, setWidgetsLoaded] = useState(false)
