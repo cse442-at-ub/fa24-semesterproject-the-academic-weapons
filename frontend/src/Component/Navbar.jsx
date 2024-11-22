@@ -93,23 +93,28 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
         const numberValue = Number(value);
         setTempManageAmount(isNaN(numberValue) || numberValue < 0 ? 0 : numberValue);
     };
-    const fetchRecurringNotifications = async () => {
-      try {
+    const fetchNotifications = async () => {
+    try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_PATH}/routes/notifications.php`
+            `${import.meta.env.VITE_API_PATH}/routes/notifications.php?userId=${userID}`
         );
         if (!response.ok) {
-          throw new Error("Failed to fetch notifications");
+            throw new Error(`Failed to fetch notifications: ${response.statusText}`);
         }
         const data = await response.json();
-        setNotifications(data);
-      } catch (error) {
-        console.error("Error fetching recurring notifications:", error);
-      }
-    };
+        if (data.success) {
+            setNotifications(data.notifications);
+        } else {
+            console.error("Failed to fetch notifications: ", data.message || "Unknown error");
+        }
+    } catch (error) {
+        console.error("Error fetching notifications:", error);
+    }
+};
+
 
     useEffect(() => {
-        fetchRecurringNotifications();
+        fetchNotifications();
 
 
          const handleClickOutside = (event) => {
@@ -171,21 +176,73 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
     };
 
 
-    const markNotificationAsRead = (id) => {
-      setNotifications((prev) =>
-        prev.map((notification) =>
-          notification.id === id ? { ...notification, isRead: true } : notification
-        )
-      );
-    };
+    const markNotificationAsRead = async (id) => {
+    try {
+        const response = await fetch(
+            `${import.meta.env.VITE_API_PATH}/routes/notifications.php`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ markAsRead: [id] }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Failed to mark notification as read: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        if (data.success) {
+            setNotifications((prev) =>
+                prev.map((notification) =>
+                    notification.id === id ? { ...notification, isRead: true } : notification
+                )
+            );
+        } else {
+            console.error("Failed to mark notification as read:", data.message || "Unknown error");
+        }
+    } catch (error) {
+        console.error("Error marking notification as read:", error);
+    }
+};
 
 
-    // Mark all notifications as read
-    const markAllAsRead = () => {
-    setNotifications((prev) =>
-    prev.map((notification) => ({ ...notification, isRead: true }))
-    );
-    };
+const markAllAsRead = async () => {
+    try {
+        const unreadIds = notifications
+            .filter((notification) => !notification.isRead)
+            .map((notification) => notification.id);
+
+        if (unreadIds.length === 0) {
+            console.warn("No unread notifications to mark as read.");
+            return;
+        }
+
+        const response = await fetch(
+            `${import.meta.env.VITE_API_PATH}/routes/notifications.php`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ markAsRead: unreadIds }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Failed to mark all notifications as read: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        if (data.success) {
+            setNotifications((prev) =>
+                prev.map((notification) => ({ ...notification, isRead: true }))
+            );
+        } else {
+            console.error("Failed to mark all notifications as read:", data.message || "Unknown error");
+        }
+    } catch (error) {
+        console.error("Error marking all notifications as read:", error);
+    }
+};
 
     // Count unread notifications
     const unreadCount = notifications.filter((n) => !n.isRead).length;
@@ -243,44 +300,50 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
           )}
         </div>
         {isNotificationOpen && (
-          <div className="notification-dropdown" ref={dropdownRef}>
-            <div className="notification-header">
-              <h3>Notifications</h3>
-              <button onClick={markAllAsRead} className="mark-read-btn">
-                Mark All as Read
-              </button>
+            <div className="notification-dropdown" ref={dropdownRef}>
+                <div className="notification-header">
+                    <h3>Notifications</h3>
+                    <button onClick={markAllAsRead} className="mark-read-btn">
+                        Mark All as Read
+                    </button>
+                </div>
+                <ul className="notification-list">
+                    {notifications.map((notification) => (
+                        <li
+                            key={notification.id}
+                            className={`notification-item ${
+                                notification.isRead ? "read" : "unread"
+                            }`}
+                        >
+                            <div className="notification-card">
+                                <div className="notification-content">
+                                    <p className="notification-title">
+                                        {notification.message}
+                                    </p>
+                                    <p className="notification-due-date">
+                                        <strong>Due Date:</strong> {notification.dueDate}
+                                    </p>
+                                </div>
+                                <div className="notification-actions">
+                                    {!notification.isRead ? (
+                                        <button
+                                            className="mark-read-btn"
+                                            onClick={() => markNotificationAsRead(notification.id)}
+                                        >
+                                            Mark as Read
+                                        </button>
+                                    ) : (
+                                        <span className="read-status">Read</span>
+                                    )}
+                                </div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+                {notifications.length === 0 && (
+                    <p className="no-notifications">No notifications available.</p>
+                )}
             </div>
-              <ul className="notification-list">
-                  {notifications.map((notification) => (
-                      <li key={notification.id} className={`notification-item ${notification.isRead ? "" : "unread"}`}>
-                          <div className="notification-card">
-                              <div className="notification-content">
-                                  <p className="notification-title">
-                                      <strong>Recurring Transaction:</strong> {notification.message}
-                                  </p>
-                                  <p className="notification-due-date">
-                                      <span>Due Date:</span> <strong>{notification.dueDate}</strong>
-                                  </p>
-                              </div>
-                              <div className="notification-actions">
-                                  <button className="mark-read-btn"
-                                          onClick={() => markNotificationAsRead(notification.id)}>
-                                      Mark as Read
-                                  </button>
-                              </div>
-                          </div>
-                      </li>
-                  ))}
-                  {notifications.length === 0 && (
-                      <li className="no-notifications">
-                          <p>You're all caught up! No notifications available.</p>
-                      </li>
-                  )}
-              </ul>
-              {notifications.length === 0 && (
-                  <p className="no-notifications">No notifications available.</p>
-              )}
-          </div>
         )}
                 <div className="navbar-savings-container" onClick={() => openModal('savings')}>
                     <FaPiggyBank className="savings-icon" style={{fontSize: '2rem', cursor: 'pointer'}}/>
@@ -301,7 +364,7 @@ const Navbar = ({openError, setErrorMessage, username, openSettings, pfpMap, pfp
             {currentModal === 'savings' && (
                 <div className="modal-overlay" onClick={closeAllModals}>
                     <div className="modal-content_piggy" onClick={(e) => e.stopPropagation()}>
-                        <CloseButton onClick={closeAllModals} />
+                        <CloseButton onClick={closeAllModals}/>
                         <div className='values_container_piggy'>
                             <p className="savings-text_percentage_main">${currentSavings.toFixed(2)} Allocated</p>
                             <p className="allocated-text-piggy-top">${savingsGoal.toFixed(2)} Saved</p>

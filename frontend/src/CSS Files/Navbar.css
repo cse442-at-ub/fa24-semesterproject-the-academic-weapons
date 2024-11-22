@@ -23,18 +23,29 @@
     align-items: center;
     cursor: pointer;
     margin-right: auto;
+    gap: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.navbar-logo:hover {
+    transform: scale(1.05);
 }
 
 .logo-image {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #5661AC;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .logo-text {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
+    color: #5661AC;
     line-height: 1.2;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-profile {
@@ -86,6 +97,7 @@
 }
 
 .savings-icon {
+    color: #5661AC;
     cursor: pointer;
 }
 
@@ -533,91 +545,98 @@ background-color: #c8c8c8;
 }
 
 .notification-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-height: 300px;
-  overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .notification-item {
-  padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
 }
 
-.notification-item:last-child {
-  border-bottom: none;
+.notification-item.read {
+    background-color: #e8f5e9;
+    color: #616161;
 }
 
-.notification-item:hover {
-  background-color: #f9f9f9;
-}
-
-.unread {
-  background-color: #f7faff; /* Light blue background for unread notifications */
+.notification-item.unread {
+    background-color: #ffffff;
+    color: #000000;
 }
 
 .notification-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.notification-content {
-  flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
 }
 
 .notification-title {
-  font-size: 1rem;
-  color: #333;
-  margin-bottom: 4px;
+    font-weight: bold;
+    margin: 0;
 }
 
 .notification-due-date {
-  font-size: 0.85rem;
-  color: #777;
-}
-
-.notification-due-date span {
-  font-weight: bold;
-  color: #555;
+    font-size: 0.9rem;
+    color: #757575;
+    margin: 0;
 }
 
 .notification-actions {
-  display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  gap: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
 }
 
 .mark-read-btn {
-  background-color: #7984d2;
-  color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 5px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    padding: 6px 12px;
+    background-color: #3f51b5;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .mark-read-btn:hover {
-  background-color: #5f6cb3;
+    background-color: #303f9f;
+}
+
+.read-status {
+    font-size: 0.8rem;
+    color: #757575;
 }
 
 .no-notifications {
-  text-align: center;
-  padding: 20px;
-  font-size: 0.9rem;
-  color: #777;
+    text-align: center;
+    font-style: italic;
+    color: #757575;
+    padding: 10px;
 }
+
 
 
 /* Mobile-specific styles */
 @media only screen and (max-width: 768px) {
+     .logo-image {
+        width: 50px;
+        height: 50px;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+    }
     .mobile-menu-icon {
         display: block; /* Show mobile menu button */
     }
@@ -678,6 +697,9 @@ background-color: #c8c8c8;
 }
 
 @media only screen and (max-width: 400px) {
+    .logo-text {
+        display: none; /* Hide text for very small screens */
+    }
     .navbar_name {
         display: none; /* Hide name for very small screens */
     }
