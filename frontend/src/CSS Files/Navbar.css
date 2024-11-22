@@ -675,11 +675,6 @@ background-color: #c8c8c8;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border-top: 1px solid #ccc;
 }
-    .notification-dropdown
-    {
-        top: 200px;
-        height: 330px;
-    }
 
 .mobile-nav-item {
     padding: 10px;
