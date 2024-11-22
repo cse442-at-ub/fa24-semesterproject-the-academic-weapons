@@ -1,9 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {FaBars, FaPiggyBank} from 'react-icons/fa';
 import logo from '../logo.svg';
-import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { FaBell } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const CloseButton = ({ onClick, text }) => (
     <button className="close-button_piggy_bank_overlay" onClick={onClick}>{text}</button>
@@ -292,7 +291,7 @@ const markAllAsRead = async () => {
           ref={bellRef}
           onClick={toggleNotifications}
         >
-          <FontAwesomeIcon icon={faBell} className="notification-icon" />
+          <FaBell className="notification-icon" />
           {unreadCount > 0 && (
             <span className="notification-badge">{unreadCount}</span>
           )}
