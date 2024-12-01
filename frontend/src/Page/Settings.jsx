@@ -4,9 +4,9 @@ import ChangeUsername from "../Component/Settings Components/ChangeUsername";
 import ChangePFP from "../Component/Settings Components/ChangePFP";
 import ChangePassword from "../Component/Settings Components/ChangePassword.jsx";
 import DeleteAccount from "../Component/Settings Components/DeleteAccount.jsx";
+import ReorderWidgets from "../Component/Settings Components/ReorderWidgets.jsx";
 
-
-const Settings = ({ openError, setErrorMessage, closeSettings, pfpMap, changePFP, pfp, username, changeUsername, deleteAccount }) => {
+const Settings = ({setWidgetOrder, widgetOrder, openError, setErrorMessage, closeSettings, pfpMap, changePFP, pfp, username, changeUsername, deleteAccount }) => {
     const active = 'settings_button_active';
     const inactive = 'settings_button_inactive';
     const top_active = "settings_top_tab_button_active";
@@ -17,6 +17,7 @@ const Settings = ({ openError, setErrorMessage, closeSettings, pfpMap, changePFP
     const [showChangePFP, setShowChangePFP] = useState(false);
     const [showChangePassword, setShowChangePassword] = useState(false);
     const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+    const [showReorderWidgets, setShowReorderWidgets] = useState(false)
 
     const openUsername = () => setShowChangeUsername(true);
     const closeUsername = () => setShowChangeUsername(false);
@@ -26,6 +27,9 @@ const Settings = ({ openError, setErrorMessage, closeSettings, pfpMap, changePFP
     const closeChangePassword = () => setShowChangePassword(false);
     const openDeleteAccount = () => setShowDeleteAccount(true);
     const closeDeleteAccount = () => setShowDeleteAccount(false);
+    const openReorderWidgets = () => setShowReorderWidgets(true);
+    const closeReorderWidgets = () => setShowReorderWidgets(false)
+
     return (
         <div onClick={closeSettings} className={"settings_modal_bg_container"}>
             <div onClick={event => event.stopPropagation()} className={"settings_modal_container"}>
@@ -38,17 +42,25 @@ const Settings = ({ openError, setErrorMessage, closeSettings, pfpMap, changePFP
                         <div onClick={() => setShowSettings('General')} className={showSettings === "General" ? top_active : top_inactive}>General</div>
                         <div onClick={() => setShowSettings('Security')} className={showSettings === "Security" ? top_active : top_inactive}>Security</div>
                     </div>
-                    <div className={"settings_tab_content"}>
+                    {/*<div className={"settings_tab_content"}>*/}
                         {showSettings === 'General' ?
                             <div className={"settings_tab_rows"}>
                                 <div className={"settings_tab_row"}>
                                     <div className={"settings_change_label"}>{"Username: " + username}</div>
                                     <button onClick={openUsername} className={change_button}>Change</button>
                                 </div>
-                                <br />
+                                <br/>
                                 <div className={"settings_tab_row"}>
-                                    <div className={"settings_change_label"}>Profile Picture: <img src={pfpMap[pfp]} alt="Profile Icon" className="settings_profile_picture" /></div>
+                                    <div className={"settings_change_label"}>Profile Picture: <img src={pfpMap[pfp]}
+                                                                                                   alt="Profile Icon"
+                                                                                                   className="settings_profile_picture"/>
+                                    </div>
                                     <button onClick={openChangePFP} className={change_button}>Change</button>
+                                </div>
+                                <br/>
+                                <div className={"settings_tab_row"}>
+                                    <div className={"settings_change_label"}>Reorder Dashboard Widgets</div>
+                                    <button onClick={openReorderWidgets} className={change_button}>Reorder</button>
                                 </div>
                             </div> :
                             <div>
@@ -63,12 +75,13 @@ const Settings = ({ openError, setErrorMessage, closeSettings, pfpMap, changePFP
                                 </div>
                             </div>
                         }
-                    </div>
+                    {/*</div>*/}
                 </div>
                 {showChangeUsername && <ChangeUsername openError={openError} setErrorMessage={setErrorMessage} closeModal={closeUsername} changeUsername={changeUsername} />}
                 {showChangePFP && <ChangePFP openError={openError} setErrorMessage={setErrorMessage} pfpMap={pfpMap} changePFP={changePFP} closeModal={closeChangePFP} />}
                 {showChangePassword && <ChangePassword openError={openError} setErrorMessage={setErrorMessage} closeModal={closeChangePassword} />}
                 {showDeleteAccount && <DeleteAccount openError={openError} setErrorMessage={setErrorMessage} deleteAccount={deleteAccount} closeModal={closeDeleteAccount} />}
+                {showReorderWidgets && <ReorderWidgets setWidgetOrder={setWidgetOrder} closeModal={closeReorderWidgets} widgetOrder={widgetOrder}/>}
             </div>
         </div>
     );

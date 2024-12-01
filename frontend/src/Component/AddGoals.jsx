@@ -99,9 +99,6 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
                             <button type="submit" onClick={handleAddGoal} className="add_goal_add_btn">Add</button>
                         </div>
                     </form>
-                    <div className="add_goals_close_text_container">
-                        <div className="add_goal_close_text" onClick={closeModal}>Cancel</div>
-                    </div>
                 </div>
                 <div className="add_goal_added_box_container">
                     <h1 className="add_goal_title">Added Goals</h1>
@@ -123,8 +120,9 @@ const AddGoals = ({ closeModal, addGoal, maxGoalID, updateMaxGoalID }) => {
                         )}
                     </div>
                     {message && <p className="success-message">{message}</p>}
-                    <div className="add_goal_added_save_exit_container">
-                        <button onClick={handleSaveAndExit} className="add_goal_add_btn">Save and Exit</button>
+                    <div className={'add_goal_added_save_exit_container'}>
+                        <button onClick={handleSaveAndExit} className={"add_goal_add_btn"}>Save and Exit</button>
+                        <div className={"add_goal_close_text"} onClick={closeModal}>Cancel</div>
                     </div>
                 </div>
             </div>

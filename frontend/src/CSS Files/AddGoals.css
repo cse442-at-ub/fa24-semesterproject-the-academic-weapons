@@ -6,7 +6,8 @@
     width: 100vw;
     height: 100vh;
     overflow-y: auto;
-    margin-bottom: 20px;
+    padding-top: 15px;
+    /*margin-bottom: 20px;*/
     background-color: rgba(0, 0, 0, 0.42);
 }
 
@@ -17,7 +18,7 @@
     margin-inline: auto;
     width: 90vw;
     max-width: 900px;
-    margin-top: 35px;
+    /*margin-top: 35px;*/
     height: auto;
     display: flex;
     flex-direction: row;
@@ -34,7 +35,7 @@
     padding-top: 0px;
     font-size: clamp(25px, 2vw, 35px);
     text-align: center;
-    color: #5661AC;
+    color: #8884d8;
     font-weight: normal;
     font-family: Arial, sans-serif;
 }
@@ -48,8 +49,8 @@
 }
 
 .add_goal_input_label {
-    font-size: 25px;
-    color: #5661AC;
+    font-size: 20px;
+    color: #8884d8;
     margin-bottom: 2px;
 }
 
@@ -68,9 +69,10 @@
 }
 
 .add_goal_add_btn {
+    color: white;
     border: 1px solid rgb(0,0,0,0);
-    background-color: #ecebeb;
-    border-radius: 30px;
+    background-color: #8884d8;
+    border-radius: 5px;
     font-size: 25px;
     margin-top: 20px;
     width: 200px;
@@ -81,7 +83,7 @@
 }
 
 .add_goal_add_btn:hover {
-    background-color: #d3d3d3;
+    background-color: #625eb6;
 }
 
 .add_goals_close_text_container
@@ -92,14 +94,14 @@
 
 .add_goal_close_text {
     text-align: center;
-    color: #5661AC;
+    color: #8884d8;
     text-decoration: underline;
     cursor: pointer;
     transition: color .3s ease;
 }
 
 .add_goal_close_text:hover {
-    color: #d3d3d3;
+    color: #625eb6;
 }
 
 .add_goal_added_box_container {
@@ -119,6 +121,9 @@
 }
 
 .add_goal_added_save_exit_container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     margin-top: 20px;
     text-align: center;
 }
@@ -147,13 +152,16 @@
 
 @media only screen and (max-width: 1000px) {
 
+    .add_goal_modal_container {
+        padding-bottom: 15px;
+    }
+
     .add_goal_modal_container_inside {
         flex-direction: column;
     }
     .add_goal_add_btn
     {
         border: 1px solid rgb(0,0,0,0);
-        background-color: #ecebeb;
         border-radius: 30px;
         font-size: 18px;
         margin-top: 10px;
@@ -170,7 +178,6 @@
     }
     .add_goal_input_label{
         font-size: 20px;
-        color: #5661AC;
         margin-bottom: 2px;
     }
     .add_goal_title {

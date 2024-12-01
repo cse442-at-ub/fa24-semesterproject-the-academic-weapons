@@ -2,126 +2,184 @@
 // update_income.php
 
 // Enable CORS
-header('Access-Control-Allow-Origin: *'); // Allow requests from any origin, change '*' to specific domain if needed
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS'); // Allow POST, GET, and OPTIONS methods
-header('Access-Control-Allow-Headers: Content-Type, Authorization'); // Allow specific headers
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json');
-
-// Handle preflight requests (for OPTIONS method)
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204); // No Content response for preflight requests
-    exit;
-}
 
 // Include your database connection (modify this path if necessary)
 include_once('../config/db.php');
 
-// Handle POST request to update income
+// Route requests based on HTTP method
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ensure necessary data is provided
-    if (isset($_POST['user_id']) && isset($_POST['income_amount']) && isset($_POST['date'])) {
-        $userID = intval($_POST['user_id']);
-        $incomeAmount = floatval($_POST['income_amount']);
-        $date = $_POST['date']; // Ensure that date is in 'YYYY-MM-DD' format
+    handlePost($conn);
+} else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    handlePut($conn);
+} else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    handleDelete($conn);
+} else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    handleGet($conn);
+} else {
+    echo json_encode(["success" => false, "message" => "Invalid request method"]);
+    exit;
+}
 
-        // Prepare an SQL statement to insert into the 'income' table
-        $query = "INSERT INTO income (user_id, income_amount, date) VALUES (?, ?, ?)";
+// Authenticate user
+function authenticateUser($conn, $userID, $token) {
+    $auth_stmt = $conn->prepare("SELECT * FROM users WHERE id = ? AND auth_token = ?");
+    $auth_stmt->bind_param("is", $userID, $token);
+    $auth_stmt->execute();
+    $auth_result = $auth_stmt->get_result();
+    $auth_stmt->close();
 
-        if ($stmt = $conn->prepare($query)) {
-            // Bind the parameters to the SQL query
-            $stmt->bind_param('ids', $userID, $incomeAmount, $date); // 'i' => integer, 'd' => double (decimal), 's' => string
-            
-            // Execute the statement
-            if ($stmt->execute()) {
-                // If successful, send a success response
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Income updated successfully!'
-                ]);
-            } else {
-                // If there's an error with execution
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Error executing query: ' . $stmt->error
-                ]);
-            }
+    return $auth_result->num_rows > 0;
+}
 
-            $stmt->close();
-        } else {
-            // If the query preparation fails
-            echo json_encode([
-                'success' => false,
-                'message' => 'Error preparing query: ' . $conn->error
-            ]);
+// Handle GET requests
+function handleGet($conn) {
+    if (!isset($_GET['user_id']) || !isset($_GET['token'])) {
+        echo json_encode(["success" => false, "message" => "User ID and token are required"]);
+        exit;
+    }
+
+    $userID = intval($_GET['user_id']);
+    $token = $_GET['token'];
+
+    if (!authenticateUser($conn, $userID, $token)) {
+        echo json_encode(["success" => false, "message" => "Authentication failed"]);
+        exit;
+    }
+
+    if (isset($_GET['current_month']) && $_GET['current_month'] === 'true') {
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+        $query = "SELECT SUM(income_amount) AS totalIncome FROM income WHERE user_id = ? AND YEAR(date) = ? AND MONTH(date) = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('iii', $userID, $currentYear, $currentMonth);
+        $stmt->execute();
+        $stmt->bind_result($totalIncome);
+        $stmt->fetch();
+        $stmt->close();
+        echo json_encode(["success" => true, "totalIncome" => $totalIncome ?: 0]);
+    } else if (isset($_GET['detailed']) && $_GET['detailed'] === 'true') {
+        $query = "SELECT id, income_amount, category, date, recurring, next_recurrence_date FROM income WHERE user_id = ? ORDER BY date DESC";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $userID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $incomeRecords = [];
+        while ($row = $result->fetch_assoc()) {
+            $incomeRecords[] = $row;
         }
+        $stmt->close();
+        echo json_encode(["success" => true, "incomes" => $incomeRecords]);
     } else {
-        // If any of the required POST fields are missing
-        echo json_encode([
-            'success' => false,
-            'message' => 'Missing required fields: user_id, income_amount, or date.'
-        ]);
+        $query = "SELECT SUM(income_amount) AS totalIncome FROM income WHERE user_id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $userID);
+        $stmt->execute();
+        $stmt->bind_result($totalIncome);
+        $stmt->fetch();
+        $stmt->close();
+        echo json_encode(["success" => true, "totalIncome" => $totalIncome ?: 0]);
     }
 }
 
-// Handle GET request to fetch total income for a user
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Ensure user_id is provided in the GET request
-    if (isset($_GET['user_id'])) {
-        $userID = intval($_GET['user_id']);
-        $totalIncome = 0;
+// Handle POST requests (Add new income)
+function handlePost($conn) {
+    $data = json_decode(file_get_contents('php://input'), true);
 
-        // Check if current month income is requested
-        if (isset($_GET['current_month']) && $_GET['current_month'] === 'true') {
-            // Get the current year and month
-            $currentYear = date('Y');
-            $currentMonth = date('m');
-
-            // Prepare an SQL query to calculate total income for the current month
-            $query = "SELECT SUM(income_amount) AS totalIncome FROM income WHERE user_id = ? AND YEAR(date) = ? AND MONTH(date) = ?";
-
-            if ($stmt = $conn->prepare($query)) {
-                // Bind the parameters
-                $stmt->bind_param('iii', $userID, $currentYear, $currentMonth); // 'i' => integer
-
-                // Execute the query
-                if ($stmt->execute()) {
-                    // Bind the result to a variable
-                    $stmt->bind_result($totalIncome);
-                    $stmt->fetch();
-                }
-                $stmt->close();
-            }
-        } else {
-            // Prepare an SQL query to calculate total income for the user
-            $query = "SELECT SUM(income_amount) AS totalIncome FROM income WHERE user_id = ?";
-
-            if ($stmt = $conn->prepare($query)) {
-                // Bind the user ID parameter
-                $stmt->bind_param('i', $userID); // 'i' => integer
-                
-                // Execute the query
-                if ($stmt->execute()) {
-                    // Bind the result to a variable
-                    $stmt->bind_result($totalIncome);
-                    $stmt->fetch();
-                }
-                $stmt->close();
-            }
-        }
-
-        // Send the total income as a response
-        echo json_encode([
-            'success' => true,
-            'totalIncome' => $totalIncome !== null ? $totalIncome : 0 // Return 0 if no income records are found
-        ]);
-    } else {
-        // If user_id is not provided
-        echo json_encode([
-            'success' => false,
-            'message' => 'Missing required field: user_id.'
-        ]);
+    if (!isset($data['user_id'], $data['userToken'], $data['income_amount'], $data['category'], $data['date'])) {
+        echo json_encode(["success" => false, "message" => "Missing required fields"]);
+        exit;
     }
+
+    $userID = intval($data['user_id']);
+    $token = $data['userToken'];
+    $incomeAmount = floatval($data['income_amount']);
+    $category = $data['category'];
+    $date = $data['date'];
+    $isRecurring = isset($data['is_recurring']) ? intval($data['is_recurring']) : 0;
+
+    if (!authenticateUser($conn, $userID, $token)) {
+        echo json_encode(["success" => false, "message" => "Authentication failed"]);
+        exit;
+    }
+
+    $nextRecurrenceDate = $isRecurring ? date('Y-m-d', strtotime('+1 month', strtotime($date))) : null;
+
+    $query = "INSERT INTO income (user_id, income_amount, category, date, recurring, next_recurrence_date) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('idssis', $userID, $incomeAmount, $category, $date, $isRecurring, $nextRecurrenceDate);
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true, "message" => "Income added successfully"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Error adding income: " . $stmt->error]);
+    }
+    $stmt->close();
 }
 
-$conn->close();
+// Handle PUT requests (Update existing income)
+function handlePut($conn) {
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (!isset($data['user_id'], $data['userToken'], $data['id'], $data['income_amount'], $data['category'], $data['date'])) {
+        echo json_encode(["success" => false, "message" => "Missing required fields"]);
+        exit;
+    }
+
+    $userID = intval($data['user_id']);
+    $token = $data['userToken'];
+    $id = intval($data['id']);
+    $incomeAmount = floatval($data['income_amount']);
+    $category = $data['category'];
+    $date = $data['date'];
+    $isRecurring = isset($data['is_recurring']) ? intval($data['is_recurring']) : 0;
+
+    if (!authenticateUser($conn, $userID, $token)) {
+        echo json_encode(["success" => false, "message" => "Authentication failed"]);
+        exit;
+    }
+
+    $nextRecurrenceDate = $isRecurring ? date('Y-m-d', strtotime('+1 month', strtotime($date))) : null;
+
+    $query = "UPDATE income SET income_amount = ?, category = ?, date = ?, recurring = ?, next_recurrence_date = ? WHERE id = ? AND user_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('dssisii', $incomeAmount, $category, $date, $isRecurring, $nextRecurrenceDate, $id, $userID);
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true, "message" => "Income updated successfully"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Error updating income: " . $stmt->error]);
+    }
+    $stmt->close();
+}
+
+// Handle DELETE requests (Delete income)
+function handleDelete($conn) {
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (!isset($data['userID'], $data['userToken'], $data['id'])) {
+        echo json_encode(["success" => false, "message" => "Missing required fields"]);
+        exit;
+    }
+
+    $userID = intval($data['userID']);
+    $token = $data['userToken'];
+    $id = intval($data['id']);
+
+    if (!authenticateUser($conn, $userID, $token)) {
+        echo json_encode(["success" => false, "message" => "Authentication failed"]);
+        exit;
+    }
+
+    $query = "DELETE FROM income WHERE id = ? AND user_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('ii', $id, $userID);
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true, "message" => "Income deleted successfully"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Error deleting income: " . $stmt->error]);
+    }
+    $stmt->close();
+}
 ?>

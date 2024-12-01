@@ -1,10 +1,13 @@
+
 .bar-chart-component {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  max-width: 100%;
-  padding: 20px;
+  width: 100%;
+  height: 10%; /* Allow the container to take full height of the parent */
+  padding: 10px;
+  padding-bottom: 1px;
+  box-sizing: border-box;
 }
 
 .bar-chart-header {
@@ -12,58 +15,89 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  margin-bottom: 20px;
 }
 
-.year-dropdown {
-  padding: 5px 10px;
+.Category_spend_txt {
+  text-align: center;
+  width: fit-content;
+  margin: 10px 0;
+  padding: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.year-dropdown, .chart-type-button {
+  padding: 8px 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #fff;
   font-size: 14px;
   cursor: pointer;
-  display: inline-block;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.year-dropdown:focus, .chart-type-button:focus {
+  outline: none;
+  border-color: #8884d8;
+}
+
+.chart-type-button:hover {
+  background-color: #e0e0e0;
 }
 
 .bar-chart-wrapper {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  flex: 1; /* Allow the chart container to grow */
   padding: 10px;
+  box-sizing: border-box;
 }
 
-p {
+.no_content_text {
   color: #888;
-  font-size: 14px;
+  font-size: 1rem;
+  text-align: center;
 }
 
-/* Media query for smaller screens */
 @media (max-width: 768px) {
   .bar-chart-header {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .year-dropdown {
-    margin-top: 10px; /* Add space between dropdown and title */
-    width: 100%; /* Make the dropdown fill the available width */
+  .header-controls {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .year-dropdown, .chart-type-button {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 10px;
   }
 
   .bar-chart-wrapper {
     padding: 0;
   }
-}
 
-@media (max-width: 480px) {
-  .bar-chart-header h3 {
-    /*font-size: 1rem;*/
+  .Category_spend_txt {
+    font-size: 1.2rem;
   }
 
-  .year-dropdown {
-    font-size: 12px;
-  }
-
-  .bar-chart-wrapper {
-    padding: 0;
+  .year-dropdown, .chart-type-button {
+    font-size: 0.9rem;
+    padding: 6px 12px;
   }
 }

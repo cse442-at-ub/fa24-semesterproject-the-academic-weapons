@@ -1,0 +1,77 @@
+.health_snapshot_content {
+    border: 3px solid #8884d8;
+    border-radius: 10px;
+    margin-inline: auto;
+    width: 90vw;
+    height: fit-content;
+    max-height: 90vh;
+    background-color: white;
+    overflow-y: scroll;
+}
+
+.health_modal_title_band {
+    width: 100%;
+    height: 10%;
+    position: relative;
+    /*background-color: rgba(0, 0, 0, 0);*/
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.health_modal_title_band h2 {
+    margin: 20px;
+    font-size: 30px;
+    font-weight: normal;
+}
+
+.health_snapshot_data {
+    max-height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    padding: 15px 30px 30px 30px;
+    gap: 30px;
+}
+
+.health_snapshot_data_item {
+    min-width: 270px;
+    width: 30%;
+    border-radius: 10px;
+    border: 3px solid #8884d8;
+    padding: 25px;
+    min-height: 400px;
+}
+
+.health_snapshot_data_item h3 {
+    font-size: 25px;
+    font-weight: bold;
+    color: #8884d8;
+}
+
+@media only screen and (max-width: 1050px) {
+
+    .health_snapshot_content {
+        overflow-y: scroll;
+        padding-bottom: 30px;
+    }
+
+    .health_snapshot_data {
+        overflow-y: scroll;
+        max-height: fit-content;
+        margin-inline: auto;
+        flex-direction: column;
+        justify-content: center;
+        width: 90%;
+        padding: 0;
+    }
+
+    .health_snapshot_data_item {
+        width: 100%;
+        min-width: fit-content;
+        min-height: 200px;
+    }
+
+}
