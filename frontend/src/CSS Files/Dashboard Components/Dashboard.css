@@ -78,6 +78,23 @@
   /*width: 100%;*/
   /*max-width: 100%;*/
 }
+
+.chart-type-button {
+  /*margin-bottom: 15px;*/
+  padding: 8px 16px;
+  background-color: #8884d8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  font-size: 1rem;
+}
+
+.chart-type-button:hover {
+  background-color: #625eb6;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
 

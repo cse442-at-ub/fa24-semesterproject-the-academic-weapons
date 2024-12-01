@@ -20,22 +20,6 @@
     color: #333;
 }
 
-.chart-type-button {
-    margin-bottom: 15px;
-    padding: 8px 16px;
-    background-color: #7984D2;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 1rem;
-}
-
-.chart-type-button:hover {
-    background-color: #5a6cb5;
-}
-
 .chart-section {
     width: 100%;
     display: flex;
