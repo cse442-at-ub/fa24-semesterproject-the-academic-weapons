@@ -141,3 +141,42 @@
     height: 50px;
     width: 50px;
 }
+.delete_account_title {
+    color: #D9534F; /* Red color */
+    font-weight: bold; /* Bold text */
+}
+
+.delete_warning {
+    color: #D9534F; /* Red color */
+    font-weight: bold; /* Bold text */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+.delete_button {
+    cursor: pointer;
+    height: 40px;
+    border-radius: 10px;
+    width: 50%;
+    border: 2px solid #D9534F; /* Red border color */
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #D9534F; /* Red background color */
+    text-transform: uppercase; /* Makes the text all caps */
+    margin-inline: auto;
+    margin-bottom: 25px;
+    transition: background-color 0.3s ease;
+}
+
+.delete_button:disabled {
+    background-color: #c6c6c6;
+    color: #AC6A6A;
+    border-color: #AC6A6A;
+    cursor: not-allowed;
+}
+
+.delete_button:hover:not(:disabled) {
+    background-color: #c9302c; /* Darker red on hover */
+}
+
