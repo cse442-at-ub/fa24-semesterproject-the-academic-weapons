@@ -546,7 +546,7 @@ background-color: #c8c8c8;
   right: 10px;
   width: 350px;
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 2px solid #8884d8;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
@@ -675,6 +675,12 @@ background-color: #c8c8c8;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border-top: 1px solid #ccc;
 }
+    .notification-dropdown
+    {
+        top: 200px;
+        height: auto;
+        max-height: 330px;
+    }
 
 .mobile-nav-item {
     padding: 10px;
@@ -685,6 +691,18 @@ background-color: #c8c8c8;
     gap: 10px;
     cursor: pointer;
     font-size: 1rem;
+}
+
+.notification-item {
+    padding: 10px ;
+    margin: 10px 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
 }
 
 .navbar_name_container {
@@ -704,6 +722,7 @@ background-color: #c8c8c8;
     .profile-icon {
         width: 25px;
         height: 25px;
+        margin: 0;
     }
 
     .logout_text {

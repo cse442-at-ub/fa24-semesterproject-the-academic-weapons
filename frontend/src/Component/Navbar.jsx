@@ -249,7 +249,7 @@ const markAllAsRead = async () => {
     }
 
     return (
-        <nav className="navbar">
+<nav className="navbar">
             <div onClick={() => navigate('/')} className="navbar-logo">
                 <img src={logo} alt="Wealth Wise Logo" className="logo-image"/>
                 <span className="logo-text">Wealth <br/> Wise</span>
@@ -269,6 +269,66 @@ const markAllAsRead = async () => {
                             <div className="navbar_name">{username}</div>
                         </div>
                     </div>
+                    
+                    <div className='mobile-nav-item'>
+                    <div
+          className="notification-icon-container"
+          ref={bellRef}
+          onClick={toggleNotifications}
+        >
+          <FaBell className="notification-icon" />
+          {unreadCount > 0 && (
+            <span className="notification-badge">{unreadCount}</span>
+          )}
+        </div>
+        {isNotificationOpen && (
+            <div className="notification-dropdown" ref={dropdownRef}>
+                <div className="notification-header">
+                    <h3>Notifications</h3>
+                    <button onClick={markAllAsRead} className="mark-read-btn">
+                        Mark All as Read
+                    </button>
+                </div>
+                <ul className="notification-list">
+                    {notifications.map((notification) => (
+                        <li
+                            key={notification.id}
+                            className={`notification-item ${
+                                notification.isRead ? "read" : "unread"
+                            }`}
+                        >
+                            <div className="notification-card">
+                                <div className="notification-content">
+                                    <p className="notification-title">
+                                        {notification.message}
+                                    </p>
+                                    <p className="notification-due-date">
+                                        <strong>Due Date:</strong> {notification.dueDate}
+                                    </p>
+                                </div>
+                                <div className="notification-actions">
+                                    {!notification.isRead ? (
+                                        <button
+                                            className="mark-read-btn"
+                                            onClick={() => markNotificationAsRead(notification.id)}
+                                        >
+                                            Mark as Read
+                                        </button>
+                                    ) : (
+                                        <span className="read-status">Read</span>
+                                    )}
+                                </div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+                {notifications.length === 0 && (
+                    <p className="no-notifications">No notifications available.</p>
+                )}
+            </div>
+        )}
+                    </div>
+
                     <div className="mobile-nav-item" onClick={() => openModal('savings')}>
                         <FaPiggyBank className="savings-icon"/>
                         <span>Savings Overview</span>
