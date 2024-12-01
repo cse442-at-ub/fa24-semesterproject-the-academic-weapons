@@ -9,6 +9,7 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
     const [category, setCategory] = useState('');
     const [date, setDate] = useState(todayDate);
     const [recurring, setRecurring] = useState(false);
+    const [isError, setIsError] = useState(false)
     const [newTransactions, setNewTransactions] = useState([]);
     const uniqueNames = Array.from(new Set(transactions.map(item => item.name)));
     const nameOptions = uniqueNames.map(name => ({
@@ -25,7 +26,12 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
 
     const handleAddTransaction = (e) => {
         e.preventDefault();
-        if (name.value.trim() === '' || price.trim() === '' || category.value.trim() === '' || date === name) return;
+        if (name === '' || price === '' || category === '' || date === name) {
+            setIsError(true);
+            return
+        } else {
+            setIsError(false);
+        }
         const addNewTrans = [...newTransactions];
         const newID = maxTransID + 1;
         addNewTrans.push({ "id": newID, "name": name.value, "price": price, "category": category.value, "date": date, "recurring": recurring });
@@ -65,6 +71,9 @@ const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, 
                     <h1 className={"add_trans_title"}>Add Transaction</h1>
                     <form>
                         <div className={'add_trans_form_input_group'}>
+                            {isError &&
+                                <div className={"error-message"}>{"Please complete all required fields"}</div>
+                            }
                             <label className={"add_trans_input_label"}>Name<span className={'required_field'}>*</span></label>
                             <Creatable
                                 formatCreateLabel={(inputText) => inputText}

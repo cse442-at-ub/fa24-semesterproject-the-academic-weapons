@@ -27,7 +27,6 @@ const Login = ( { openError, setErrorMessage, } ) => {
       }
 
       const data = await response.json();
-      console.log(data); // Log response data for debugging
 
       if (data.success) {
         sessionStorage.setItem('username', data.username)
@@ -39,7 +38,7 @@ const Login = ( { openError, setErrorMessage, } ) => {
         navigate('/');
         window.location.reload();
       } else {
-        setMessage(data.message || 'Login failed');
+        setMessage('Invalid email or password');
         setIsSuccess(false);
       }
     } catch (error) {
@@ -59,14 +58,7 @@ const Login = ( { openError, setErrorMessage, } ) => {
             </div>
             <form className="login_section" onSubmit={handleLogin}>
               {message && (
-                  <div
-                      style={{
-                        color: isSuccess ? 'green' : 'red', // Green for success, red for error
-                        marginTop: '10px',
-                        fontSize: '0.9em',
-                        textAlign: 'center',
-                      }}
-                  >
+                  <div className={"error-message"}>
                     {message}
                   </div>
               )}
