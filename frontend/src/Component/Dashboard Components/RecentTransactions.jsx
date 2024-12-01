@@ -211,7 +211,7 @@ const RecentTransactions = ({ updateEditTransaction, openEditModal, openModal, t
                                     </div>
                                 </div>
                             ))
-                    ) : <p style={{textAlign: "center", marginTop: "100px", color: "black"}}>
+                    ) : <p className={"no_content_text"}>
                             Looks like you haven't added any transactions yet. <br/>
                             Try <span onClick={openModal}
                                       style={{color: "#7984D2", textDecoration: "underline", cursor: "pointer"}}>adding a transaction</span>

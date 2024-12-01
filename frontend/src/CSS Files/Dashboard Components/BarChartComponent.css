@@ -13,7 +13,8 @@
 .bar-chart-header {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap; /* Allow wrapping on smaller screens */
   margin-bottom: 20px;
@@ -31,11 +32,13 @@
 
 .header-controls {
   display: flex;
+  flex-direction: row;
+  gap: 15px;
   align-items: center;
   flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-.year-dropdown, .chart-type-button {
+.year-dropdown {
   padding: 8px 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -46,13 +49,9 @@
   transition: background-color 0.3s ease;
 }
 
-.year-dropdown:focus, .chart-type-button:focus {
+.year-dropdown:focus {
   outline: none;
   border-color: #8884d8;
-}
-
-.chart-type-button:hover {
-  background-color: #e0e0e0;
 }
 
 .bar-chart-wrapper {
@@ -72,17 +71,14 @@
 }
 
 @media (max-width: 768px) {
-  .bar-chart-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 
   .header-controls {
     width: 100%;
     margin-top: 10px;
+    justify-content: center;
   }
 
-  .year-dropdown, .chart-type-button {
+  .year-dropdown {
     width: 100%;
     margin-left: 0;
     margin-bottom: 10px;
@@ -96,7 +92,7 @@
     font-size: 1.2rem;
   }
 
-  .year-dropdown, .chart-type-button {
+  .year-dropdown {
     font-size: 0.9rem;
     padding: 6px 12px;
   }

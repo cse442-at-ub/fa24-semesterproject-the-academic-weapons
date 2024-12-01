@@ -37,3 +37,21 @@
 .modal-content button {
     margin-top: 15px;
 }
+
+.select_graph_buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.select_graph_buttons button {
+    border: none;
+    background-color: #8884d8;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    transition: background-color ease-in-out .3s;
+}
+
+.select_graph_buttons button:hover {
+    background-color: #625eb6;
+}

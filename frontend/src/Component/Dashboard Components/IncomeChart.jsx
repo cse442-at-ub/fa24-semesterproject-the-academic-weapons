@@ -44,15 +44,17 @@ const IncomeChart = ({ income, transactions }) => {
     <div className="income-widget">
       <div className="income-chart-header">
         <h2 className="Category_spend_txt">Income Summary</h2>
-        <button onClick={() => setIsModalOpen(true)} className="chart-type-button">
-          Select Chart Type
-        </button>
+        {(income > 0 || transactions.length > 0) &&
+          <button onClick={() => setIsModalOpen(true)} className="chart-type-button">
+            Select Chart Type
+          </button>
+        }
       </div>
-      <GraphSelectionModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSelect={handleChartTypeSelect}
-      />
+        <GraphSelectionModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSelect={handleChartTypeSelect}
+        />
       <div className="income_wrapper">
         {(income > 0 || transactions.length > 0) ? (
           <>
