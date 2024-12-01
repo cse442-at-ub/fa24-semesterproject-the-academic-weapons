@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
+// SubPieChart.jsx
+import React, { useEffect, useState } from 'react';
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 import '../../CSS Files/Dashboard Components/SubPieChart.css';
 
 const colors = [
@@ -18,21 +19,19 @@ const SubPieChart = ({ category, onBack, subData }) => {
     const [highest, setHighest] = useState('');
 
     useEffect(() => {
+        if (subData[category]) {
+            setData(subData[category]);
 
-        if (data.length === 0) {
-            setData(subData[category])
+            const highestCat = getHighestTransactionInCategory(category, subData);
+            if (highestCat) {
+                setHighest(highestCat.name);
+            } else {
+                setHighest('N/A');
+            }
         }
+    }, [subData, category]);
 
-        if (data.length > 0) {
-            const highestCat = getHighestTransactionInCategory(category, subData)
-            setHighest(highestCat.name)
-        }
-
-        setData(subData[category])
-
-    }, [subData, data])
-
-    function getHighestTransactionInCategory(category, transactionsByCategory) {
+    const getHighestTransactionInCategory = (category, transactionsByCategory) => {
         const transactions = transactionsByCategory[category];
 
         if (!transactions || transactions.length === 0) {
@@ -42,31 +41,34 @@ const SubPieChart = ({ category, onBack, subData }) => {
         return transactions.reduce((highest, transaction) => {
             return (transaction.value > highest.value) ? transaction : highest;
         }, transactions[0]); // Start with the first transaction as the highest
-    }
-
-
+    };
 
     return (
-        <div className="sub-pie-container">
-            <button onClick={onBack}>Back</button>
-            <PieChart width={280} height={400}> {/* Same size as main chart */}
-                <Pie
-                    data={data}
-                    cx={140}
-                    cy={140}
-                    labelLine={false}
-                    outerRadius={90}
-                    fill="#ffffff"
-                    dataKey="value"
-                >
-                    {data.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={colors[index]}/>
-                    ))}
-                </Pie>
-                <Legend width={280}/>
-                <Tooltip/>
-            </PieChart>
-            <h3 className="Category_spend_txt">{"Highest Item: " + highest}</h3>
+        <div className="sub-pie-chart">
+            <button onClick={onBack} className="back-button">Back</button>
+            <div className="chart-container">
+                <ResponsiveContainer width="100%" aspect={1}>
+                    <PieChart>
+                        <Pie
+                            data={data}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            outerRadius="80%"
+                            fill="#ffffff"
+                            dataKey="value"
+                            onClick={() => {}}
+                        >
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                            ))}
+                        </Pie>
+                        <Legend verticalAlign="bottom" height={36} />
+                        <Tooltip />
+                    </PieChart>
+                </ResponsiveContainer>
+            </div>
+            <h3 className="highest-item">Highest Item: {highest}</h3>
         </div>
     );
 };

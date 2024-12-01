@@ -69,7 +69,7 @@ function App() {
         'Income Report',
         'Goals',
         'Monthly Health'
-    ]
+      ];
     const [widgetOrder, setWidgetOrder] = useState(defaultOrder)
     const [widgetsLoaded, setWidgetsLoaded] = useState(false)
     // Account Health

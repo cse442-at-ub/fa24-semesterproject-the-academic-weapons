@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import {
   PieChart,
   Pie,
@@ -23,7 +24,7 @@ const colors = [
   "#E7E9ED", "#FFCD56", "#4D5360", "#A3E4D7", "#F1948A", "#C39BD3"
 ];
 
-const BarChartComponent = ({openTransactionModal, transactions }) => {
+const BarChartComponent = ({ openTransactionModal, transactions }) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Default to current year
   const [availableYears, setAvailableYears] = useState([]);
   const [barData, setBarData] = useState([]);
@@ -101,17 +102,17 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
         <h2 className="Category_spend_txt">Monthly Spending</h2>
         <div className="header-controls">
           {availableYears.length > 0 && (
-              <>
-            <select value={selectedYear} onChange={handleYearChange} className="year-dropdown">
-              {availableYears.map(year => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          <button onClick={() => setIsModalOpen(true)} className="chart-type-button">Select Chart Type</button>
-              </>
-              )}
+            <>
+              <select value={selectedYear} onChange={handleYearChange} className="year-dropdown">
+                {availableYears.map(year => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+              <button onClick={() => setIsModalOpen(true)} className="chart-type-button">Select Chart Type</button>
+            </>
+          )}
         </div>
       </div>
 
@@ -123,24 +124,24 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
 
       <div className="bar-chart-wrapper">
         {barData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer width="100%" aspect={1}>
             {selectedChart === 'bar' && (
-              <BarChart data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
+              <BarChart data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" interval={0} angle={-45} textAnchor="end" /> {/* Force all months to show */}
+                <XAxis dataKey="name" interval={0} angle={-45} textAnchor="end" height={60} />
                 <YAxis tickFormatter={formatYAxis} />
                 <Tooltip formatter={tooltipFormatter} />
-                <Legend />
+                <Legend verticalAlign="top" height={36} />
                 <Bar dataKey="value" fill="#8884d8" />
               </BarChart>
             )}
             {selectedChart === 'line' && (
-              <LineChart data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
+              <LineChart data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" interval={0} angle={-45} textAnchor="end" /> {/* Force all months to show */}
+                <XAxis dataKey="name" interval={0} angle={-45} textAnchor="end" height={60} />
                 <YAxis tickFormatter={formatYAxis} />
                 <Tooltip formatter={tooltipFormatter} />
-                <Legend />
+                <Legend verticalAlign="top" height={36} />
                 <Line type="monotone" dataKey="value" stroke="#8884d8" />
               </LineChart>
             )}
@@ -150,7 +151,7 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
                   data={barData}
                   cx="50%"
                   cy="50%"
-                  outerRadius={100}
+                  outerRadius="80%"
                   fill="#8884d8"
                   dataKey="value"
                   label
@@ -160,7 +161,7 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
                   ))}
                 </Pie>
                 <Tooltip formatter={tooltipFormatter} />
-                <Legend />
+                <Legend verticalAlign="bottom" height={36} />
               </PieChart>
             )}
           </ResponsiveContainer>
@@ -176,3 +177,4 @@ const BarChartComponent = ({openTransactionModal, transactions }) => {
 };
 
 export default BarChartComponent;
+

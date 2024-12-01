@@ -1,16 +1,50 @@
+
 .income-widget {
   margin-inline: auto;
   display: flex;
-  /*justify-content: center;*/
   align-items: center;
   flex-direction: column;
-  /*background-color: #f5f5f5; !* Add background color *!*/
   padding: 20px;
-  border-radius: 10px; /* Rounded corners */
-  /*box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); !* Add subtle shadow *!*/
-  max-width: 90%; /* Fixed width to prevent resizing */
-  /*height: auto; !* Changed to auto so that each box doesnt take unneccesary Y axis stuff *!*/
-  /* HOWEVEV we need to test min height so it doenst break perhaps*/
+  max-width: 90%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  box-shadow: none;
+  border: none;
+}
+
+.income-chart-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Allow elements to wrap on smaller screens */
+  margin-bottom: 20px;
+}
+
+.Category_spend_txt {
+  text-align: center;
+  width: fit-content;
+  margin: 10px 0;
+  padding: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.chart-type-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #7984D2; /* Purple */
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 10px; /* Space between title and button */
+}
+
+.chart-type-button:hover {
+  background-color: #5a6cb5; /* Darker purple on hover */
 }
 
 .income_wrapper {
@@ -24,7 +58,7 @@
 }
 
 .income-button {
-  background-color: #8884d8; /* Green */
+  background-color: #8884d8; /* Purple */
   border: none;
   color: white;
   padding: 10px 20px;
@@ -39,5 +73,41 @@
 }
 
 .income-button:hover {
-  background-color: #625eb6; /* Darker green */
+  background-color: #625eb6; /* Darker purple on hover */
+}
+
+.no_content_text {
+  color: #888;
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .income-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chart-type-button {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+
+  .income-wrapper {
+    padding: 0;
+  }
+
+  .Category_spend_txt {
+    font-size: 1.2rem;
+  }
+
+  .income-button {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
 }
