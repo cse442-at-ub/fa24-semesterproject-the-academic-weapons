@@ -74,7 +74,7 @@ if (!$deleteStmt) {
 $deleteStmt->bind_param("i", $userID);
 
 if ($deleteStmt->execute()) {
-    echo json_encode(['success' => true, 'message' => 'Account deleted successfully']);
+    echo json_encode(['success' => true, "auth" => True, 'message' => 'Account deleted successfully']);
 } else {
     echo json_encode(['success' => false, 'message' => 'Error: ' . $deleteStmt->error]);
 }

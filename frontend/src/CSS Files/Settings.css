@@ -127,14 +127,13 @@
 }
 
 .settings_tab_row_button {
-    background-color: #fff;
-    color: #8884d8;
+    color: #fff;
+    background-color: #8884d8;
     border: 1px solid #8884d8;
 }
 
 .settings_tab_row_button:hover {
-    color: #fff;
-    background-color: #8884d8;
+    background-color: #625eb6;
 }
 
 .settings_tab_row div {
@@ -145,16 +144,16 @@
 }
 
 .delete_account_button {
-    background-color: #a10000;
+    background-color: #D9534F;
     color: white;
-    border: 1px solid #a10000;
+    border: 1px solid #D9534F;
     padding: 10px;
 }
 
 .delete_account_button:hover {
-    color: #a10000;
-    background-color: white;
-    border: 1px solid #a10000;
+    background-color: #c9302c;
+    color: white;
+    border: 1px solid #c9302c;
 }
 
 .settings_profile_picture {

@@ -384,7 +384,7 @@ function App() {
             });
 
             const textResponse = await response.text(); // Get the raw response as text
-            console.log("Raw response:", textResponse); // Log the raw response
+            // console.log("Raw response:", textResponse); // Log the raw response
 
             const data = JSON.parse(textResponse); // Try to parse the text response as JSON
             if (data.success) {

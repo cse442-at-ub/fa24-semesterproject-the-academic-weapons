@@ -44,7 +44,6 @@ const Registration = ( { openError } ) => {
       }
 
       const data = await response.json();
-      console.log(data); // Log response data for debugging
 
       if (data.success) {
         navigate('/')
@@ -67,6 +66,9 @@ const Registration = ( { openError } ) => {
             <h1>Wealth Wise</h1>
           </div>
           <form className="Register_section" onSubmit={handleRegristration}>
+            {errorMessage !== '' &&
+                <div className={"error-message"}>{errorMessage}</div>
+            }
             <div className="email_section">
               <label htmlFor="username" className="email_text">Email</label>
               <input

@@ -5,8 +5,8 @@ const HealthSnapshot = ( { highest, badFine, accountHealth, closeModal } ) => {
     const overSpent = ['Bad', 'Okay', 'Fine']
     const underSpent = ['Fine', 'Good', 'Great']
 
-    console.log(highest)
-    console.log(accountHealth)
+    // console.log(highest)
+    // console.log(accountHealth)
 
     return (
         <div onClick={closeModal} className={"edit_background"}>

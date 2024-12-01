@@ -6,6 +6,7 @@ const DeleteAccount = ({ setErrorMessage, openError, closeModal }) => {
     const [password, setPassword] = useState('');
     const userID = sessionStorage.getItem('User');
     const userToken = sessionStorage.getItem('auth_token');
+    const [passwordInvalid, setPasswordInvalid] = useState(false)
 
     useEffect(() => {
         if (!userID) {
@@ -39,22 +40,15 @@ const DeleteAccount = ({ setErrorMessage, openError, closeModal }) => {
             const data = await response.json();
 
             if (!data.auth) {
-                setErrorMessage("Invalid user credentials, please sign in again.");
-                openError();
+                setPasswordInvalid(true);
+                return
+            } else {
+                setPasswordInvalid(false)
+            }
+            if (data.success) {
                 sessionStorage.clear();
                 navigate('/');
-                window.location.reload();
-                return;
-            }
-
-            if (!data.success) {
-                setErrorMessage(data.message || 'Failed to delete account.');
-                openError();
-            } else {
-                setErrorMessage("Account deleted successfully.");
-                openError();
-                sessionStorage.clear();
-                navigate('/login');
+                window.location.reload()
             }
         } catch (error) {
             setErrorMessage("An error occurred. Please try again later.");
@@ -68,12 +62,15 @@ const DeleteAccount = ({ setErrorMessage, openError, closeModal }) => {
             <div onClick={(event) => event.stopPropagation()} className="change_modal_container">
                 <div className="change_modal_title_desc_container">
                     <h2 className="delete_account_title">Delete Account</h2>
-                    <p className="delete_warning">ARE YOU SURE YOU WANT TO DELETE YOUR ACCOUNT?</p>
+                    {/*<p className="delete_warning">ARE YOU SURE YOU WANT TO DELETE YOUR ACCOUNT?</p>*/}
                     <div className="change_modal_desc">
                         Enter your password to confirm deletion of your account.
                     </div>
                 </div>
                 <div className="change_form">
+                    {passwordInvalid &&
+                        <div className={"error-message"}>Invalid Password</div>
+                    }
                     <div className="label_container">
                         <label className="change_label">Password</label>
                     </div>
@@ -88,9 +85,9 @@ const DeleteAccount = ({ setErrorMessage, openError, closeModal }) => {
                         title={password.trim() === '' ? "Please enter your password to delete account" : null}
                         disabled={password.trim() === ''}
                         onClick={handleConfirmDelete}
-                        className={password.trim() === '' ? 'delete_button_disabled' : 'delete_button'}
+                        className={'delete_button'}
                     >
-                         Delete
+                         Delete Account
                     </button>
                 </div>
                 <div className="change_cancel" onClick={closeModal}>Cancel</div>

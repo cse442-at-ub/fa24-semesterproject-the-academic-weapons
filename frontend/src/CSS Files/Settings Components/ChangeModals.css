@@ -157,13 +157,13 @@
     cursor: pointer;
     height: 40px;
     border-radius: 10px;
-    width: 50%;
+    width: 100%;
     border: 2px solid #D9534F; /* Red border color */
     font-size: 16px;
     font-weight: bold;
     color: white;
     background-color: #D9534F; /* Red background color */
-    text-transform: uppercase; /* Makes the text all caps */
+    /*text-transform: uppercase; !* Makes the text all caps *!*/
     margin-inline: auto;
     margin-bottom: 25px;
     transition: background-color 0.3s ease;
