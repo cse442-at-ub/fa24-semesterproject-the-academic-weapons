@@ -1,12 +1,12 @@
-/* BarChartComponent.css */
 
 .bar-chart-component {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100%; /* Allow the container to take full height of the parent */
-  padding: 20px;
+  height: 10%; /* Allow the container to take full height of the parent */
+  padding: 10px;
+  padding-bottom: 1px;
   box-sizing: border-box;
 }
 

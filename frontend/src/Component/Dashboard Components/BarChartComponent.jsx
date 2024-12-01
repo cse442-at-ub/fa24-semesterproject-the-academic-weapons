@@ -1,5 +1,5 @@
-// BarChartComponent.jsx
 import React, { useState, useEffect } from 'react';
+
 import {
   PieChart,
   Pie,
@@ -177,3 +177,4 @@ const BarChartComponent = ({ openTransactionModal, transactions }) => {
 };
 
 export default BarChartComponent;
+
