@@ -6,6 +6,8 @@ const ChangePFP = ( { setErrorMessage, openError, closeModal, changePFP, pfpMap,
     const navigate = useNavigate();
     const userID = sessionStorage.getItem('User');
     const userToken = sessionStorage.getItem('auth_token')
+    const [message, setMessage] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
 
     useEffect(() => {
 
@@ -36,6 +38,7 @@ const ChangePFP = ( { setErrorMessage, openError, closeModal, changePFP, pfpMap,
         if (!data.auth) {
             setErrorMessage("Invalid user credentials, please sign in again...")
             openError()
+
             sessionStorage.clear()
             window.location.reload()
             return
@@ -60,6 +63,18 @@ const ChangePFP = ( { setErrorMessage, openError, closeModal, changePFP, pfpMap,
                     <h2>Change Profile Picture</h2>
                     <div className={"change_modal_desc"}>Choose a profile picture</div>
                 </div>
+                {message && (
+                  <div
+                    style={{
+                      color: isSuccess ? 'green' : 'red', // Green for success, red for error
+                      marginTop: '10px',
+                      fontSize: '0.9em',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {message}
+                    </div>
+                    )}
                 <div className={"change_pfp_options_container"}>
                     {Object.values(pfpMap).map((pic, index) =>
                     <div onClick={e => newPFP(index)} className={"profile_picture_container"} key={index}>

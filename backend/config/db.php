@@ -9,6 +9,9 @@ $dbname = "cse442_2024_fall_team_an_db";
 // $dbname = "journeys_db";
 // $username = "root";
 // $password = "";
+// $username = "lejimene";
+// $password = "50463600";
+// $dbname = "lejimene_db";
 
 
 // Create connection

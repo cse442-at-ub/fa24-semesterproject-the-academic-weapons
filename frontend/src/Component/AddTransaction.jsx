@@ -1,23 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
+import Creatable, { useCreatable } from 'react-select/creatable';
 
-const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTransID, updateMaxTransID }) => {
+const AddTransaction = ({ transactions, closeModal, addTransaction, maxTransID, updateMaxTransID }) => {
     const todayDate = new Date().toISOString().substr(0,10)
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
     const [date, setDate] = useState(todayDate);
     const [recurring, setRecurring] = useState(false);
+    const [isError, setIsError] = useState(false)
     const [newTransactions, setNewTransactions] = useState([]);
+    const uniqueNames = Array.from(new Set(transactions.map(item => item.name)));
+    const nameOptions = uniqueNames.map(name => ({
+        label: name,
+        value: name
+    }));
+    const uniqueCategories = Array.from(new Set(transactions.map(item => item.category)));
+    const categoryOptions = uniqueCategories.map(category => ({
+        label: category,
+        value: category
+    }));
 
     useEffect(() => { }, [newTransactions]);
 
     const handleAddTransaction = (e) => {
         e.preventDefault();
-        if (name.trim() === '' || price.trim() === '' || category.trim() === '' || date === name) return;
+        if (name === '' || price === '' || category === '' || date === name) {
+            setIsError(true);
+            return
+        } else {
+            setIsError(false);
+        }
         const addNewTrans = [...newTransactions];
         const newID = maxTransID + 1;
-        addNewTrans.push({ "id": newID, "name": name, "price": price, "category": category, "date": date, "recurring": recurring });
+        addNewTrans.push({ "id": newID, "name": name.value, "price": price, "category": category.value, "date": date, "recurring": recurring });
         updateMaxTransID(newID);
         setNewTransactions(addNewTrans);
         setName('');
@@ -39,6 +56,14 @@ const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTran
         setNewTransactions(delTrans);
     };
 
+    const handleSetCategory = (option) => {
+        setCategory(option);
+    };
+
+    const handleSetName = (option) => {
+        setName(option)
+    }
+
     return (
         <div className={"add_trans_modal_container"}>
             <div className={"add_trans_modal_container_inside"}>
@@ -46,13 +71,18 @@ const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTran
                     <h1 className={"add_trans_title"}>Add Transaction</h1>
                     <form>
                         <div className={'add_trans_form_input_group'}>
+                            {isError &&
+                                <div className={"error-message"}>{"Please complete all required fields"}</div>
+                            }
                             <label className={"add_trans_input_label"}>Name<span className={'required_field'}>*</span></label>
-                            <input
-                                className={'add_trans_input_field'}
+                            <Creatable
+                                formatCreateLabel={(inputText) => inputText}
+                                placeholder={''}
                                 value={name}
-                                type={"text"}
+                                options={nameOptions}
+                                onChange={handleSetName}
                                 required={true}
-                                onChange={e => setName(e.target.value)}
+                                className={"add_trans_input_field_suggest"}
                             />
                         </div>
                         <div className={'add_trans_form_input_group'}>
@@ -67,12 +97,14 @@ const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTran
                         </div>
                         <div className={'add_trans_form_input_group'}>
                             <label className={"add_trans_input_label"}>Category<span className={'required_field'}>*</span></label>
-                            <input
-                                className={'add_trans_input_field'}
+                            <Creatable
+                                formatCreateLabel={(inputText) => inputText}
+                                placeholder={''}
                                 value={category}
+                                options={categoryOptions}
+                                onChange={handleSetCategory}
                                 required={true}
-                                type={"text"}
-                                onChange={e => setCategory(e.target.value)}
+                                className={"add_trans_input_field_suggest"}
                             />
                         </div>
                         <div className={'add_trans_form_input_group'}>
@@ -88,7 +120,7 @@ const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTran
 
                         {/* Recurring Transaction Checkbox */}
                         <div className={'add_trans_recurring_group'}>
-                            <label className={'add_trans_recurring_label'}>Recurring Transaction?</label>
+                            <label className={'add_trans_recurring_label'}>Recurring</label>
                             <input
                                 type="checkbox"
                                 checked={recurring}
@@ -108,7 +140,6 @@ const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTran
                             </button>
                         </div>
                     </form>
-                    <div className={"add_trans_close_text"} onClick={closeModal}>Cancel</div>
                 </div>
                 <div className={'add_trans_added_box_container'}>
                     <h1 className={'add_trans_title'}>Added</h1>
@@ -117,27 +148,28 @@ const AddTransaction = ({ closeModal, addTransaction, removeTransaction, maxTran
                         {newTransactions.length > 0 ? (
                             (newTransactions.map(transaction => (
 
-                            <div key={transaction.id} className={'add_trans_added_transaction_item'}>
-                                <div className={'add_trans_added_item_text'}>
-                                    <div className={'add_trans_added_text'}>{transaction.name}</div>
-                                    <div className={'add_trans_added_text'}>{"$" + transaction.price}</div>
-                                    <div className={'add_trans_added_text'}>{transaction.category}</div>
-                                    <div className={'add_trans_added_text'}>{transaction.date}</div>
-                                    {transaction.recurring && (
-                                        <div className={'add_trans_added_text'}>Recurring</div>
-                                    )}
-                                    <div onClick={() => deleteTransaction(transaction.id)}>
-                                        <MdDelete />
+                                    <div key={transaction.id} className={'add_trans_added_transaction_item'}>
+                                        <div className={'add_trans_added_item_text'}>
+                                            <div className={'add_trans_added_text'}>{transaction.name}</div>
+                                            <div className={'add_trans_added_text'}>{"$" + transaction.price}</div>
+                                            <div className={'add_trans_added_text'}>{transaction.category}</div>
+                                            <div className={'add_trans_added_text'}>{transaction.date}</div>
+                                            {transaction.recurring && (
+                                                <div className={'add_trans_added_text'}>Recurring</div>
+                                            )}
+                                            <div onClick={() => deleteTransaction(transaction.id)}>
+                                                <MdDelete/>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
                                 ))
-                            )): (
-                            <p className={"no_content_text"}>No goals added yet.</p>
-                            )}
+                            )) : (
+                            <p className={"no_content_text"}>No transactions added yet.</p>
+                        )}
                     </div>
                     <div className={'add_trans_added_save_exit_container'}>
                         <button onClick={handleSaveAndExit} className={"add_trans_add_btn"}>Save and Exit</button>
+                        <div className={"add_trans_close_text"} onClick={closeModal}>Cancel</div>
                     </div>
                 </div>
             </div>

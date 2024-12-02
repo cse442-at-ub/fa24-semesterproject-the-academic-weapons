@@ -4,19 +4,24 @@
     left: 0;
     margin-inline: auto;
     width: 100vw;
-    height: 120vh;
-    max-height: 100%;
+    height: 100vh;
     overflow-y: auto;
-    background-color: #7984D2;
-    margin-bottom: 20px;
+    background-color: rgba(0, 0, 0, 0.42);
+    padding-top: 15px;
 }
 
 .add_trans_modal_container_inside {
+    background-color: white;
+    border: 2px solid #A3AAD9;
+    border-radius: 10px;
     margin-inline: auto;
-    width: 100%;
+    width: 90vw;
+    max-width: 900px;
+    height: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    padding: 15px;
 }
 
 .add_trans_input_form_container {
@@ -25,11 +30,16 @@
 }
 
 .add_trans_title {
-    font-size: 45px;
+    padding-top: 0px;
+    font-size: clamp(25px, 2vw, 35px);
     text-align: center;
-    color: white;
+    color: #8884d8;
     font-weight: normal;
     font-family: Arial, sans-serif;
+}
+
+.add_trans_header {
+    position: relative;
 }
 
 .add_trans_form_input_group {
@@ -41,8 +51,8 @@
 }
 
 .add_trans_input_label {
-    font-size: 25px;
-    color: white;
+    font-size: 20px;
+    color: #8884d8;
     margin-bottom: 2px;
 }
 
@@ -57,13 +67,19 @@
     outline: 1px solid rgba(0, 0, 0, 0);
     border: 1px solid rgba(0, 0, 0, 0);
     border-radius: 5px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+}
+
+.add_trans_input_field_suggest {
+    font-size: 20px;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
 }
 
 .add_trans_add_btn {
+    color: white;
     border: 1px solid rgb(0,0,0,0);
-    background-color: white;
-    border-radius: 30px;
+    background-color: #8884d8;
+    border-radius: 5px;
     font-size: 25px;
     margin-top: 20px;
     width: 200px;
@@ -74,19 +90,25 @@
 }
 
 .add_trans_add_btn:hover {
-    background-color: #d3d3d3;
+    background-color: #625eb6;
+}
+
+.add_trans_close_text_container
+{
+    display: flex;
+    justify-content: center;
 }
 
 .add_trans_close_text {
     text-align: center;
-    color: white;
+    color: #8884d8;
     text-decoration: underline;
     cursor: pointer;
     transition: color .3s ease;
 }
 
 .add_trans_close_text:hover {
-    color: #d3d3d3;
+    color: #625eb6;
 }
 
 .add_trans_added_box_container {
@@ -96,23 +118,26 @@
 
 .add_trans_added_box {
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 5px;
     margin-inline: auto;
-    background-color: white;
+    background-color: #e0e0e0;
     width: 85%;
     height: 360px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
     overflow-y: scroll;
 }
 
 .add_trans_added_save_exit_container {
     margin-top: 20px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .add_trans_added_transaction_item {
     margin-top: 15px;
-    background-color: #d9d9d9;
+    background-color: white;
     width: 90%;
     margin-inline: auto;
     border-radius: 10px;
@@ -143,8 +168,8 @@
 }
 
 .add_trans_recurring_label {
-    font-size: 25px;
-    color: white;
+    font-size: 20px;
+    color: #8884d8;;
     margin-right: 10px;
 }
 
@@ -153,12 +178,30 @@
     height: 20px;
     cursor: pointer;
     border-radius: 3px;
-    accent-color: white; /* Optional: to match the theme */
+    accent-color: rgb(158, 158, 158); /* Optional: to match the theme */
 }
 
+
+
 @media only screen and (max-width: 1000px) {
+
+    .add_trans_modal_container {
+        padding-bottom: 15px;
+    }
+
     .add_trans_modal_container_inside {
         flex-direction: column;
+    }
+    .add_trans_add_btn {
+        border: 1px solid rgb(0,0,0,0);
+        border-radius: 30px;
+        font-size: 18px;
+        margin-top: 10px;
+        width: 200px;
+        padding: 10px;
+        margin-inline: auto;
+        cursor: pointer;
+        transition: background-color .3s ease;
     }
 
     .add_trans_input_form_container, .add_trans_added_box_container {
@@ -167,8 +210,13 @@
     }
 
     .add_trans_title {
-        font-size: 30px;
+        font-size: 28px;
         font-weight: bold;
+    }
+
+    .add_trans_input_label {
+        font-size: 20px;
+        margin-bottom: 2px;
     }
 
     .add_trans_form_input_group {
@@ -176,7 +224,7 @@
     }
 
     .add_trans_added_box_container {
-        padding-bottom: 20px;
+        padding-bottom: 10px;
     }
 
     .add_trans_added_item_text {
@@ -190,7 +238,7 @@
     }
 
     .add_trans_recurring_label {
-        font-size: 20px; /
+        font-size: 16px; /
     }
 
     .add_trans_recurring_checkbox {
